@@ -1,0 +1,41 @@
+TestFrogs block_size=10
+
+    SpriteSet
+        test0 > Resource img=newset/barrier1
+        test1 > OrientedFlicker img=newset/block1
+        test2 > Chaser img=oryx/alien1 cooldown=2 sType=bomb cooldown=10
+        test3 > OrientedFlicker img=newset/bandit1 cooldown=5
+        test4 > Spreader img=newset/block1 autoTiling=True
+        test5 > AStarChaser img=oryx/alien1 speed=0.5346819091614701 hidden=False
+        test6 > RandomInertial img=newset/barrier1
+        test7 > Flicker img=newset/barrier1 sType=explosion shrinkFactor=0.3378577319300038
+        testResource > Resource
+
+   LevelMapping
+        g > goal grass
+        0 > water grass
+        1 > forestDense water
+        2 > forestDense log
+        3 > forestSparse water
+        4 > forestSparse log
+        - > highway slowRtruck
+        x > highway fastRtruck
+        _ > highway slowLtruck
+        l > highway fastLtruck
+        = > log water
+        B > avatar log water
+        A > avatar grass
+        w > wall grass
+        + > grass
+        . > highway grass
+
+    InteractionSet
+        test2 test6 > wrapAround offset=1
+        test0 test4 > changeResource resource=testResource value=1
+        test7 test2 > killIfOtherHasLess resource=testResource limit=5
+        test3 test6 > bounceForward 
+        test6 test0 > cloneSprite 
+
+    TerminationSet
+        SpriteCounter stype=goal   limit=0 win=True
+        SpriteCounter stype=avatar limit=0 win=False
