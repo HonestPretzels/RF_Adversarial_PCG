@@ -1,14 +1,14 @@
 TestFrogs block_size=10
 
     SpriteSet
-        test0 > Resource img=newset/barrier1
-        test1 > OrientedFlicker img=newset/block1
-        test2 > Chaser img=oryx/alien1 cooldown=2 sType=bomb cooldown=10
-        test3 > OrientedFlicker img=newset/bandit1 cooldown=5
-        test4 > Spreader img=newset/block1 autoTiling=True
-        test5 > AStarChaser img=oryx/alien1 speed=0.5346819091614701 hidden=False
-        test6 > RandomInertial img=newset/barrier1
-        test7 > Flicker img=newset/barrier1 sType=explosion shrinkFactor=0.3378577319300038
+        test0 > WalkJumper img=newset/bandit1 invisible=True singleton=False autoTiling=False
+        test1 > RandomNPC img=newset/bandit1
+        test2 > RandomInertial img=newset/barrier1 invisible=True speed=0.9414151501617395
+        test3 > Flicker img=newset/bandit1 orientation=LEFT
+        test4 > WalkJumper img=newset/barrier1 speed=0.012113661184963265 sType=log
+        test5 > Flicker img=newset/bandit1 shrinkFactor=0.2502525564692979 color=WHITE
+        test6 > ResourcePack img=oryx/bat1
+        test7 > ErraticMissile img=newset/bandit1 autoTiling=False shrinkFactor=0.779577486960543
         testResource > Resource
 
    LevelMapping
@@ -30,12 +30,12 @@ TestFrogs block_size=10
         . > highway grass
 
     InteractionSet
-        test2 test6 > wrapAround offset=1
-        test0 test4 > changeResource resource=testResource value=1
-        test7 test2 > killIfOtherHasLess resource=testResource limit=5
-        test3 test6 > bounceForward 
-        test6 test0 > cloneSprite 
+        test7 test3 > killIfFromAbove 
+        test1 test6 > spawnIfHasMore resource=testResource stype=test2 limit=4
+        test6 test7 > killIfOtherHasLess resource=testResource limit=1
+        test4 test3 > slipForward prob=0.38722693447538326
+        test6 test5 > undoAll 
 
     TerminationSet
-        SpriteCounter stype=goal   limit=0 win=True
-        SpriteCounter stype=avatar limit=0 win=False
+        ResourceCounter stype=testResource limit=59 win=True scoreChange=225
+        Timeout limit=396 win=False

@@ -211,6 +211,43 @@ def randomInteraction(spriteName, partnerName, resources, sTypes):
   
   return newInteraction(spriteName, partnerName, interaction, options)
 
+# TERMINATIONS
+
+TERMINATION_TYPES = [
+    'SpriteCounter',
+    # 'MultiSpriteCounter', Removed for now
+    'ResourceCounter',
+    'Timeout',
+  ]
+
+def addTermination(parent: Node, termination: Node):
+  termination.indent = parent.indent + 4
+  parent.insert(termination)
+
+def newTermination(terminationType, options):
+  return Node(terminationType + ' ' + ' '.join(options), 8)
+
+def randomTermination(sTypes, resources, win):
+  terminationType = random.choice(TERMINATION_TYPES)
+  options = []
+
+  if terminationType == 'SpriteCounter':
+    options.append('stype=' + random.choice(sTypes))
+    options.append('limit=' + str(random.randint(0, 10)))
+
+  if terminationType == 'ResourceCounter':
+    options.append('stype=' + random.choice(resources))
+    options.append('limit=' + str(random.randint(0, 100)))
+  
+  if terminationType == 'Timeout':
+    options.append('limit=' + str(random.randint(10, 1000)))
+
+  options.append('win=' + str(win))
+  if random.uniform(0, 1) > 0.8:
+    options.append('scoreChange=' + str(random.randint(0, 500)))
+
+  return newTermination(terminationType, options)
+
 # OUTPUT
 
 # Recurse through a tree and write to the stream
@@ -242,7 +279,7 @@ if __name__ == "__main__":
     spriteRoot = Node('SpriteSet', 4)
     levelMapping = extractLevelMapping('level-generation/games/frogs.txt')
     interactionRoot = Node('InteractionSet', 4)
-    terminations = getTerminationSetNode('level-generation/games/frogs.txt')
+    terminationRoot = Node('TerminationSet', 4)
     gameDesc = 'TestFrogs block_size=10'
 
     spriteNames = []
@@ -263,7 +300,12 @@ if __name__ == "__main__":
       rInteraction = randomInteraction(spriteChoices[0], spriteChoices[1], resources, spriteNames)
       addInteraction(interactionRoot, rInteraction)
 
+    winCondition = randomTermination(spriteNames, resources, True)
+    loseCondition = randomTermination(spriteNames, resources, False)
+    addTermination(terminationRoot, winCondition)
+    addTermination(terminationRoot, loseCondition)
+
     with open('level-generation/outputs/testRandomSprites.txt', 'w') as out:
-      writeToFile(out, gameDesc, spriteRoot, levelMapping, terminations, interactionRoot)
+      writeToFile(out, gameDesc, spriteRoot, levelMapping, terminationRoot, interactionRoot)
       
 
