@@ -1,0 +1,36 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > MovingAvatar img=oryx/alien2
+        test0 > OrientedFlicker img=oryx/alien1 hidden=False autoTiling=False
+        test1 > Resource img=oryx/bat1
+        test2 > Resource img=oryx/bat1
+        test3 > SpawnPoint img=oryx/alien1 cooldown=13 color=PINK orientation=RIGHT
+        test4 > Chaser img=newset/bandit1
+        test5 > Immovable img=newset/block1 autoTiling=False prob=0.359991366979601 cooldown=16
+        test6 > Passive img=newset/bandit1
+        test7 > Missile img=oryx/alien1
+        testResource > Resource color=DARKGRAY
+
+    LevelMapping
+        ? > avatar
+        k > test0
+        s > test1
+        K > test2
+        . > test3
+        M > test4
+        a > test5
+        W > test6
+        n > test7
+        r > testResource
+
+    InteractionSet
+        test1 avatar > transformTo stype=testResource
+        test1 avatar > stepBack scoreChange=-1
+        test4 avatar > transformTo stype=test3 scoreChange=5
+        test2 test0 > bounceForward 
+        test1 test3 > killSprite 
+
+    TerminationSet
+        SpriteCounter stype=test5 limit=7 win=True
+        ResourceCounter stype=testResource limit=17 win=False

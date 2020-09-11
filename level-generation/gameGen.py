@@ -5,57 +5,17 @@ from gameComprehension import *
 # SPRITES
 
 SPRITE_CLASSES = [
-    'AStarChaser',
     'Bomber',
     'Chaser',
-    'Conveyor',
-    'ErraticMissile',
-    'Fleeing',
     'Flicker',
     'Immovable',
     'Missile',
     'OrientedFlicker',
-    'OrientedSprite',
     'Passive',
     'Portal',
-    'RandomInertial',
-    'RandomMissile',
     'RandomNPC',
-    'ResourcePack',
     'SpawnPoint',
-    'Spreader',
-    'SpriteProducer',
-    'WalkJumper',
-    'Walker',
     'Resource'
-]
-
-# These might be entirely arbitrary identifiers??
-SPRITE_TYPES = [
-  'sam',
-  'bomb',
-  'alienBlue',
-  'alienGreen',
-  'avatar',
-  'portal',
-  'log',
-  'goal',
-  'box',
-  'sword',
-  'diamond',
-  'exitdoor',
-  'carcass',
-  'angry',
-  'scared',
-  'explosion',
-  'city',
-  'incoming',
-  'exit1',
-  'exit2',
-  'bee',
-  'zombie',
-  'honey',
-  'withkey',
 ]
 
 SPRITE_IMAGES = [
@@ -94,7 +54,6 @@ SPRITE_MODIFIERS = {
     'UP',
     'DOWN',
   ],
-  'sType': SPRITE_TYPES,
   'hidden': ['True', 'False'],
   'invisible': ['True', 'False'],
   'singleton': ['True', 'False'],
@@ -105,6 +64,12 @@ SPRITE_MODIFIERS = {
   'limit': [1, 10],
   'shrinkFactor': [0, 1],
 }
+
+AVATAR_CLASSES = [
+  'FlakAvatar',
+  'MovingAvatar',
+  'ShootAvatar',
+]
 
 def addSprite(parent: Node, sprite: Node):
   sprite.indent = parent.indent + 4
@@ -140,36 +105,25 @@ def addOption(sprite):
     value = random.choice(SPRITE_MODIFIERS[option])
   return sprite + ' ' + strOption + '=' + str(value)
 
+def randomAvatar():
+  aClass = random.choice(AVATAR_CLASSES)
+  image = random.choice(SPRITE_IMAGES)
+  return aClass + ' img=' + image
+
 # INTERACTIONS
 
 INTERACTION_TYPES = [
     'killSprite',
     'killBoth',
-    'cloneSprite',
     'transformTo',
     'stepBack',
     'undoAll',
     'bounceForward',
-    'windGust',
-    'slipForward',
-    'attractGaze',
-    'flipDirection',
-    'conveySprite',
     'turnAround',
     'reverseDirection',
-    'bounceDirection',
-    'wallBounce',
-    'wallStop',
-    'killIfSlow',
-    'killIfFromAbove',
-    'killIfAlive',
     'collectResource', # This is probably broken for now
     'changeResource',
-    'spawnIfHasMore',
-    'killIfHasMore',
-    'killIfOtherHasMore',
     'killIfHasLess',
-    'killIfOtherHasLess',
     'wrapAround',
     'pullWithIt',
     'teleportToExit',
@@ -209,6 +163,9 @@ def randomInteraction(spriteName, partnerName, resources, sTypes):
   if interaction in ['slipForward', 'attractGaze']:
     options.append('prob=' + str(random.uniform(0, 1)))
   
+  if random.uniform(0, 1) > 0.5:
+    options.append('scoreChange=' + str(random.randint(-5, 5)))
+
   return newInteraction(spriteName, partnerName, interaction, options)
 
 # TERMINATIONS
@@ -248,6 +205,15 @@ def randomTermination(sTypes, resources, win):
 
   return newTermination(terminationType, options)
 
+# MAPPING
+
+CHARS = 'QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890,./;[]?:"!@#$%^&*()'
+
+def generateLevelMapping(spriteNames):
+  chars = random.sample(CHARS, len(spriteNames))
+  mapping = {chars.pop(): name  for name in spriteNames}
+  return mapping
+
 # OUTPUT
 
 # Recurse through a tree and write to the stream
@@ -258,7 +224,7 @@ def writeNodes(stream, spriteNode: Node):
 
 # Write a dictionary level mapping to the stream
 def writeLevelMapping(stream, mapping: dict):
-  stream.write('   LevelMapping\n')
+  stream.write('    LevelMapping\n')
   for key in mapping.keys():
     stream.write('        ' + key + ' > ' + mapping[key] + '\n')
 
@@ -277,13 +243,15 @@ def writeToFile(stream, gameDescription, spriteNode, levelMapping, terminations,
 if __name__ == "__main__":
     # spriteRoot = getSpriteSetNode('level-generation/games/frogs.txt')
     spriteRoot = Node('SpriteSet', 4)
-    levelMapping = extractLevelMapping('level-generation/games/frogs.txt')
     interactionRoot = Node('InteractionSet', 4)
     terminationRoot = Node('TerminationSet', 4)
-    gameDesc = 'TestFrogs block_size=10'
+    gameDesc = 'BasicGame block_size=10'
 
     spriteNames = []
     resources = []
+
+    addSprite(spriteRoot, newSprite('avatar', randomAvatar()))
+    spriteNames.append('avatar')
     for idx in range(8):
       rSprite = newSprite('test' + str(idx), randomSprite())
       if rSprite.content.split('>')[1].split(' ')[0].strip() == 'Resource':
@@ -292,8 +260,11 @@ if __name__ == "__main__":
       addSprite(spriteRoot, rSprite)
 
     if len(resources) == 0:
-      addSprite(spriteRoot, Node('testResource > Resource', 8))
+      addSprite(spriteRoot, Node('testResource > Resource color=' + random.choice(SPRITE_MODIFIERS['color']), 8))
       resources.append('testResource')
+      spriteNames.append('testResource')
+
+    levelMapping = generateLevelMapping(spriteNames)
 
     for _ in range (5):
       spriteChoices = random.sample(spriteNames, 2)
@@ -305,7 +276,7 @@ if __name__ == "__main__":
     addTermination(terminationRoot, winCondition)
     addTermination(terminationRoot, loseCondition)
 
-    with open('level-generation/outputs/testRandomSprites.txt', 'w') as out:
+    with open('level-generation/outputs/testGame.txt', 'w') as out:
       writeToFile(out, gameDesc, spriteRoot, levelMapping, terminationRoot, interactionRoot)
       
 
