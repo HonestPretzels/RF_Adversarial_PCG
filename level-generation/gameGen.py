@@ -7,14 +7,17 @@ from gameComprehension import *
 SPRITE_CLASSES = [
     'Bomber',
     'Chaser',
+    'Fleeing',
     'Flicker',
     'Immovable',
     'Missile',
     'OrientedFlicker',
     'Passive',
     'Portal',
+    'RandomMissile',
     'RandomNPC',
     'SpawnPoint',
+    'Spreader',
     'Resource'
 ]
 
@@ -89,6 +92,7 @@ def randomSprite():
   sClass = random.choice(SPRITE_CLASSES)
   image = random.choice(SPRITE_IMAGES)
   sprite = sClass + ' img=' + image 
+  sprite = sprite + ' orientation=' + random.choice(SPRITE_MODIFIERS['orientation'])
   optionCount = random.randint(0,3)
   for _ in range(optionCount):
     sprite = addOption(sprite)
@@ -115,15 +119,23 @@ def randomAvatar():
 INTERACTION_TYPES = [
     'killSprite',
     'killBoth',
+    'cloneSprite',
     'transformTo',
     'stepBack',
     'undoAll',
     'bounceForward',
+    'attractGaze',
+    'flipDirection',
     'turnAround',
     'reverseDirection',
+    'killIfFromAbove',
     'collectResource', # This is probably broken for now
     'changeResource',
+    'spawnIfHasMore',
+    'killIfHasMore',
+    'killIfOtherHasMore',
     'killIfHasLess',
+    'killIfOtherHasLess',
     'wrapAround',
     'pullWithIt',
     'teleportToExit',
