@@ -1,36 +1,36 @@
 BasicGame block_size=10
 
     SpriteSet
-        avatar > MovingAvatar img=oryx/alien2
-        test0 > OrientedFlicker img=oryx/alien1 hidden=False autoTiling=False
-        test1 > Resource img=oryx/bat1
-        test2 > Resource img=oryx/bat1
-        test3 > SpawnPoint img=oryx/alien1 cooldown=13 color=PINK orientation=RIGHT
-        test4 > Chaser img=newset/bandit1
-        test5 > Immovable img=newset/block1 autoTiling=False prob=0.359991366979601 cooldown=16
-        test6 > Passive img=newset/bandit1
-        test7 > Missile img=oryx/alien1
-        testResource > Resource color=DARKGRAY
+        avatar > ShootAvatar img=newset/barrier1
+        test0 > Flicker img=newset/bandit1 singleton=False
+        test1 > Chaser img=newset/block1 speed=0.24410888430202116 shrinkFactor=0.5431458348802649
+        test2 > OrientedFlicker img=newset/block1 limit=6 cooldown=15
+        test3 > RandomNPC img=oryx/bat1
+        test4 > Passive img=oryx/alien2 singleton=False hidden=False limit=3
+        test5 > OrientedFlicker img=newset/block1 autoTiling=False
+        test6 > Portal img=oryx/alien2 autoTiling=True hidden=False
+        test7 > Immovable img=newset/bandit1 orientation=DOWN cooldown=0
+        testResource > Resource color=RED
 
     LevelMapping
-        ? > avatar
-        k > test0
-        s > test1
-        K > test2
-        . > test3
-        M > test4
-        a > test5
-        W > test6
-        n > test7
-        r > testResource
+        u > test0
+        m > test1
+        ? > test2
+        8 > test3
+        d > test4
+        6 > test5
+        ; > test6
+        ) > test7
+        * > testResource
+        A > avatar
 
     InteractionSet
-        test1 avatar > transformTo stype=testResource
-        test1 avatar > stepBack scoreChange=-1
-        test4 avatar > transformTo stype=test3 scoreChange=5
-        test2 test0 > bounceForward 
-        test1 test3 > killSprite 
+        test4 test3 > killBoth 
+        test4 test5 > teleportToExit scoreChange=-5
+        test7 test2 > changeResource resource=testResource value=3 scoreChange=-2
+        test2 test5 > reverseDirection 
+        test7 test5 > stepBack scoreChange=0
 
     TerminationSet
-        SpriteCounter stype=test5 limit=7 win=True
-        ResourceCounter stype=testResource limit=17 win=False
+        Timeout limit=809 win=True
+        Timeout limit=848 win=False

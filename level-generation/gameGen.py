@@ -207,11 +207,12 @@ def randomTermination(sTypes, resources, win):
 
 # MAPPING
 
-CHARS = 'QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890,./;[]?:"!@#$%^&*()'
+CHARS = 'qwertyuiopasdfghjklzxcvbnm1234567890,./;[]?:"!@#$%^&*()'
 
-def generateLevelMapping(spriteNames):
+def generateLevelMapping(spriteNames, avatarName):
   chars = random.sample(CHARS, len(spriteNames))
   mapping = {chars.pop(): name  for name in spriteNames}
+  mapping['A'] = avatarName
   return mapping
 
 # OUTPUT
@@ -251,7 +252,6 @@ if __name__ == "__main__":
     resources = []
 
     addSprite(spriteRoot, newSprite('avatar', randomAvatar()))
-    spriteNames.append('avatar')
     for idx in range(8):
       rSprite = newSprite('test' + str(idx), randomSprite())
       if rSprite.content.split('>')[1].split(' ')[0].strip() == 'Resource':
@@ -264,7 +264,7 @@ if __name__ == "__main__":
       resources.append('testResource')
       spriteNames.append('testResource')
 
-    levelMapping = generateLevelMapping(spriteNames)
+    levelMapping = generateLevelMapping(spriteNames, 'avatar')
 
     for _ in range (5):
       spriteChoices = random.sample(spriteNames, 2)
