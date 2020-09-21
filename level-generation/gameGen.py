@@ -14,7 +14,6 @@ SPRITE_CLASSES = [
     'OrientedFlicker',
     'Passive',
     'Portal',
-    'RandomMissile',
     'RandomNPC',
     'SpawnPoint',
     'Spreader',
@@ -88,11 +87,15 @@ def removeSprite(parent: Node, sprite: Node):
 def newSprite(name, content):
   return Node(name + ' > ' + content, 8)
 
-def randomSprite():
+def randomSprite(otherSprites):
   sClass = random.choice(SPRITE_CLASSES)
   image = random.choice(SPRITE_IMAGES)
   sprite = sClass + ' img=' + image 
   sprite = sprite + ' orientation=' + random.choice(SPRITE_MODIFIERS['orientation'])
+
+  if sClass in ['Bomber', 'SpawnPoint', 'Chaser', 'Fleeing', 'Portal']:
+    sprite = sprite + ' stype=' + random.choice(otherSprites)
+
   optionCount = random.randint(0,3)
   for _ in range(optionCount):
     sprite = addOption(sprite)
@@ -265,8 +268,8 @@ if __name__ == "__main__":
 
     addSprite(spriteRoot, newSprite('avatar', randomAvatar()))
     for idx in range(8):
-      rSprite = newSprite('test' + str(idx), randomSprite())
-      if rSprite.content.split('>')[1].split(' ')[0].strip() == 'Resource':
+      rSprite = newSprite('test' + str(idx), randomSprite(['test' + str(i) for i in range(8) if i != idx]))
+      if rSprite.content.split('>')[1].split()[0].strip() == 'Resource':
         resources.append('test' + str(idx))
       spriteNames.append('test' + str(idx))
       addSprite(spriteRoot, rSprite)
