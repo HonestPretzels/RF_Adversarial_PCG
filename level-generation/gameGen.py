@@ -248,50 +248,160 @@ def writeLevelMapping(stream, mapping: dict):
 def writeToFile(stream, gameDescription, spriteNode, levelMapping, terminations, interactions):
     stream.write(gameDescription + '\n')
     stream.write('\n')
-    writeNodes(out, spriteNode)
+    writeNodes(stream, spriteNode)
     stream.write('\n')
-    writeLevelMapping(out, levelMapping)
+    writeLevelMapping(stream, levelMapping)
     stream.write('\n')
-    writeNodes(out, interactions)
+    writeNodes(stream, interactions)
     stream.write('\n')
-    writeNodes(out, terminations)
+    writeNodes(stream, terminations)
+
+def randomGen(outPath):
+  spriteRoot = Node('SpriteSet', 4)
+  interactionRoot = Node('InteractionSet', 4)
+  terminationRoot = Node('TerminationSet', 4)
+  gameDesc = 'BasicGame block_size=10'
+
+  spriteNames = []
+  resources = []
+
+  addSprite(spriteRoot, newSprite('avatar', randomAvatar()))
+  for idx in range(8):
+    rSprite = newSprite('test' + str(idx), randomSprite(['test' + str(i) for i in range(8) if i != idx]))
+    if rSprite.content.split('>')[1].split()[0].strip() == 'Resource':
+      resources.append('test' + str(idx))
+    spriteNames.append('test' + str(idx))
+    addSprite(spriteRoot, rSprite)
+
+  if len(resources) == 0:
+    addSprite(spriteRoot, Node('testResource > Resource color=' + random.choice(SPRITE_MODIFIERS['color']), 8))
+    resources.append('testResource')
+    spriteNames.append('testResource')
+
+  levelMapping = generateLevelMapping(spriteNames, 'avatar')
+
+  for _ in range (5):
+    spriteChoices = random.sample(spriteNames, 2)
+    rInteraction = randomInteraction(spriteChoices[0], spriteChoices[1], resources, spriteNames)
+    addInteraction(interactionRoot, rInteraction)
+
+  winCondition = randomTermination(spriteNames, resources, True)
+  loseCondition = randomTermination(spriteNames, resources, False)
+  addTermination(terminationRoot, winCondition)
+  addTermination(terminationRoot, loseCondition)
+
+  with open(outPath, 'w') as out:
+    writeToFile(out, gameDesc, spriteRoot, levelMapping, terminationRoot, interactionRoot)
+
+# Substitution generation
+
+def nameSub(pre, post, root):
+  if len(root.children) != 0:
+    for child in root.children:
+      child.content.replace(pre, post)
+      nameSub(pre, post, child)
+
+def getLeaves(node, leaves):
+  if len(node.children) == 0:
+    return node
+  else:
+    for child in node.children:
+      leaves += [getLeaves(child, leaves)]
+    return leaves
+
+def subRandomSprite(spriteRoot):
+  nodes = getLeaves(spriteRoot, [])
+  nodes = [n for n in nodes if 'Resource' not in n.content]
+  nodes = [n for n in nodes if 'avatar' not in n.content]
+  
+  spriteToSwap = random.randint(0, len(nodes) - 1)
+
+  pre = nodes[spriteToSwap].content.split('>')[0]
+  
+  otherSprites = [nodes[i].content.split('>')[0] for i in range(len(nodes)) if i != spriteToSwap]
+
+  rSprite = randomSprite(otherSprites)
+
+  getNode(spriteRoot, nodes[spriteToSwap].content).content = pre + ' > ' + rSprite
+
+def subRandomInteraction(interactionRoot, resources, sprites):
+  nodes = getLeaves(interactionRoot, [])
+  
+  interactionToSwap = random.randint(0, len(nodes) - 1)
+  
+  pre = nodes[interactionToSwap].content.split('>')[0].split(' ')
+
+  rInteraction = randomInteraction(pre[0], pre[1], resources, sprites)
+
+  old = getNode(interactionRoot, nodes[interactionToSwap].content)
+  old.parent.children.remove(old)
+
+  addInteraction(interactionRoot, rInteraction)
+
+def subRandomTermination(terminationRoot, resources, sprites):
+  nodes = getLeaves(terminationRoot, [])
+  
+  terminationToSwap = random.randint(0, len(nodes) - 1)
+  if 'win=True' in nodes[terminationToSwap].content:
+    rTermination = randomTermination(sprites, resources, True)
+  else:
+    rTermination = randomTermination(sprites, resources, False)
+  
+  old = getNode(terminationRoot, nodes[terminationToSwap].content)
+  old.parent.children.remove(old)
+
+  addTermination(terminationRoot, rTermination)
+
+def getResources(node, currentResources):
+  if len(node.children) == 0:
+    if 'Resource' in node.content:
+      return node.content.split('>')[0].strip()
+    return None
+  else:
+    if 'Resource' in node.content:
+      currentResources += [node.content.split('>')[0].strip()]
+    for child in node.children:
+      x = getResources(child, currentResources)
+      if x != None:
+        currentResources += [x]
+    return currentResources
+
+def getSpriteNames(node, currentNames):
+  if len(node.children) == 0:
+    return node.content.split('>')[0].strip()
+  else:
+    if 'SpriteSet' not in node.content:
+      currentNames += node.content.split('>')[0].strip()
+    currentNames += [getSpriteNames(child, currentNames) for child in node.children]
+    return currentNames
+
+def subGen(initialGamePath, spriteSubs, interactionSubs, terminationSubs):
+  with open(initialGamePath, 'r') as preGame:
+    gameDesc = preGame.readline().strip()
+
+  spriteRoot = getSpriteSetNode(initialGamePath)
+  interactionRoot = getInteractionSetNode(initialGamePath)
+  terminationRoot = getTerminationSetNode(initialGamePath)
+
+  # Sub sprites (Only works on sprites with no children for now and keeps resources)
+  for i in range(spriteSubs):
+    subRandomSprite(spriteRoot)
+
+  for i in range(interactionSubs):
+    subRandomInteraction(interactionRoot, getResources(spriteRoot, []), getSpriteNames(spriteRoot, []))
+
+  for i in range(terminationSubs):
+    subRandomTermination(terminationRoot, getResources(spriteRoot, []), getSpriteNames(spriteRoot, []))
+
+  levelMapping = generateLevelMapping([name for name in getSpriteNames(spriteRoot, []) if name != 'avatar'], 'avatar')
+  print(getSpriteNames(spriteRoot, []))
+
+  with open(initialGamePath.split('.')[0] + '_sub.txt', 'w') as out:
+    writeToFile(out, gameDesc, spriteRoot, levelMapping, terminationRoot, interactionRoot)
 
 if __name__ == "__main__":
-    # spriteRoot = getSpriteSetNode('level-generation/games/frogs.txt')
-    spriteRoot = Node('SpriteSet', 4)
-    interactionRoot = Node('InteractionSet', 4)
-    terminationRoot = Node('TerminationSet', 4)
-    gameDesc = 'BasicGame block_size=10'
+  randomGen('level-generation/outputs/testGame.txt')
+  subGen('level-generation/outputs/testGame.txt', 1, 1, 1)
 
-    spriteNames = []
-    resources = []
-
-    addSprite(spriteRoot, newSprite('avatar', randomAvatar()))
-    for idx in range(8):
-      rSprite = newSprite('test' + str(idx), randomSprite(['test' + str(i) for i in range(8) if i != idx]))
-      if rSprite.content.split('>')[1].split()[0].strip() == 'Resource':
-        resources.append('test' + str(idx))
-      spriteNames.append('test' + str(idx))
-      addSprite(spriteRoot, rSprite)
-
-    if len(resources) == 0:
-      addSprite(spriteRoot, Node('testResource > Resource color=' + random.choice(SPRITE_MODIFIERS['color']), 8))
-      resources.append('testResource')
-      spriteNames.append('testResource')
-
-    levelMapping = generateLevelMapping(spriteNames, 'avatar')
-
-    for _ in range (5):
-      spriteChoices = random.sample(spriteNames, 2)
-      rInteraction = randomInteraction(spriteChoices[0], spriteChoices[1], resources, spriteNames)
-      addInteraction(interactionRoot, rInteraction)
-
-    winCondition = randomTermination(spriteNames, resources, True)
-    loseCondition = randomTermination(spriteNames, resources, False)
-    addTermination(terminationRoot, winCondition)
-    addTermination(terminationRoot, loseCondition)
-
-    with open('level-generation/outputs/testGame.txt', 'w') as out:
-      writeToFile(out, gameDesc, spriteRoot, levelMapping, terminationRoot, interactionRoot)
       
 
