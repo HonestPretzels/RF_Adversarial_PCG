@@ -352,28 +352,27 @@ def subRandomTermination(terminationRoot, resources, sprites):
 
   addTermination(terminationRoot, rTermination)
 
-def getResources(node, currentResources):
-  if len(node.children) == 0:
-    if 'Resource' in node.content:
-      return node.content.split('>')[0].strip()
-    return None
-  else:
-    if 'Resource' in node.content:
-      currentResources += [node.content.split('>')[0].strip()]
-    for child in node.children:
-      x = getResources(child, currentResources)
-      if x != None:
-        currentResources += [x]
-    return currentResources
+def getResources(root):
+  leaves = []
+  def __getResources(node):
+    if node is not None:
+      if 'Resource' in node.content:
+        leaves.append(node.content.split('>')[0].strip())
+      for n in node.children:
+        __getResources(n)
+  __getResources(root)
+  return leaves
 
-def getSpriteNames(node, currentNames):
-  if len(node.children) == 0:
-    return node.content.split('>')[0].strip()
-  else:
-    if 'SpriteSet' not in node.content:
-      currentNames += node.content.split('>')[0].strip()
-    currentNames += [getSpriteNames(child, currentNames) for child in node.children]
-    return currentNames
+def getSpriteNames(root):
+  leaves = []
+  def __getSpriteNames(node):
+    if node is not None:
+      if len(node.children) == 0:
+        leaves.append(node.content.split('>')[0].strip())
+      for n in node.children:
+        __getSpriteNames(n)
+  __getSpriteNames(root)
+  return leaves
 
 def subGen(initialGamePath, spriteSubs, interactionSubs, terminationSubs):
   with open(initialGamePath, 'r') as preGame:
@@ -388,20 +387,19 @@ def subGen(initialGamePath, spriteSubs, interactionSubs, terminationSubs):
     subRandomSprite(spriteRoot)
 
   for i in range(interactionSubs):
-    subRandomInteraction(interactionRoot, getResources(spriteRoot, []), getSpriteNames(spriteRoot, []))
+    subRandomInteraction(interactionRoot, getResources(spriteRoot), getSpriteNames(spriteRoot))
 
   for i in range(terminationSubs):
-    subRandomTermination(terminationRoot, getResources(spriteRoot, []), getSpriteNames(spriteRoot, []))
+    subRandomTermination(terminationRoot, getResources(spriteRoot), getSpriteNames(spriteRoot))
 
-  levelMapping = generateLevelMapping([name for name in getSpriteNames(spriteRoot, []) if name != 'avatar'], 'avatar')
-  print(getSpriteNames(spriteRoot, []))
+  levelMapping = generateLevelMapping([name for name in getSpriteNames(spriteRoot) if name != 'avatar'], 'avatar')
 
   with open(initialGamePath.split('.')[0] + '_sub.txt', 'w') as out:
     writeToFile(out, gameDesc, spriteRoot, levelMapping, terminationRoot, interactionRoot)
 
 if __name__ == "__main__":
-  randomGen('level-generation/outputs/testGame.txt')
-  subGen('level-generation/outputs/testGame.txt', 1, 1, 1)
+  #randomGen('level-generation/outputs/testGame.txt')
+  subGen('games/frogs.txt', 0, 1, 1)
 
       
 

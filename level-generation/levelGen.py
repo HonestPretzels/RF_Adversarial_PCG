@@ -48,9 +48,9 @@ def getRandomSubLevel(width, height, charSet, background, subNum):
   return level
 
 def main():
-  levelMapping = extractLevelMapping('level-generation/outputs/testGame_sub.txt')
+  levelMapping = extractLevelMapping('./level-generation/games/frogs_sub.txt')
   charSet = [i for i in levelMapping.keys()]
-  levelToFile(getRandomLevel(10, 10, charSet), 'level-generation/outputs/testGame_lvl0.txt')
+  levelToFile(getRandomLevel(10, 10, charSet), './level-generation/outputs/frogs_sub_lvl0.txt')
   return
 
 if __name__ == "__main__":
