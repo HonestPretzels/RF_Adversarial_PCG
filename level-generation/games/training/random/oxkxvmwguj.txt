@@ -1,0 +1,36 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > MovingAvatar img=oryx/bat1
+        test0 > RandomNPC img=oryx/bat1 orientation=DOWN prob=0.24634310717785457
+        test1 > OrientedFlicker img=newset/bandit1 orientation=LEFT color=LIGHTGREEN shrinkFactor=0.5367184521806544 hidden=True
+        test2 > Fleeing img=oryx/alien1 orientation=UP stype=test5 shrinkFactor=0.9071706362068762 singleton=False cooldown=2
+        test3 > Passive img=newset/bandit1 orientation=UP hidden=False color=BROWN invisible=False
+        test4 > Bomber img=oryx/alien1 orientation=RIGHT stype=test1 orientation=UP color=GOLD
+        test5 > SpawnPoint img=newset/barrier1 orientation=RIGHT stype=test1 singleton=True invisible=False hidden=True
+        testResource > Resource color=BLUE
+
+    LevelMapping
+        b > test0
+        l > test1
+        c > test2
+        # > test3
+        i > test4
+        3 > test5
+        x > testResource
+        A > avatar
+
+    InteractionSet
+        test0 test4 > flipDirection 
+        test5 test0 > bounceForward 
+        testResource test1 > wrapAround offset=3 scoreChange=-4
+        test4 test5 > pullWithIt scoreChange=-4
+        test0 test1 > bounceForward scoreChange=1
+        testResource test3 > undoAll 
+        test1 test3 > killSprite 
+        test0 test2 > killIfOtherHasMore resource=testResource limit=1
+        test1 test5 > collectResource 
+
+    TerminationSet
+        SpriteCounter stype=test0 limit=10 win=True
+        SpriteCounter stype=test1 limit=0 win=False

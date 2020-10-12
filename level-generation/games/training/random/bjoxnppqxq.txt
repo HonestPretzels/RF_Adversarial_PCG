@@ -1,0 +1,38 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > MovingAvatar img=oryx/alien2
+        test0 > Missile img=oryx/bat1 orientation=UP
+        test1 > Spreader img=oryx/alien1 orientation=LEFT
+        test2 > SpawnPoint img=newset/barrier1 orientation=DOWN stype=test5
+        test3 > SpawnPoint img=oryx/bat1 orientation=RIGHT stype=test7 hidden=True speed=0.5473453897115571 color=DARKBLUE
+        test4 > RandomNPC img=newset/bandit1 orientation=RIGHT hidden=False singleton=True
+        test5 > RandomNPC img=oryx/alien1 orientation=DOWN
+        test6 > Portal img=newset/barrier1 orientation=UP stype=test3 color=BLACK singleton=True autoTiling=False
+        test7 > Resource img=oryx/alien1 orientation=LEFT
+
+    LevelMapping
+        ? > test0
+        7 > test1
+        9 > test2
+        n > test3
+        g > test4
+        k > test5
+        [ > test6
+        r > test7
+        A > avatar
+
+    InteractionSet
+        test1 test2 > transformTo stype=test5
+        test7 test4 > killIfOtherHasLess resource=test7 limit=4 scoreChange=0
+        test2 test6 > wrapAround offset=2 scoreChange=-2
+        test3 test1 > killSprite scoreChange=1
+        test6 test1 > killIfOtherHasMore resource=test7 limit=4 scoreChange=0
+        test0 test5 > wrapAround offset=3
+        test1 test3 > killIfHasMore resource=test7 limit=3
+        test2 test6 > pullWithIt 
+        test1 test0 > stepBack scoreChange=3
+
+    TerminationSet
+        ResourceCounter stype=test7 limit=81 win=True
+        Timeout limit=490 win=False

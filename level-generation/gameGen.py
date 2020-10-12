@@ -1,6 +1,10 @@
 import random
+import sys
+import string
+
 from vgdl.parser import Node
 from gameComprehension import *
+
 
 # SPRITES
 
@@ -266,8 +270,11 @@ def randomGen(outPath):
   resources = []
 
   addSprite(spriteRoot, newSprite('avatar', randomAvatar()))
-  for idx in range(8):
-    rSprite = newSprite('test' + str(idx), randomSprite(['test' + str(i) for i in range(8) if i != idx]))
+
+  sCount = random.randint(5, 10)
+
+  for idx in range(sCount):
+    rSprite = newSprite('test' + str(idx), randomSprite(['test' + str(i) for i in range(sCount) if i != idx]))
     if rSprite.content.split('>')[1].split()[0].strip() == 'Resource':
       resources.append('test' + str(idx))
     spriteNames.append('test' + str(idx))
@@ -280,7 +287,9 @@ def randomGen(outPath):
 
   levelMapping = generateLevelMapping(spriteNames, 'avatar')
 
-  for _ in range (5):
+  iCount = random.randint(5, 10)
+
+  for _ in range (iCount):
     spriteChoices = random.sample(spriteNames, 2)
     rInteraction = randomInteraction(spriteChoices[0], spriteChoices[1], resources, spriteNames)
     addInteraction(interactionRoot, rInteraction)
@@ -398,8 +407,15 @@ def subGen(initialGamePath, spriteSubs, interactionSubs, terminationSubs):
     writeToFile(out, gameDesc, spriteRoot, levelMapping, terminationRoot, interactionRoot)
 
 if __name__ == "__main__":
-  #randomGen('level-generation/outputs/testGame.txt')
-  subGen('games/frogs.txt', 0, 1, 1)
+
+  outputPath = sys.argv[1]
+  amount = int(sys.argv[2])
+
+  for i in range(amount):
+    outputName = (''.join(random.choice(string.ascii_lowercase) for _ in range(10)))
+    output = outputPath + '\\' + outputName + '.txt'
+
+    randomGen(output)
 
       
 

@@ -1,0 +1,44 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > ShootAvatar img=newset/bandit1
+        test0 > Passive img=newset/barrier1 orientation=RIGHT singleton=True
+        test1 > Portal img=oryx/alien1 orientation=DOWN stype=test0 hidden=False invisible=False
+        test2 > Passive img=newset/block1 orientation=DOWN orientation=RIGHT hidden=True cooldown=6
+        test3 > Flicker img=oryx/bat1 orientation=DOWN
+        test4 > Missile img=oryx/alien2 orientation=RIGHT limit=3 prob=0.08991186101814663
+        test5 > OrientedFlicker img=newset/bandit1 orientation=RIGHT hidden=True limit=8 shrinkFactor=0.3578063941915818
+        test6 > Fleeing img=oryx/bat1 orientation=RIGHT stype=test8 color=LIGHTGRAY
+        test7 > Immovable img=oryx/alien1 orientation=UP autoTiling=True
+        test8 > OrientedFlicker img=newset/bandit1 orientation=RIGHT invisible=False
+        test9 > SpawnPoint img=newset/bandit1 orientation=LEFT stype=test0 color=GOLD limit=3
+        testResource > Resource color=LIGHTBLUE
+
+    LevelMapping
+        d > test0
+        z > test1
+        ? > test2
+        a > test3
+        h > test4
+        b > test5
+        7 > test6
+        2 > test7
+        6 > test8
+        4 > test9
+        w > testResource
+        A > avatar
+
+    InteractionSet
+        test7 test9 > wrapAround offset=2 scoreChange=3
+        test0 test6 > killIfHasMore resource=testResource limit=4
+        test6 test7 > changeResource resource=testResource value=5 scoreChange=-4
+        test9 test2 > turnAround scoreChange=-3
+        test4 test6 > collectResource scoreChange=0
+        test3 test2 > killIfFromAbove 
+        test7 test5 > cloneSprite 
+        test2 test6 > changeResource resource=testResource value=-5 scoreChange=-4
+        test2 test3 > bounceForward scoreChange=-5
+
+    TerminationSet
+        Timeout limit=505 win=True
+        ResourceCounter stype=testResource limit=34 win=False

@@ -1,0 +1,33 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > FlakAvatar img=oryx/alien1
+        test0 > Passive img=newset/block1 orientation=LEFT singleton=True prob=0.15151414428548982
+        test1 > Spreader img=newset/block1 orientation=LEFT hidden=True prob=0.7591596272592598
+        test2 > Flicker img=newset/block1 orientation=UP invisible=True prob=0.7820460575221531 hidden=True
+        test3 > Spreader img=newset/bandit1 orientation=LEFT singleton=False
+        test4 > RandomNPC img=oryx/alien2 orientation=RIGHT
+        testResource > Resource color=BROWN
+
+    LevelMapping
+        t > test0
+        ^ > test1
+        k > test2
+        j > test3
+        n > test4
+        # > testResource
+        A > avatar
+
+    InteractionSet
+        test3 test2 > flipDirection scoreChange=-3
+        test4 test3 > spawnIfHasMore resource=testResource stype=test3 limit=5
+        test0 test1 > wrapAround offset=0 scoreChange=2
+        test2 test0 > undoAll scoreChange=5
+        test1 test2 > cloneSprite 
+        test0 test4 > spawnIfHasMore resource=testResource stype=testResource limit=5 scoreChange=-4
+        test3 test2 > pullWithIt scoreChange=0
+        test2 test4 > stepBack 
+
+    TerminationSet
+        Timeout limit=244 win=True scoreChange=47
+        ResourceCounter stype=testResource limit=83 win=False

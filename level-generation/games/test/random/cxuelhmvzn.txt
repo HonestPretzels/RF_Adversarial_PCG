@@ -1,0 +1,39 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > ShootAvatar img=oryx/alien1
+        test0 > Bomber img=oryx/alien2 orientation=UP stype=test2 limit=5 shrinkFactor=0.9434737049785928
+        test1 > Resource img=oryx/alien1 orientation=UP prob=0.9097794595992227 singleton=False singleton=False
+        test2 > Fleeing img=newset/block1 orientation=UP stype=test4 singleton=False color=BROWN
+        test3 > Flicker img=newset/bandit1 orientation=RIGHT limit=3 prob=0.7075756632500386 speed=0.7160410915916366
+        test4 > Chaser img=newset/barrier1 orientation=LEFT stype=test1
+        test5 > Immovable img=oryx/bat1 orientation=RIGHT
+        test6 > Missile img=oryx/alien1 orientation=DOWN invisible=False invisible=False color=GRAY
+        test7 > RandomNPC img=oryx/alien2 orientation=DOWN
+        test8 > Fleeing img=newset/barrier1 orientation=LEFT stype=test0 speed=0.8848379381157158
+
+    LevelMapping
+        l > test0
+        u > test1
+        r > test2
+        9 > test3
+        t > test4
+        5 > test5
+        & > test6
+        ] > test7
+        v > test8
+        A > avatar
+
+    InteractionSet
+        test8 test2 > collectResource scoreChange=2
+        test5 test7 > attractGaze prob=0.06938828995701363 scoreChange=0
+        test7 test6 > bounceForward scoreChange=-1
+        test2 test0 > killIfOtherHasLess resource=test1 limit=1
+        test2 test3 > stepBack scoreChange=-4
+        test6 test8 > flipDirection scoreChange=-1
+        test2 test4 > cloneSprite scoreChange=-3
+        test1 test3 > wrapAround offset=2
+
+    TerminationSet
+        Timeout limit=28 win=True
+        ResourceCounter stype=test1 limit=40 win=False scoreChange=225

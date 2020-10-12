@@ -1,0 +1,39 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > ShootAvatar img=newset/barrier1
+        test0 > SpawnPoint img=oryx/alien2 orientation=DOWN stype=test1 color=YELLOW shrinkFactor=0.7279936960777051 hidden=True
+        test1 > Missile img=newset/block1 orientation=LEFT
+        test2 > SpawnPoint img=newset/bandit1 orientation=DOWN stype=test3 shrinkFactor=0.414044995874988 shrinkFactor=0.4874387769983476
+        test3 > Fleeing img=oryx/alien1 orientation=LEFT stype=test2 invisible=False cooldown=3 orientation=DOWN
+        test4 > Flicker img=oryx/alien1 orientation=LEFT singleton=False hidden=True hidden=False
+        test5 > OrientedFlicker img=oryx/alien1 orientation=RIGHT
+        test6 > OrientedFlicker img=oryx/bat1 orientation=RIGHT
+        testResource > Resource color=BLUE
+
+    LevelMapping
+        ( > test0
+        2 > test1
+        5 > test2
+        h > test3
+        , > test4
+        q > test5
+        o > test6
+        m > testResource
+        A > avatar
+
+    InteractionSet
+        test1 test6 > spawnIfHasMore resource=testResource stype=test2 limit=4
+        test2 test3 > teleportToExit scoreChange=4
+        test6 test3 > killBoth scoreChange=-2
+        test0 test6 > turnAround scoreChange=2
+        test3 test5 > undoAll scoreChange=5
+        test2 test3 > cloneSprite scoreChange=-2
+        test6 test5 > killIfOtherHasLess resource=testResource limit=3
+        test2 test6 > reverseDirection 
+        testResource test0 > bounceForward 
+        testResource test0 > flipDirection scoreChange=-3
+
+    TerminationSet
+        SpriteCounter stype=test5 limit=8 win=True
+        SpriteCounter stype=test5 limit=3 win=False

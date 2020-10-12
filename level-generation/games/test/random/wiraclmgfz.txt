@@ -1,0 +1,36 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > ShootAvatar img=oryx/alien2
+        test0 > Bomber img=newset/bandit1 orientation=DOWN stype=test3 shrinkFactor=0.3000244010860492 shrinkFactor=0.9236116214412056 shrinkFactor=0.9973264200968304
+        test1 > Bomber img=oryx/alien1 orientation=RIGHT stype=test3 invisible=True autoTiling=False
+        test2 > Passive img=newset/bandit1 orientation=UP cooldown=6 color=ORANGE orientation=RIGHT
+        test3 > Flicker img=newset/barrier1 orientation=RIGHT hidden=False speed=0.4645640027490202
+        test4 > RandomNPC img=oryx/bat1 orientation=RIGHT
+        test5 > Spreader img=newset/bandit1 orientation=LEFT prob=0.27689766288899387 limit=2
+        test6 > Spreader img=newset/barrier1 orientation=UP shrinkFactor=0.5259985395998162 color=LIGHTRED cooldown=13
+        test7 > Resource img=newset/bandit1 orientation=UP singleton=True singleton=False shrinkFactor=0.5726696794191237
+
+    LevelMapping
+        c > test0
+        1 > test1
+        2 > test2
+        q > test3
+        . > test4
+        l > test5
+        k > test6
+        m > test7
+        A > avatar
+
+    InteractionSet
+        test6 test1 > killSprite 
+        test7 test5 > killIfFromAbove scoreChange=5
+        test6 test0 > undoAll 
+        test7 test0 > wrapAround offset=3 scoreChange=5
+        test1 test5 > bounceForward scoreChange=-4
+        test4 test0 > killIfHasMore resource=test7 limit=5
+        test4 test3 > killIfOtherHasLess resource=test7 limit=2
+
+    TerminationSet
+        Timeout limit=573 win=True
+        SpriteCounter stype=test7 limit=6 win=False scoreChange=413
