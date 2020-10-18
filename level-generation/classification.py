@@ -1,6 +1,8 @@
 import os
 import sys
+import matplotlib.pyplot as plt
 from sklearn.ensemble import RandomForestClassifier
+from sklearn import tree
 
 from gameComprehension import *
 from vgdl.parser import Node
@@ -127,7 +129,9 @@ def getVector(fName):
   return vector
 
 
+
 def main():
+  # classification.py path-to-random-training path-to-human-training path-to-test
   randomGamesPath = sys.argv[1]
   humanGamesPath = sys.argv[2]
 
@@ -142,12 +146,31 @@ def main():
     vectors.append(getVector(f))
     labels.append(1)
 
-  clf = RandomForestClassifier(max_depth=2, random_state=0)
+  clf = RandomForestClassifier(max_depth=2, random_state=0, n_estimators=20)
   clf.fit(vectors, labels)
 
   p = clf.predict([getVector(testPath)])
   print(p)
 
+  vName = ['sTotal', 'iTotal', 'tTotal']
+  vName.extend(['s_' + sType for sType in sTypes])
+  vName.extend(['i_' + iType for iType in iTypes])
+  vName.extend(['t_' + tType for tType in tTypes])
+
+  classes = ['random', 'human']
+
+  i = 0
+
+  for estimator in clf.estimators_:
+    fig, axes = plt.subplots(nrows = 1,ncols = 1,figsize = (4,4), dpi=800)
+    tree.plot_tree(estimator,
+                feature_names=vName,
+                class_names=classes,
+                filled = True)
+    fig.savefig('./trees/rf_individualtree' + str(i) + '.png')
+    plt.clf()
+    plt.close()
+    i += 1
 
 if __name__ == "__main__":
     main()
