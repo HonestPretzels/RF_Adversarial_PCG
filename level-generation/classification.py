@@ -135,23 +135,43 @@ def main():
   randomGamesPath = sys.argv[1]
   humanGamesPath = sys.argv[2]
 
-  testPath = sys.argv[3]
+  allRandoms = getAllFilePaths(randomGamesPath)
+  allHumans = getAllFilePaths(humanGamesPath)
 
-  vectors = []
-  labels = []
-  for f in getAllFilePaths(randomGamesPath):
-    vectors.append(getVector(f))
-    labels.append(0)
-  for f in getAllFilePaths(humanGamesPath):
-    vectors.append(getVector(f))
-    labels.append(1)
+  correct = 0
+  total = 0
 
-  clf = RandomForestClassifier(max_depth=2, random_state=0, n_estimators=20)
-  clf.fit(vectors, labels)
+  for r in allRandoms:
+    for h in allHumans:
+      testR = r
+      testH = h
+      vectors = []
+      labels = []
+      for f in allRandoms:
+        if f != testR:
+          vectors.append(getVector(f))
+          labels.append(0)
+      for f in allHumans:
+        if f != testH:
+          vectors.append(getVector(f))
+          labels.append(1)
 
-  p = clf.predict([getVector(testPath)])
-  print(p)
+      clf = RandomForestClassifier(max_depth=2, random_state=0, n_estimators=20)
+      clf.fit(vectors, labels)
 
+      p = clf.predict([getVector(testR)])
+      if p[0] == 0:
+        correct += 1
+      else:
+        print('wrong:' + testR)
+      p = clf.predict([getVector(testH)])
+      if p[0] == 1:
+        correct += 1
+      else:
+        print('wrong:' + testH)
+      total += 2
+  print(str(correct/total))
+  print('trees exclude:' + testH + ' and ' + testR)
   vName = ['sTotal', 'iTotal', 'tTotal']
   vName.extend(['s_' + sType for sType in sTypes])
   vName.extend(['i_' + iType for iType in iTypes])
