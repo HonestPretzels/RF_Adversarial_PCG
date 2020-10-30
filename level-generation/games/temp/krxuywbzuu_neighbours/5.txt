@@ -1,0 +1,37 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > MovingAvatar img=oryx/bat1
+        test0   > Missile img=newset/barrier1 orientation=RIGHT color=GOLD hidden=False limit=3
+        test1   > Chaser img=newset/block1 orientation=LEFT stype=test2    invisible=False
+        test2   > Chaser img=oryx/bat1 orientation=LEFT stype=test3   cooldown=17 speed=0.6699004350559159
+        test3   > Resource img=newset/bandit1 orientation=LEFT hidden=False singleton=True singleton=False
+        test4  > Resource img=oryx/alien2 orientation=LEFT prob=0.22293495125029839
+        test5 > Resource img=oryx/bat1 orientation=UP singleton=False orientation=LEFT
+        test6   > Resource img=newset/block1 orientation=LEFT color=BROWN
+
+    LevelMapping
+        3 > test0
+        q > test1
+        2 > test2
+        & > test3
+        f > test4
+        c > test5
+        1 > test6
+        A > avatar
+
+    InteractionSet
+        test5 test1 > changeResource resource=test5 value=-5
+        test2 test3 > teleportToExit
+        test3 test6 > wrapAround offset=3 scoreChange=2
+        test5 test3 > killSprite
+        test2 test1 > killSprite scoreChange=0
+        test3 test2 > killSprite scoreChange=2
+        test5 test6 > killIfHasLess resource=test5 limit=3
+        test3 test1 > stepBack
+        test0 test4 > reverseDirection
+        test0 test6 > stepBack 
+
+    TerminationSet
+        SpriteCounter stype=avatar limit=10 win=True
+        SpriteCounter stype=test5 limit=7 win=False scoreChange=257

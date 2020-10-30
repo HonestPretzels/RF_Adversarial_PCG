@@ -1,0 +1,32 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > ShootAvatar img=newset/barrier1
+        test0   > Immovable img=oryx/alien1 orientation=RIGHT
+        test1  > Resource img=newset/bandit1 orientation=RIGHT invisible=True autoTiling=True invisible=True
+        test2   > Bomber img=oryx/alien1 orientation=LEFT stype=test4
+        test3  > Resource img=oryx/alien2 orientation=DOWN
+        test4  > Missile img=newset/bandit1 orientation=UP color=PINK cooldown=3
+        test5     > Immovable img=newset/barrier1 orientation=UP hidden=False speed=0.1819915696005342 invisible=False
+        testResource > Resource color=RED
+
+    LevelMapping
+        . > test0
+        f > test1
+        k > test2
+        i > test3
+        1 > test4
+        ! > test5
+        % > testResource
+        A > avatar
+
+    InteractionSet
+        test3 test1 > stepBack
+        test0 test2 > teleportToExit scoreChange=5
+        test2 test1 > stepBack
+        test5 test0 > transformTo stype=test2 scoreChange=-2
+        test2 test3 > teleportToExit 
+
+    TerminationSet
+        SpriteCounter stype=avatar limit=2 win=False
+        SpriteCounter stype=test3 limit=1 win=True

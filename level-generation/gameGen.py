@@ -383,7 +383,7 @@ def getSpriteNames(root):
   __getSpriteNames(root)
   return leaves
 
-def subGen(initialGamePath, spriteSubs, interactionSubs, terminationSubs):
+def subGen(initialGamePath, outPath, spriteSubs, interactionSubs, terminationSubs):
   with open(initialGamePath, 'r') as preGame:
     gameDesc = preGame.readline().strip()
 
@@ -403,7 +403,7 @@ def subGen(initialGamePath, spriteSubs, interactionSubs, terminationSubs):
 
   levelMapping = generateLevelMapping([name for name in getSpriteNames(spriteRoot) if name != 'avatar'], 'avatar')
 
-  with open(initialGamePath.split('.')[0] + '_sub.txt', 'w') as out:
+  with open(outPath, 'w') as out:
     writeToFile(out, gameDesc, spriteRoot, levelMapping, terminationRoot, interactionRoot)
 
 if __name__ == "__main__":

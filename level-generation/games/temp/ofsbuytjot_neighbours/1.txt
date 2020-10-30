@@ -1,0 +1,30 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > MovingAvatar img=newset/barrier1
+        test0  > Fleeing img=oryx/alien1 orientation=UP stype=test1   
+        test1   > Passive img=oryx/alien2 orientation=DOWN
+        test2  > Passive img=newset/block1 orientation=DOWN
+        test3    > Immovable img=newset/block1 orientation=RIGHT orientation=DOWN
+        test4   > Immovable img=oryx/bat1 orientation=LEFT hidden=True
+        testResource > Resource color=YELLOW
+
+    LevelMapping
+        , > test0
+        i > test1
+        q > test2
+        u > test3
+        : > test4
+        x > testResource
+        A > avatar
+
+    InteractionSet
+        test3 test1 > reverseDirection scoreChange=-3
+        test0 test3 > killSprite
+        test1 test2 > killIfHasLess resource=testResource limit=5 scoreChange=-3
+        test4 test0 > stepBack scoreChange=-3
+        test2 test0 > collectResource scoreChange=2
+
+    TerminationSet
+        SpriteCounter stype=test2 limit=1 win=False
+        SpriteCounter stype=test2 limit=3 win=True scoreChange=471

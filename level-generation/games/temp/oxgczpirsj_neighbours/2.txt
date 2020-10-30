@@ -1,0 +1,37 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > ShootAvatar img=newset/barrier1
+        test0 > Resource img=oryx/alien1 orientation=UP
+        test1   > Chaser img=oryx/alien1 orientation=RIGHT stype=test3  orientation=DOWN
+        test2   > Chaser img=oryx/bat1 orientation=LEFT stype=test1    invisible=True hidden=True
+        test3  > Resource img=newset/block1 orientation=RIGHT limit=1 orientation=RIGHT color=RED
+        test4   > Resource img=oryx/alien2 orientation=DOWN autoTiling=True invisible=False cooldown=7
+        test5  > Resource img=oryx/bat1 orientation=UP orientation=LEFT
+        test6  > Resource img=newset/barrier1 orientation=UP invisible=False limit=5
+        test7   > Missile img=newset/block1 orientation=LEFT
+
+    LevelMapping
+        . > test0
+        h > test1
+        6 > test2
+        i > test3
+        w > test4
+        ^ > test5
+        ; > test6
+        7 > test7
+        A > avatar
+
+    InteractionSet
+        test7 test4 > spawnIfHasMore resource=test0 stype=test3 limit=1
+        test1 test6 > reverseDirection
+        test5 test3 > killSprite
+        test4 test1 > teleportToExit
+        test4 test3 > stepBack
+        test1 test0 > stepBack scoreChange=-4
+        test2 test1 > changeResource resource=test0 value=0
+        test3 test5 > killSprite
+
+    TerminationSet
+        SpriteCounter stype=test5 limit=6 win=True
+        SpriteCounter stype=test5 limit=9 win=False

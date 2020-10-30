@@ -141,56 +141,27 @@ def main():
   correct = 0
   total = 0
 
-  for r in allRandoms:
-    for h in allHumans:
-      testR = r
-      testH = h
-      vectors = []
-      labels = []
-      for f in allRandoms:
-        if f != testR:
-          vectors.append(getVector(f))
-          labels.append(0)
-      for f in allHumans:
-        if f != testH:
-          vectors.append(getVector(f))
-          labels.append(1)
+  clf = createClassifier(allHumans, allRandoms)
 
-      clf = RandomForestClassifier(max_depth=2, random_state=0, n_estimators=20)
-      clf.fit(vectors, labels)
+  test = sys.argv[3]
 
-      p = clf.predict([getVector(testR)])
-      if p[0] == 0:
-        correct += 1
-      else:
-        print('wrong:' + testR)
-      p = clf.predict([getVector(testH)])
-      if p[0] == 1:
-        correct += 1
-      else:
-        print('wrong:' + testH)
-      total += 2
-  print(str(correct/total))
-  print('trees exclude:' + testH + ' and ' + testR)
-  vName = ['sTotal', 'iTotal', 'tTotal']
-  vName.extend(['s_' + sType for sType in sTypes])
-  vName.extend(['i_' + iType for iType in iTypes])
-  vName.extend(['t_' + tType for tType in tTypes])
+  p = clf.predict([getVector(test)])
+  print(p)
 
-  classes = ['random', 'human']
+def createClassifier(humanExamples, randomExamples):
+  vectors = []
+  labels = []
+  for r in randomExamples:
+    vectors.append(getVector(r))
+    labels.append(0)
+  for f in humanExamples:
+    vectors.append(getVector(f))
+    labels.append(1)
 
-  i = 0
+  clf = RandomForestClassifier(max_depth=2, random_state=0, n_estimators=100)
+  clf.fit(vectors, labels)
 
-  for estimator in clf.estimators_:
-    fig, axes = plt.subplots(nrows = 1,ncols = 1,figsize = (4,4), dpi=800)
-    tree.plot_tree(estimator,
-                feature_names=vName,
-                class_names=classes,
-                filled = True)
-    fig.savefig('./trees/rf_individualtree' + str(i) + '.png')
-    plt.clf()
-    plt.close()
-    i += 1
+  return clf
 
 if __name__ == "__main__":
     main()

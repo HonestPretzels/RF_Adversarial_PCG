@@ -1,0 +1,39 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > ShootAvatar img=oryx/alien1
+        test0  > Resource img=newset/block1 orientation=LEFT
+        test1 > Chaser img=newset/bandit1 orientation=UP stype=test5 hidden=False
+        test2   > SpawnPoint img=newset/barrier1 orientation=DOWN stype=test7  invisible=True color=BLUE autoTiling=False
+        test3  > Chaser img=newset/bandit1 orientation=DOWN stype=test2   speed=0.07618094080080384 singleton=True
+        test4 > Immovable img=newset/bandit1 orientation=LEFT hidden=False shrinkFactor=0.8570175201798725
+        test5  > Chaser img=newset/block1 orientation=UP stype=test3  shrinkFactor=0.5996285396908559 cooldown=13
+        test6   > Immovable img=newset/block1 orientation=LEFT autoTiling=True color=GRAY speed=0.07438797313301726
+        test7 > Portal img=newset/block1 orientation=LEFT stype=test8
+        test8  > Chaser img=oryx/bat1 orientation=RIGHT stype=test5   prob=0.6616170736217736
+        testResource > Resource color=GOLD
+
+    LevelMapping
+        5 > test0
+        ( > test1
+        b > test2
+        w > test3
+        u > test4
+        p > test5
+        9 > test6
+        n > test7
+        m > test8
+        * > testResource
+        A > avatar
+
+    InteractionSet
+        testResource test0 > stepBack scoreChange=-1
+        test0 test6 > killIfFromAbove scoreChange=-2
+        test1 test0 > killSprite scoreChange=1
+        test0 test5 > killIfHasMore resource=testResource limit=3
+        test4 test5 > transformTo stype=test7 scoreChange=-1
+        test0 test1 > killIfHasLess resource=test0 limit=2 scoreChange=-2
+
+    TerminationSet
+        SpriteCounter stype=test8 limit=0 win=True
+        SpriteCounter stype=test3 limit=7 win=False

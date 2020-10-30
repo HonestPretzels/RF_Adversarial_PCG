@@ -1,0 +1,37 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > ShootAvatar img=oryx/bat1
+        test0   > Resource img=oryx/bat1 orientation=UP speed=0.9057160863059018
+        test1   > Immovable img=newset/block1 orientation=RIGHT autoTiling=False limit=2 cooldown=7
+        test2    > Immovable img=oryx/alien1 orientation=LEFT limit=1
+        test3   > Chaser img=oryx/alien2 orientation=LEFT stype=test5   color=LIGHTGREEN
+        test4   > Missile img=newset/block1 orientation=LEFT limit=6 speed=0.5259992278087552
+        test5  > Immovable img=newset/barrier1 orientation=RIGHT autoTiling=True singleton=True
+        test6  > Missile img=newset/barrier1 orientation=UP
+        test7 > Immovable img=oryx/alien1 orientation=LEFT limit=2
+        testResource > Resource color=YELLOW
+
+    LevelMapping
+        ^ > test0
+        . > test1
+        & > test2
+        f > test3
+        b > test4
+        , > test5
+        x > test6
+        d > test7
+        % > testResource
+        A > avatar
+
+    InteractionSet
+        test6 test2 > teleportToExit
+        test6 test3 > stepBack
+        test0 test2 > changeResource resource=testResource value=-5 scoreChange=-2
+        test7 test5 > changeResource resource=testResource value=-3 scoreChange=-4
+        test1 test0 > killSprite
+        test4 test0 > killSprite 
+
+    TerminationSet
+        SpriteCounter stype=test3 limit=7 win=True scoreChange=261
+        SpriteCounter stype=test4 limit=1 win=False
