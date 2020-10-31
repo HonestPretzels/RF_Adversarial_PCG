@@ -24,13 +24,36 @@ SPRITE_CLASSES = [
     'Resource'
 ]
 
+LEVEL_CHARS = [
+  'B',
+  'C',
+  'F',
+  'L',
+  'I',
+  'M',
+  'O',
+  'P',
+  'R',
+  'N',
+  'S',
+  'E',
+  'U',
+]
+
 SPRITE_IMAGES = [
   'oryx/alien1',
-  'oryx/alien2',
-  'oryx/bat1',
   'newset/bandit1',
-  'newset/block1',
-  'newset/barrier1',
+  'newset/blessedman',
+  'newset/butterfly1',
+  'newset/block2',
+  'newset/arrow',
+  'newset/cherries',
+  'newset/camel1',
+  'newset/exit',
+  'newset/girl2',
+  'newset/blockR3',
+  'newest/alienShotgun_0',
+  'newset/egg',
 ]
 
 SPRITE_MODIFIERS = {
@@ -93,7 +116,7 @@ def newSprite(name, content):
 
 def randomSprite(otherSprites):
   sClass = random.choice(SPRITE_CLASSES)
-  image = random.choice(SPRITE_IMAGES)
+  image = SPRITE_IMAGES[SPRITE_CLASSES.index(sClass)]
   sprite = sClass + ' img=' + image 
   sprite = sprite + ' orientation=' + random.choice(SPRITE_MODIFIERS['orientation'])
 
@@ -118,7 +141,7 @@ def addOption(sprite):
 
 def randomAvatar():
   aClass = random.choice(AVATAR_CLASSES)
-  image = random.choice(SPRITE_IMAGES)
+  image = 'newset/cop1'
   return aClass + ' img=' + image
 
 # INTERACTIONS
@@ -155,15 +178,26 @@ def addInteraction(parent: Node, interaction: Node):
 def newInteraction(spriteName, partnerName, interaction, options):
   return Node(spriteName + ' ' + partnerName + ' > ' + interaction + ' ' + ' '.join(options), 8)
 
-def randomInteraction(spriteName, partnerName, resources, sTypes):
+def randomInteraction(sprite, partner, resources, sTypes):
   interaction = random.choice(INTERACTION_TYPES)
+
+  spriteName = sprite.content.split('>')[0].strip()
+  partnerName = sprite.content.split('>')[0].strip()
+
+  spriteType = sprite.content.split('>')[1].split()[0].strip()
+  partnerType = partner.content.split('>')[1].split()[0].strip()
+
   options = []
+
+  if spriteType == 'Immovable' or partnerType == 'Immovable':
+    while interaction == 'teleportToExit':
+      interaction = random.choice(INTERACTION_TYPES)
 
   if interaction in ['changeResource', 'spawnIfHasMore', 'killIfHasMore', 'killIfOtherHasMore', 'killIfHasLess', 'killIfOtherHasLess']:
     options.append('resource=' + random.choice(resources))
     if interaction == 'changeResource':
       options.append('value=' + str(random.randint(-5, 5)))
-  
+
   if interaction in ['transformTo', 'spawnIfHasMore']:
     options.append('stype=' + random.choice(sTypes))
 
@@ -228,9 +262,18 @@ def randomTermination(sTypes, resources, win):
 
 CHARS = 'qwertyuiopasdfghjklzxcvbnm1234567890,./;[]?:"!@#$%^&*()'
 
-def generateLevelMapping(spriteNames, avatarName):
-  chars = random.sample(CHARS, len(spriteNames))
-  mapping = {chars.pop(): name  for name in spriteNames}
+def generateLevelMapping(spriteNames, spriteTypes, avatarName):
+  mapping = {}
+  for i in range(len(spriteNames)):
+    key = LEVEL_CHARS[SPRITE_CLASSES.index(spriteTypes[i])]
+    while key in mapping.keys():
+      if key.lower() not in mapping.keys():
+        key = key.lower()
+      else:
+        key = random.choice(CHARS)
+      
+    mapping[key] = spriteNames[i]
+
   mapping['A'] = avatarName
   return mapping
 
@@ -267,6 +310,7 @@ def randomGen(outPath):
   gameDesc = 'BasicGame block_size=10'
 
   spriteNames = []
+  spriteTypes = []
   resources = []
 
   addSprite(spriteRoot, newSprite('avatar', randomAvatar()))
@@ -278,20 +322,24 @@ def randomGen(outPath):
     if rSprite.content.split('>')[1].split()[0].strip() == 'Resource':
       resources.append('test' + str(idx))
     spriteNames.append('test' + str(idx))
+    spriteTypes.append(rSprite.content.split('>')[1].split()[0].strip())
     addSprite(spriteRoot, rSprite)
 
   if len(resources) == 0:
     addSprite(spriteRoot, Node('testResource > Resource color=' + random.choice(SPRITE_MODIFIERS['color']), 8))
     resources.append('testResource')
     spriteNames.append('testResource')
+    spriteTypes.append('Resource')
 
-  levelMapping = generateLevelMapping(spriteNames, 'avatar')
+  levelMapping = generateLevelMapping(spriteNames, spriteTypes, 'avatar')
 
   iCount = random.randint(5, 10)
 
   for _ in range (iCount):
     spriteChoices = random.sample(spriteNames, 2)
-    rInteraction = randomInteraction(spriteChoices[0], spriteChoices[1], resources, spriteNames)
+    sprite = getSpriteByName(spriteRoot , spriteChoices[0])
+    partner = getSpriteByName(spriteRoot, spriteChoices[1])
+    rInteraction = randomInteraction(sprite, partner, resources, spriteNames)
     addInteraction(interactionRoot, rInteraction)
 
   winCondition = randomTermination(spriteNames, resources, True)
@@ -333,14 +381,14 @@ def subRandomSprite(spriteRoot):
 
   getNode(spriteRoot, nodes[spriteToSwap].content).content = pre + ' > ' + rSprite
 
-def subRandomInteraction(interactionRoot, resources, sprites):
+def subRandomInteraction(interactionRoot, resources, sprites, spriteRoot):
   nodes = getLeaves(interactionRoot, [])
   
   interactionToSwap = random.randint(0, len(nodes) - 1)
   
   pre = nodes[interactionToSwap].content.split('>')[0].split(' ')
 
-  rInteraction = randomInteraction(pre[0], pre[1], resources, sprites)
+  rInteraction = randomInteraction(getSpriteByName(spriteRoot, pre[0]), getSpriteByName(spriteRoot, pre[1]), resources, sprites)
 
   old = getNode(interactionRoot, nodes[interactionToSwap].content)
   old.parent.children.remove(old)
@@ -383,6 +431,27 @@ def getSpriteNames(root):
   __getSpriteNames(root)
   return leaves
 
+def getSpriteTypes(root):
+  leaves = []
+  def __getSpriteTypes(node):
+    if node is not None:
+      if len(node.children) == 0:
+        leaves.append(node.content.split('>')[1].split()[0].strip())
+      for n in node.children:
+        __getSpriteTypes(n)
+  __getSpriteTypes(root)
+  return leaves
+
+def getSpriteByName(node, name):
+  if node is not None:
+    if node.content.split('>')[0].strip() == name:
+      return node
+    else:
+      for child in node.children:
+        out = getSpriteByName(child, name)
+        if out is not None:
+          return out
+
 def subGen(initialGamePath, outPath, spriteSubs, interactionSubs, terminationSubs):
   with open(initialGamePath, 'r') as preGame:
     gameDesc = preGame.readline().strip()
@@ -396,12 +465,15 @@ def subGen(initialGamePath, outPath, spriteSubs, interactionSubs, terminationSub
     subRandomSprite(spriteRoot)
 
   for i in range(interactionSubs):
-    subRandomInteraction(interactionRoot, getResources(spriteRoot), getSpriteNames(spriteRoot))
+    subRandomInteraction(interactionRoot, getResources(spriteRoot), getSpriteNames(spriteRoot), spriteRoot)
 
   for i in range(terminationSubs):
     subRandomTermination(terminationRoot, getResources(spriteRoot), getSpriteNames(spriteRoot))
 
-  levelMapping = generateLevelMapping([name for name in getSpriteNames(spriteRoot) if name != 'avatar'], 'avatar')
+  spriteNames = [name for name in getSpriteNames(spriteRoot) if name != 'avatar']
+  spriteTypes = [t for t in getSpriteTypes(spriteRoot) if t not in AVATAR_CLASSES]
+
+  levelMapping = generateLevelMapping(spriteNames, spriteTypes, 'avatar')
 
   with open(outPath, 'w') as out:
     writeToFile(out, gameDesc, spriteRoot, levelMapping, terminationRoot, interactionRoot)

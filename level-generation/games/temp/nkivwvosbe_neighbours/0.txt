@@ -1,0 +1,41 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > ShootAvatar img=newset/cop1
+        test0 > Resource img=newset/egg orientation=UP speed=0.5507073772395669 speed=0.06972983878215933 orientation=UP
+        test1  > Passive img=newset/camel1 orientation=UP invisible=False
+        test2 > Resource img=newset/egg orientation=LEFT speed=0.2270985109563728 speed=0.6995206293986614
+        test3   > Immovable img=newset/block2 orientation=DOWN invisible=True speed=0.10870521166413116 orientation=LEFT
+        test4 > Missile img=newset/arrow orientation=LEFT cooldown=10 color=LIGHTBLUE orientation=UP
+        test5 > Chaser img=newset/bandit1 orientation=DOWN stype=test4 singleton=False
+        test6  > Resource img=newset/egg orientation=UP shrinkFactor=0.20341788476372913
+        test7 > Resource img=newset/egg orientation=UP
+        test8    > Passive img=newset/camel1 orientation=LEFT hidden=True shrinkFactor=0.21515545047755813 hidden=False
+
+    LevelMapping
+        U > test0
+        P > test1
+        u > test2
+        I > test3
+        M > test4
+        C > test5
+        $ > test6
+        r > test7
+        p > test8
+        A > avatar
+
+    InteractionSet
+        test3 test3 > killIfHasMore resource=test7 limit=2
+        test1 test1 > killIfHasMore resource=test7 limit=5
+        test4 test4 > killBoth scoreChange=2
+        test5 test5 > teleportToExit
+        test0 test0 > killIfOtherHasLess resource=test0 limit=5
+        test1 test1 > attractGaze prob=0.2923100036938797 scoreChange=-5
+        test8 test8 > killSprite
+        test5 test5 > killIfHasLess resource=test0 limit=5
+        test5 test5 > killSprite scoreChange=0
+        test5 test5 > flipDirection scoreChange=5
+
+    TerminationSet
+        SpriteCounter stype=test4 limit=1 win=True scoreChange=289
+        SpriteCounter stype=test6 limit=2 win=False scoreChange=365

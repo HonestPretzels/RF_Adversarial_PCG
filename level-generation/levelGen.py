@@ -1,4 +1,4 @@
-import random
+import random, sys
 from gameComprehension import *
 
 # Write a level to a file and return the file
@@ -48,9 +48,11 @@ def getRandomSubLevel(width, height, charSet, background, subNum):
   return level
 
 def main():
-  levelMapping = extractLevelMapping('./level-generation/games/frogs_sub.txt')
+  inputFile = sys.argv[1]
+  outputFile = sys.argv[2]
+  levelMapping = extractLevelMapping(inputFile)
   charSet = [i for i in levelMapping.keys()]
-  levelToFile(getRandomLevel(10, 10, charSet), './level-generation/outputs/frogs_sub_lvl0.txt')
+  levelToFile(getRandomLevel(10, 10, charSet), outputFile)
   return
 
 if __name__ == "__main__":

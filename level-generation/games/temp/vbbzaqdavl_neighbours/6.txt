@@ -1,0 +1,41 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > MovingAvatar img=newset/cop1
+        test0  > Spreader img=newest/alienShotgun_0 orientation=LEFT autoTiling=True shrinkFactor=0.19930587760334373 hidden=False
+        test1 > Spreader img=newest/alienShotgun_0 orientation=LEFT
+        test2 > Spreader img=newest/alienShotgun_0 orientation=LEFT
+        test3 > SpawnPoint img=newset/blockR3 orientation=DOWN stype=test6 shrinkFactor=0.45199978570620336 autoTiling=False
+        test4 > Spreader img=newest/alienShotgun_0 orientation=LEFT prob=0.37537412336461806 autoTiling=False cooldown=10
+        test5  > Passive img=newset/camel1 orientation=LEFT shrinkFactor=0.3309286634752062 shrinkFactor=0.7579422134971351 prob=0.8407861719648474
+        test6 > Passive img=newset/camel1 orientation=DOWN color=GOLD color=LIGHTRED color=ORANGE
+        test7 > SpawnPoint img=newset/blockR3 orientation=UP stype=test2
+        test8 > Resource img=newset/egg orientation=UP prob=0.39968355517623966
+        test9 > Spreader img=newest/alienShotgun_0 orientation=UP
+
+    LevelMapping
+        E > test0
+        e > test1
+        h > test2
+        S > test3
+        w > test4
+        P > test5
+        p > test6
+        s > test7
+        U > test8
+        ? > test9
+        A > avatar
+
+    InteractionSet
+        test4 test4 > killIfHasLess resource=test8 limit=4 scoreChange=4
+        test0 test0 > stepBack
+        test6 test6 > killSprite scoreChange=-4
+        test1 test1 > killSprite scoreChange=0
+        test8 test8 > spawnIfHasMore resource=test8 stype=test3 limit=1
+        test7 test7 > killSprite scoreChange=2
+        test9 test9 > killIfOtherHasLess resource=test8 limit=1
+        test1 test1 > killIfFromAbove scoreChange=3
+
+    TerminationSet
+        SpriteCounter stype=test4 limit=5 win=True
+        ResourceCounter stype=test8 limit=99 win=False scoreChange=280

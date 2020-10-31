@@ -1,0 +1,35 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > FlakAvatar img=newset/cop1
+        test0  > Immovable img=newset/block2 orientation=LEFT invisible=False speed=0.23436377163064015 shrinkFactor=0.6005403884306548
+        test1 > Spreader img=newest/alienShotgun_0 orientation=UP speed=0.34555319610117785 limit=3
+        test2  > Spreader img=newest/alienShotgun_0 orientation=RIGHT hidden=False
+        test3   > Missile img=newset/arrow orientation=LEFT limit=1 prob=0.4012624212998356 cooldown=16
+        test4  > Resource img=newset/egg orientation=UP prob=0.9465932139958853 prob=0.12008516658978885
+        test5  > Resource img=newset/egg orientation=UP autoTiling=True
+        test6  > Missile img=newset/arrow orientation=UP prob=0.2846116404496061
+        testResource > Resource color=LIGHTGRAY
+
+    LevelMapping
+        I > test0
+        E > test1
+        e > test2
+        M > test3
+        U > test4
+        u > test5
+        m > test6
+        q > testResource
+        A > avatar
+
+    InteractionSet
+        test0 test0 > killIfHasLess resource=testResource limit=5
+        test4 test4 > stepBack scoreChange=4
+        test4 test4 > killIfFromAbove
+        testResource testResource > changeResource resource=test5 value=-2
+        test4 test4 > undoAll
+        test0 test0 > killIfOtherHasMore resource=testResource limit=2
+
+    TerminationSet
+        SpriteCounter stype=avatar limit=1 win=False
+        Timeout limit=836 win=True

@@ -1,0 +1,40 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > ShootAvatar img=newset/cop1
+        test0 > SpawnPoint img=newset/blockR3 orientation=LEFT stype=test5 limit=8 cooldown=2
+        test1  > Immovable img=newset/block2 orientation=DOWN
+        test2  > SpawnPoint img=newset/blockR3 orientation=UP stype=test7   autoTiling=False
+        test3    > Immovable img=newset/block2 orientation=LEFT
+        test4  > Chaser img=newset/bandit1 orientation=DOWN stype=test0  shrinkFactor=0.5334523496693635 speed=0.8649771527961719
+        test5 > Passive img=newset/camel1 orientation=RIGHT orientation=LEFT
+        test6 > Immovable img=newset/block2 orientation=RIGHT shrinkFactor=0.1957812382385694 color=YELLOW limit=9
+        test7  > Immovable img=newset/block2 orientation=LEFT limit=1 hidden=False singleton=False
+        testResource > Resource color=GREEN
+
+    LevelMapping
+        S > test0
+        I > test1
+        s > test2
+        i > test3
+        C > test4
+        P > test5
+        c > test6
+        1 > test7
+        U > testResource
+        A > avatar
+
+    InteractionSet
+        testResource testResource > teleportToExit
+        test6 test6 > transformTo stype=test1
+        test3 test3 > reverseDirection scoreChange=-1
+        testResource testResource > reverseDirection
+        testResource testResource > stepBack scoreChange=-1
+        test1 test1 > changeResource resource=testResource value=-3
+        test4 test4 > wrapAround offset=2 scoreChange=4
+        test0 test0 > attractGaze prob=0.07987999970665716 scoreChange=-4
+        test2 test2 > killSprite
+
+    TerminationSet
+        SpriteCounter stype=test6 limit=3 win=True
+        SpriteCounter stype=test2 limit=2 win=False
