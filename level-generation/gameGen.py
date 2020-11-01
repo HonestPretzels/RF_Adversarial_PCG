@@ -376,6 +376,8 @@ def subRandomSprite(spriteRoot):
   pre = nodes[spriteToSwap].content.split('>')[0]
   
   otherSprites = [nodes[i].content.split('>')[0] for i in range(len(nodes)) if i != spriteToSwap]
+  if len(otherSprites) < 2:
+    return
 
   rSprite = randomSprite(otherSprites)
 

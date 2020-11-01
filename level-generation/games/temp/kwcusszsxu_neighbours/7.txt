@@ -1,0 +1,41 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > ShootAvatar img=newset/cop1
+        test0  > Resource img=newset/egg orientation=DOWN shrinkFactor=0.8221084803703014 limit=4 hidden=True
+        test1 > Bomber img=oryx/alien1 orientation=LEFT stype=test4 orientation=UP invisible=True
+        test2 > Resource img=newset/egg orientation=RIGHT
+        test3     > Fleeing img=newset/blessedman orientation=UP stype=test7  speed=0.4398496371502201 hidden=False
+        test4  > Resource img=newset/egg orientation=DOWN speed=0.0744373708446292 shrinkFactor=0.9079106077280207 hidden=False
+        test5  > Immovable img=newset/block2 orientation=RIGHT limit=8
+        test6 > Resource img=newset/egg orientation=DOWN limit=2 cooldown=0 color=RED
+        test7 > Missile img=newset/arrow orientation=UP prob=0.9772634125036611 singleton=True
+        test8  > Fleeing img=newset/blessedman orientation=DOWN stype=test4
+        test9  > Immovable img=newset/block2 orientation=DOWN speed=0.40239139956327474 cooldown=9 prob=0.14265127063132932
+
+    LevelMapping
+        U > test0
+        B > test1
+        u > test2
+        F > test3
+        4 > test4
+        I > test5
+        g > test6
+        M > test7
+        f > test8
+        i > test9
+        A > avatar
+
+    InteractionSet
+        test9 test9 > killBoth
+        test3 test3 > killSprite scoreChange=0
+        test4 test4 > killIfFromAbove scoreChange=3
+        test0 test0 > killIfHasLess resource=test6 limit=4
+        test4 test4 > stepBack scoreChange=0
+        test1 test1 > killSprite
+        test4 test4 > attractGaze prob=0.10643607801319765 scoreChange=3
+        test7 test7 > cloneSprite 
+
+    TerminationSet
+        SpriteCounter stype=test4 limit=5 win=False
+        SpriteCounter stype=test2 limit=7 win=True

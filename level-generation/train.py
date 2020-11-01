@@ -13,12 +13,12 @@ def main():
 
     validationGames = getAllFilePaths(sys.argv[3])
     predictedAsHuman = []
-    human_threshold = 0.8
+    human_threshold = 0.9
     neighbourCount = 8
 
-    iterations = 0
-    while len(predictedAsHuman) == 0:
-        iterations += 1
+    iterations = 1
+    while len(predictedAsHuman) == 0 and iterations < 200:
+        
         neighboursDict = {}
         for game in validationGames:
             prob_human = clf.predict_proba([getVector(game)])[0][1]
@@ -28,12 +28,25 @@ def main():
             neighbours = genNeighbours(game, neighbourCount)
             neighboursDict[game] = neighbours
 
-        replaceWithBestNeighbours(neighboursDict, clf)
+        avg_prob, best = replaceWithBestNeighbours(neighboursDict, clf)
+        print('training iteration: %d with average score: %.3f and best score %.3f' %(iterations, avg_prob, best))
+        iterations += 1
+
+    if len(predictedAsHuman) < 1:
+        b = None
+        p = 0
+        for game in validationGames:
+            prob = clf.predict_proba([getVector(game)])[0][1]
+            if prob > p:
+                b = game
+                p = prob
+        predictedAsHuman.append(b)
     print(predictedAsHuman, iterations)
     
     
 
 def replaceWithBestNeighbours(neighboursDict, clf):
+    probs = []
     for game in neighboursDict.keys():
         currMax = clf.predict_proba([getVector(game)])[0][1]
         currBest = game
@@ -42,10 +55,12 @@ def replaceWithBestNeighbours(neighboursDict, clf):
             if prob >= currMax:
                 currBest = neighbour
                 currMax = prob
+        probs.append(currMax)
         if currBest == game:    # Encourage exploration if stuck
             currBest = random.choice(neighboursDict[game])
         
         replaceFile(game, currBest)
+    return sum(probs)/len(probs), max(probs)
 
 def replaceFile(original, new):
     with open(original, 'w') as original:

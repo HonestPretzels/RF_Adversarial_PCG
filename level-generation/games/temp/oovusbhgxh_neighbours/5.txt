@@ -1,0 +1,42 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > ShootAvatar img=newset/cop1
+        test0   > Resource img=newset/egg orientation=UP speed=0.7663804056743101
+        test1   > Resource img=newset/egg orientation=UP
+        test2   > Resource img=newset/egg orientation=LEFT singleton=False prob=0.8512301068783973 shrinkFactor=0.9826804861165362
+        test3   > Resource img=newset/egg orientation=LEFT
+        test4  > Bomber img=oryx/alien1 orientation=DOWN stype=test2  autoTiling=False
+        test5       > Missile img=newset/arrow orientation=RIGHT invisible=True
+        test6    > Immovable img=newset/block2 orientation=LEFT
+        test7  > Resource img=newset/egg orientation=RIGHT orientation=LEFT orientation=DOWN shrinkFactor=0.20975759669028637
+        test8   > Immovable img=newset/block2 orientation=RIGHT color=DARKGRAY hidden=True
+        test9  > Bomber img=oryx/alien1 orientation=LEFT stype=test7  hidden=False singleton=False
+        testResource > Resource color=DARKGRAY
+
+    LevelMapping
+        U > test0
+        u > test1
+        z > test2
+        6 > test3
+        B > test4
+        M > test5
+        I > test6
+        1 > test7
+        i > test8
+        b > test9
+        4 > testResource
+        A > avatar
+
+    InteractionSet
+        test9 test9 > killSprite
+        test6 test6 > killSprite
+        test3 test3 > killSprite scoreChange=4
+        test2 test2 > stepBack
+        test1 test1 > killIfHasLess resource=testResource limit=3
+        test9 test9 > killIfFromAbove scoreChange=4
+        test5 test5 > killIfFromAbove scoreChange=3
+
+    TerminationSet
+        SpriteCounter stype=test6 limit=4 win=False
+        SpriteCounter stype=test2 limit=0 win=True
