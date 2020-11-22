@@ -5,6 +5,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn import tree
 
 from gameComprehension import *
+from gameGen import getSpriteByName
 from vgdl.parser import Node
 
 sTypes = [
@@ -103,18 +104,48 @@ def getAllTerminationCounts(root: Node):
   __recurse(root)
   return counts
 
+def getLevelVector(levelName, mapping, spriteRoot):
+  width = 30
+  height = 12
+  vectorizedLevel = [0]*(width*height) # maximum dimensions of the level
 
-def getVector(fName):
+  spriteTypeMapping = {}
+
+
+  spriteRows = []
+  with open(levelName, 'r') as levelFile:
+    for line in levelFile.readlines():
+      spriteList = []
+      for char in line.strip():
+        sName = mapping[char].strip().split(' ')[-1]
+        sprite = getSpriteByName(spriteRoot, sName)
+        spriteType = sprite.content.split('>')[1].strip().split(' ')[0].strip()
+        while spriteType not in sTypes:
+          spriteType = sprite.parent.content.split('>')[1].strip().split(' ')[0].strip()
+        spriteList.append(spriteType)
+      spriteRows.append(spriteList)
+  for i in range(height):
+    if i >= len(spriteRows):
+      break
+    row = spriteRows[i]
+    for j in range(width):
+      if j >= len(row):
+        continue
+      vectorizedLevel[(i*width) + j] = sTypes.index(row[j])
+  return vectorizedLevel
+
+
+def getVector(gameName, levelName):
   # Vector has the form of [total sprite counts, total interaction counts, total termination counts, ...each sprite type count, ...each interaction type count, ...each termination type count]
   # For now only covers sprites with explicit types. As such it makes no differentiation between grass and water in frogger for example.
 
-  spriteRoot = getSpriteSetNode(fName)
+  spriteRoot = getSpriteSetNode(gameName)
   sCounts = getAllSpriteCounts(spriteRoot)
 
-  interactionRoot = getInteractionSetNode(fName)
+  interactionRoot = getInteractionSetNode(gameName)
   iCounts = getAllInteractionCounts(interactionRoot)
 
-  terminationRoot = getTerminationSetNode(fName)
+  terminationRoot = getTerminationSetNode(gameName)
   tCounts = getAllTerminationCounts(terminationRoot)
 
   sTotal = sum(sCounts)
@@ -126,27 +157,11 @@ def getVector(fName):
   vector.extend([c for c in iCounts])
   vector.extend([c for c in tCounts])
 
+  # Add level data
+  mapping = extractLevelMapping(gameName)
+  level = getLevelVector(levelName, mapping, spriteRoot)
+  vector.extend(level)
   return vector
-
-
-
-def main():
-  # classification.py path-to-random-training path-to-human-training path-to-test
-  randomGamesPath = sys.argv[1]
-  humanGamesPath = sys.argv[2]
-
-  allRandoms = getAllFilePaths(randomGamesPath)
-  allHumans = getAllFilePaths(humanGamesPath)
-
-  correct = 0
-  total = 0
-
-  clf = createClassifier(allHumans, allRandoms)
-
-  test = sys.argv[3]
-
-  p = clf.predict([getVector(test)])
-  print(p)
 
 def createClassifier(humanExamples, randomExamples):
   vectors = []
@@ -162,6 +177,30 @@ def createClassifier(humanExamples, randomExamples):
   clf.fit(vectors, labels)
 
   return clf
+
+
+def main():
+  # classification.py path-to-random-training path-to-human-training path-to-test
+  # randomGamesPath = sys.argv[1]
+  # humanGamesPath = sys.argv[2]
+
+  # allRandoms = getAllFilePaths(randomGamesPath)
+  # allHumans = getAllFilePaths(humanGamesPath)
+
+  # correct = 0
+  # total = 0
+
+  # clf = createClassifier(allHumans, allRandoms)
+
+  # test = sys.argv[3]
+
+  # p = clf.predict([getVector(test)])
+  # print(p)
+  
+  game = sys.argv[1]
+  level = sys.argv[2]
+
+  getVector(game, level)
 
 if __name__ == "__main__":
     main()

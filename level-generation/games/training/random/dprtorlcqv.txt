@@ -1,0 +1,33 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > FlakAvatar img=newset/cop1
+        test0 > Immovable img=newset/block2 orientation=UP limit=8
+        test1 > SpawnPoint img=newset/blockR3 orientation=LEFT stype=test4 shrinkFactor=0.391400210490903 invisible=False
+        test2 > RandomNPC img=newset/girl2 orientation=DOWN cooldown=17
+        test3 > SpawnPoint img=newset/blockR3 orientation=UP stype=test2 hidden=False
+        test4 > Immovable img=newset/block2 orientation=UP orientation=DOWN singleton=True
+        test5 > Fleeing img=newset/blessedman orientation=UP stype=test4
+        testResource > Resource color=GREEN
+
+    LevelMapping
+        I > test0
+        S > test1
+        N > test2
+        s > test3
+        i > test4
+        F > test5
+        U > testResource
+        A > avatar
+
+    InteractionSet
+        test1 test1 > turnAround scoreChange=-4
+        test1 test1 > undoAll 
+        testResource testResource > turnAround scoreChange=-4
+        test3 test3 > collectResource scoreChange=4
+        test0 test0 > turnAround 
+        test4 test4 > stepBack 
+
+    TerminationSet
+        SpriteCounter stype=test0 limit=10 win=True
+        ResourceCounter stype=testResource limit=94 win=False

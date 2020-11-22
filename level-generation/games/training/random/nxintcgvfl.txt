@@ -1,0 +1,39 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > ShootAvatar img=newset/cop1
+        test0 > Flicker img=newset/butterfly1 orientation=UP cooldown=1
+        test1 > Fleeing img=newset/blessedman orientation=RIGHT stype=test7 limit=1 autoTiling=False autoTiling=True
+        test2 > Resource img=newset/egg orientation=LEFT prob=0.44742630687668883 color=YELLOW
+        test3 > Resource img=newset/egg orientation=RIGHT limit=6 cooldown=6
+        test4 > Chaser img=newset/bandit1 orientation=LEFT stype=test1 autoTiling=False cooldown=15
+        test5 > Missile img=newset/arrow orientation=RIGHT color=GRAY
+        test6 > Bomber img=oryx/alien1 orientation=RIGHT stype=test3 orientation=LEFT singleton=True
+        test7 > Passive img=newset/camel1 orientation=LEFT
+        test8 > RandomNPC img=newset/girl2 orientation=DOWN shrinkFactor=0.846219781477434 color=ORANGE color=ORANGE
+
+    LevelMapping
+        L > test0
+        F > test1
+        U > test2
+        u > test3
+        C > test4
+        M > test5
+        B > test6
+        P > test7
+        N > test8
+        A > avatar
+
+    InteractionSet
+        test4 test4 > stepBack 
+        test4 test4 > stepBack 
+        test0 test0 > transformTo stype=test8 scoreChange=1
+        test4 test4 > stepBack scoreChange=3
+        test3 test3 > changeResource resource=test2 value=1
+        test7 test7 > killBoth 
+        test8 test8 > cloneSprite 
+        test7 test7 > collectResource scoreChange=-2
+
+    TerminationSet
+        SpriteCounter stype=test1 limit=8 win=True
+        SpriteCounter stype=test5 limit=1 win=False

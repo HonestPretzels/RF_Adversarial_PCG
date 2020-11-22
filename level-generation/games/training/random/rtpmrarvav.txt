@@ -1,0 +1,36 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > FlakAvatar img=newset/cop1
+        test0 > OrientedFlicker img=newset/cherries orientation=LEFT
+        test1 > Bomber img=oryx/alien1 orientation=RIGHT stype=test4 hidden=True autoTiling=False cooldown=0
+        test2 > Fleeing img=newset/blessedman orientation=LEFT stype=test3
+        test3 > Spreader img=newest/alienShotgun_0 orientation=RIGHT
+        test4 > Fleeing img=newset/blessedman orientation=LEFT stype=test5
+        test5 > RandomNPC img=newset/girl2 orientation=UP
+        test6 > Flicker img=newset/butterfly1 orientation=RIGHT singleton=False invisible=True invisible=False
+        testResource > Resource color=BROWN
+
+    LevelMapping
+        O > test0
+        B > test1
+        F > test2
+        E > test3
+        f > test4
+        N > test5
+        L > test6
+        U > testResource
+        A > avatar
+
+    InteractionSet
+        test0 test0 > turnAround scoreChange=-4
+        test2 test2 > changeResource resource=testResource value=-2 scoreChange=-3
+        test1 test1 > killIfHasMore resource=testResource limit=4
+        test5 test5 > reverseDirection scoreChange=1
+        test2 test2 > bounceForward 
+        test6 test6 > changeResource resource=testResource value=2
+        test4 test4 > killIfOtherHasLess resource=testResource limit=5
+
+    TerminationSet
+        ResourceCounter stype=testResource limit=23 win=True
+        Timeout limit=171 win=False
