@@ -1,0 +1,40 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > MovingAvatar img=newset/cop1
+        test0 > Flicker img=newset/butterfly1 orientation=RIGHT cooldown=11 prob=0.024076653337459564 speed=0.3744146482651599
+        test1 > Passive img=newset/camel1 orientation=LEFT shrinkFactor=0.9457698804843843
+        test2 > Missile img=newset/arrow orientation=UP speed=0.5274505505241596 prob=0.693163637056363 hidden=False
+        test3 > SpawnPoint img=newset/blockR3 orientation=LEFT stype=test4 shrinkFactor=0.5838161759880443 hidden=True prob=0.8714373900283553
+        test4 > RandomNPC img=newset/girl2 orientation=LEFT autoTiling=False shrinkFactor=0.7879478199208144 orientation=RIGHT
+        test5 > SpawnPoint img=newset/blockR3 orientation=UP stype=test1
+        test6 > Immovable img=newset/block2 orientation=LEFT speed=0.866840457422175
+        test7 > Chaser img=newset/bandit1 orientation=RIGHT stype=test2 autoTiling=False
+        testResource > Resource color=BLACK
+
+    LevelMapping
+        L > test0
+        P > test1
+        M > test2
+        S > test3
+        N > test4
+        s > test5
+        I > test6
+        C > test7
+        U > testResource
+        A > avatar
+
+    InteractionSet
+        test7 test7 > killIfHasMore resource=testResource limit=2
+        testResource testResource > pullWithIt scoreChange=1
+        test5 test5 > attractGaze prob=0.3352575448366686
+        test2 test2 > cloneSprite 
+        test2 test2 > killIfFromAbove 
+        test0 test0 > collectResource scoreChange=-4
+        testResource testResource > bounceForward scoreChange=-5
+        test7 test7 > killSprite scoreChange=2
+        test6 test6 > transformTo stype=test6 scoreChange=1
+
+    TerminationSet
+        ResourceCounter stype=testResource limit=22 win=True
+        ResourceCounter stype=testResource limit=50 win=False

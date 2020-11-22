@@ -1,0 +1,33 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > ShootAvatar img=newset/cop1
+        test0 > RandomNPC img=newset/girl2 orientation=RIGHT color=GREEN autoTiling=True cooldown=20
+        test1 > Flicker img=newset/butterfly1 orientation=DOWN invisible=True
+        test2 > Flicker img=newset/butterfly1 orientation=RIGHT color=DARKGRAY shrinkFactor=0.2361461752498598
+        test3 > OrientedFlicker img=newset/cherries orientation=DOWN speed=0.26660334459428936 cooldown=13 prob=0.3818765234804541
+        test4 > Flicker img=newset/butterfly1 orientation=DOWN autoTiling=False invisible=False speed=0.23119342667096832
+        testResource > Resource color=RED
+
+    LevelMapping
+        N > test0
+        L > test1
+        l > test2
+        O > test3
+        t > test4
+        U > testResource
+        A > avatar
+
+    InteractionSet
+        test2 test2 > undoAll scoreChange=2
+        test2 test2 > spawnIfHasMore resource=testResource stype=test0 limit=2 scoreChange=-4
+        test2 test2 > killIfHasMore resource=testResource limit=1 scoreChange=4
+        test3 test3 > killIfFromAbove 
+        test4 test4 > killIfOtherHasLess resource=testResource limit=3
+        test0 test0 > attractGaze prob=0.327654338729936 scoreChange=-3
+        test4 test4 > teleportToExit 
+        test2 test2 > changeResource resource=testResource value=2
+
+    TerminationSet
+        Timeout limit=968 win=True
+        ResourceCounter stype=testResource limit=51 win=False

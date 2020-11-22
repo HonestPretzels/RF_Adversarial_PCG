@@ -18,6 +18,7 @@ BasicGame block_size=10
     f > floor incoming_fast
     . > floor
     A > floor avatar
+    w > wall
 
   InteractionSet
     movable wall  > stepBack

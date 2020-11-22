@@ -6,8 +6,19 @@ from gameGen import subGen
 from classification import createClassifier, getVector, getAllFilePaths
 
 def main():
-    humanGames = getAllFilePaths(sys.argv[1])
-    randomGames = getAllFilePaths(sys.argv[2])
+    humanGameFiles = getAllFilePaths(sys.argv[1])
+    humanGames = {}
+    for game in humanGameFiles:
+        if '_lvl' in game:
+            gameName = game.split('_')[0] + '.txt'
+            humanGames[gameName] = game
+    randomGameFiles = getAllFilePaths(sys.argv[2])
+    randomGames = {}
+    for game in randomGameFiles:
+        if '_lvl' in game:
+            gameName = game.split('_')[0] + '.txt'
+            randomGames[gameName] = game
+
 
     clf = createClassifier(humanGames, randomGames)
 

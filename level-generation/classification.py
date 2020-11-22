@@ -138,6 +138,7 @@ def getLevelVector(levelName, mapping, spriteRoot):
 def getVector(gameName, levelName):
   # Vector has the form of [total sprite counts, total interaction counts, total termination counts, ...each sprite type count, ...each interaction type count, ...each termination type count]
   # For now only covers sprites with explicit types. As such it makes no differentiation between grass and water in frogger for example.
+  print(gameName, levelName)
 
   spriteRoot = getSpriteSetNode(gameName)
   sCounts = getAllSpriteCounts(spriteRoot)
@@ -166,11 +167,11 @@ def getVector(gameName, levelName):
 def createClassifier(humanExamples, randomExamples):
   vectors = []
   labels = []
-  for r in randomExamples:
-    vectors.append(getVector(r))
+  for game, level in randomExamples.items():
+    vectors.append(getVector(game, level))
     labels.append(0)
-  for f in humanExamples:
-    vectors.append(getVector(f))
+  for game, level in humanExamples.items():
+    vectors.append(getVector(game, level))
     labels.append(1)
 
   clf = RandomForestClassifier(max_depth=2, random_state=0, n_estimators=100)

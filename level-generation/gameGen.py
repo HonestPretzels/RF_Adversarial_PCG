@@ -512,10 +512,8 @@ if __name__ == "__main__":
     mapping = extractLevelMapping(output)
     level = getRandomLevel(30, 12, [k for k in mapping.keys()])
     levelOutput = outputPath + '\\' + outputName + '_lvl0.txt'
-    levelOutput2 = outputPath + '\\' + outputName + '_lvl1.txt'
 
     levelToFile(level, levelOutput)
-    subGen(output, output, 1, 0, 0, levelOutput, levelOutput2)
 
 
       

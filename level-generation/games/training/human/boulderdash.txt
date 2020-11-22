@@ -18,6 +18,8 @@ BasicGame block_size=5
 		x > diamond
 		c > crab
 		b > butterfly
+		w > wall
+		A > avatar
 	InteractionSet
 		dirt avatar > killSprite
 		dirt sword  > killSprite
