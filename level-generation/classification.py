@@ -122,6 +122,7 @@ def getLevelVector(levelName, mapping, spriteRoot):
         spriteType = sprite.content.split('>')[1].strip().split(' ')[0].strip()
         while spriteType not in sTypes:
           spriteType = sprite.parent.content.split('>')[1].strip().split(' ')[0].strip()
+          sprite = sprite.parent
         spriteList.append(spriteType)
       spriteRows.append(spriteList)
   for i in range(height):
@@ -138,7 +139,6 @@ def getLevelVector(levelName, mapping, spriteRoot):
 def getVector(gameName, levelName):
   # Vector has the form of [total sprite counts, total interaction counts, total termination counts, ...each sprite type count, ...each interaction type count, ...each termination type count]
   # For now only covers sprites with explicit types. As such it makes no differentiation between grass and water in frogger for example.
-  print(gameName, levelName)
 
   spriteRoot = getSpriteSetNode(gameName)
   sCounts = getAllSpriteCounts(spriteRoot)

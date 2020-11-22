@@ -1,0 +1,34 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > ShootAvatar img=newset/cop1
+        test0        > Flicker img=newset/butterfly1 orientation=LEFT shrinkFactor=0.38310390202459277 cooldown=7 cooldown=0
+        test1      > OrientedFlicker img=newset/cherries orientation=RIGHT
+        test2  > Immovable img=newset/block2 orientation=UP
+        test3      > RandomNPC img=newset/girl2 orientation=RIGHT color=LIGHTGRAY limit=2
+        test4   > Portal img=newset/exit orientation=DOWN stype=test0   shrinkFactor=0.7725855415691266 limit=10
+        test5  > Immovable img=newset/block2 orientation=RIGHT
+        testResource > Resource color=GREEN
+
+    LevelMapping
+        L > test0
+        O > test1
+        I > test2
+        N > test3
+        R > test4
+        i > test5
+        U > testResource
+        A > avatar
+
+    InteractionSet
+        testResource testResource > killIfHasLess resource=testResource limit=5
+        test0 test0 > transformTo stype=test0
+        test5 test5 > turnAround
+        test5 test5 > undoAll
+        test1 test1 > killIfHasMore resource=testResource limit=2 scoreChange=3
+        test0 test0 > killBoth
+        testResource testResource > teleportToExit scoreChange=4
+
+    TerminationSet
+        SpriteCounter stype=test0 limit=5 win=True scoreChange=127
+        ResourceCounter stype=testResource limit=3 win=False

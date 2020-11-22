@@ -1,0 +1,43 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > ShootAvatar img=newset/cop1
+        test0 > Resource img=newset/egg orientation=RIGHT color=LIGHTRED speed=0.9809929567199859
+        test1 > Resource img=newset/egg orientation=DOWN invisible=True hidden=True orientation=DOWN
+        test2 > Resource img=newset/egg orientation=DOWN
+        test3    > Immovable img=newset/block2 orientation=RIGHT hidden=False
+        test4 > Resource img=newset/egg orientation=DOWN hidden=False
+        test5   > Portal img=newset/exit orientation=DOWN stype=test7
+        test6      > Spreader img=newest/alienShotgun_0 orientation=UP
+        test7  > Immovable img=newset/block2 orientation=LEFT autoTiling=True
+        test8     > Immovable img=newset/block2 orientation=UP speed=0.7806814317410866 limit=5
+        test9    > Portal img=newset/exit orientation=DOWN stype=test5   color=LIGHTGREEN invisible=True prob=0.6940871983181804
+
+    LevelMapping
+        U > test0
+        u > test1
+        6 > test2
+        I > test3
+        9 > test4
+        R > test5
+        E > test6
+        i > test7
+        q > test8
+        r > test9
+        A > avatar
+
+    InteractionSet
+        test1 test1 > flipDirection scoreChange=-2
+        test2 test2 > collectResource
+        test8 test8 > undoAll scoreChange=-1
+        test9 test9 > collectResource
+        test3 test3 > turnAround
+        test3 test3 > killIfOtherHasMore resource=test2 limit=4
+        test2 test2 > killIfHasMore resource=test0 limit=3
+        test1 test1 > transformTo stype=test5
+        test2 test2 > spawnIfHasMore resource=test2 stype=test4 limit=3
+        test8 test8 > changeResource resource=test1 value=0
+
+    TerminationSet
+        Timeout limit=954 win=True
+        ResourceCounter stype=test4 limit=82 win=False scoreChange=263

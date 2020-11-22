@@ -1,0 +1,38 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > FlakAvatar img=newset/cop1
+        test0 > Missile img=newset/arrow orientation=DOWN shrinkFactor=0.7890342084271298 singleton=True shrinkFactor=0.8420382138976007
+        test1 > Passive img=newset/camel1 orientation=UP
+        test2 > Missile img=newset/arrow orientation=DOWN speed=0.3139954222326501 orientation=DOWN
+        test3 > Fleeing img=newset/blessedman orientation=LEFT stype=test6
+        test4 > Flicker img=newset/butterfly1 orientation=LEFT
+        test5 > Resource img=newset/egg orientation=LEFT cooldown=11 speed=0.8745530967803345
+        test6 > Immovable img=newset/block2 orientation=DOWN orientation=RIGHT singleton=False
+        test7 > RandomNPC img=newset/girl2 orientation=UP shrinkFactor=0.1581082764257018 orientation=DOWN
+        test8 > Flicker img=newset/butterfly1 orientation=DOWN prob=0.12941601474213082 hidden=True
+        test9 > Spreader img=newest/alienShotgun_0 orientation=UP shrinkFactor=0.4139585862082297 prob=0.8512146606190385 limit=4
+
+    LevelMapping
+        M > test0
+        P > test1
+        m > test2
+        F > test3
+        L > test4
+        U > test5
+        I > test6
+        N > test7
+        l > test8
+        E > test9
+        A > avatar
+
+    InteractionSet
+        test5 test5 > turnAround 
+        test7 test7 > killBoth 
+        test0 test0 > turnAround 
+        test2 test2 > spawnIfHasMore resource=test5 stype=test1 limit=2 scoreChange=2
+        test3 test3 > stepBack scoreChange=4
+
+    TerminationSet
+        ResourceCounter stype=test5 limit=17 win=True
+        ResourceCounter stype=test5 limit=55 win=False scoreChange=115

@@ -1,0 +1,33 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > FlakAvatar img=newset/cop1
+        test0 > Missile img=newset/arrow orientation=DOWN
+        test1 > Resource img=newset/egg orientation=DOWN shrinkFactor=0.2004806886463918 limit=2 shrinkFactor=0.4855815339427447
+        test2 > OrientedFlicker img=newset/cherries orientation=DOWN color=LIGHTRED orientation=LEFT
+        test3 > OrientedFlicker img=newset/cherries orientation=LEFT
+        test4 > OrientedFlicker img=newset/cherries orientation=RIGHT shrinkFactor=0.3780983827616089
+        test5 > RandomNPC img=newset/girl2 orientation=LEFT
+
+    LevelMapping
+        M > test0
+        U > test1
+        O > test2
+        o > test3
+        3 > test4
+        N > test5
+        A > avatar
+
+    InteractionSet
+        test1 test1 > pullWithIt 
+        test0 test0 > wrapAround offset=2 scoreChange=-5
+        test5 test5 > cloneSprite 
+        test4 test4 > killIfOtherHasMore resource=test1 limit=4 scoreChange=2
+        test2 test2 > transformTo stype=test5
+        test2 test2 > flipDirection scoreChange=-5
+        test5 test5 > turnAround scoreChange=5
+        test3 test3 > undoAll scoreChange=3
+
+    TerminationSet
+        Timeout limit=935 win=True scoreChange=293
+        Timeout limit=430 win=False

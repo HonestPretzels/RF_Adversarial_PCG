@@ -1,0 +1,41 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > MovingAvatar img=newset/cop1
+        test0  > Immovable img=newset/block2 orientation=RIGHT singleton=True singleton=False
+        test1  > Immovable img=newset/block2 orientation=DOWN limit=8
+        test2    > Passive img=newset/camel1 orientation=DOWN hidden=True singleton=False speed=0.3678751795567222
+        test3 > Resource img=newset/egg orientation=LEFT cooldown=17 prob=0.5007033751013058
+        test4       > SpawnPoint img=newset/blockR3 orientation=UP stype=test5      shrinkFactor=0.3811329114033728 orientation=UP
+        test5     > SpawnPoint img=newset/blockR3 orientation=DOWN stype=test6
+        test6   > Portal img=newset/exit orientation=DOWN stype=test0
+        test7   > RandomNPC img=newset/girl2 orientation=LEFT cooldown=19 prob=0.925086941536773
+        test8  > Portal img=newset/exit orientation=DOWN stype=test1  hidden=True
+        test9    > Portal img=newset/exit orientation=UP stype=test0   cooldown=19
+
+    LevelMapping
+        I > test0
+        i > test1
+        P > test2
+        U > test3
+        S > test4
+        s > test5
+        R > test6
+        N > test7
+        r > test8
+        q > test9
+        A > avatar
+
+    InteractionSet
+        test3 test3 > stepBack scoreChange=-3
+        test2 test2 > spawnIfHasMore resource=test3 stype=test5 limit=2 scoreChange=3
+        test3 test3 > wrapAround offset=3 scoreChange=-5
+        test5 test5 > turnAround
+        test0 test0 > bounceForward
+        test8 test8 > transformTo stype=test3 scoreChange=4
+        test1 test1 > spawnIfHasMore resource=test3 stype=test7 limit=1
+        test7 test7 > killBoth scoreChange=5
+
+    TerminationSet
+        Timeout limit=120 win=False
+        ResourceCounter stype=test3 limit=25 win=True
