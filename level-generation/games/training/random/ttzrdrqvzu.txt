@@ -1,0 +1,36 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > FlakAvatar img=newset/cop1
+        test0 > Chaser img=newset/bandit1 orientation=UP stype=test4
+        test1 > RandomNPC img=newset/girl2 orientation=UP shrinkFactor=0.8203868885752932 shrinkFactor=0.08752189674034583 limit=2
+        test2 > RandomNPC img=newset/girl2 orientation=DOWN limit=9 orientation=RIGHT prob=0.7905381209836123
+        test3 > Fleeing img=newset/blessedman orientation=RIGHT stype=test0 color=BLACK limit=1 prob=0.1476955255875141
+        test4 > Resource img=newset/egg orientation=LEFT shrinkFactor=0.8838117353346218 singleton=True
+        test5 > Missile img=newset/arrow orientation=RIGHT orientation=RIGHT invisible=False limit=4
+        test6  > Portal img=newset/exit orientation=LEFT stype=test0  hidden=True shrinkFactor=0.38733884477704716 limit=10
+
+    LevelMapping
+        C > test0
+        N > test1
+        n > test2
+        F > test3
+        U > test4
+        M > test5
+        R > test6
+        A > avatar
+
+    InteractionSet
+        test0 test0 > bounceForward
+        test4 test4 > killIfHasMore resource=test4 limit=2 scoreChange=-3
+        test0 test0 > wrapAround offset=3
+        test2 test2 > teleportToExit scoreChange=-4
+        test2 test2 > killIfHasLess resource=test4 limit=2
+        test5 test5 > turnAround
+        test6 test6 > reverseDirection scoreChange=2
+        test1 test1 > killIfHasLess resource=test4 limit=2
+        test3 test3 > turnAround
+
+    TerminationSet
+        ResourceCounter stype=test4 limit=82 win=True
+        ResourceCounter stype=test4 limit=3 win=False

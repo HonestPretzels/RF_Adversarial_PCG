@@ -1,0 +1,37 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > ShootAvatar img=newset/cop1
+        test0 > Spreader img=newest/alienShotgun_0 orientation=LEFT
+        test1 > OrientedFlicker img=newset/cherries orientation=DOWN hidden=True singleton=False hidden=True
+        test2 > OrientedFlicker img=newset/cherries orientation=RIGHT shrinkFactor=0.3676154438758804
+        test3 > Missile img=newset/arrow orientation=DOWN
+        test4 > Passive img=newset/camel1 orientation=DOWN cooldown=0 autoTiling=False
+        test5 > Spreader img=newest/alienShotgun_0 orientation=UP
+        test6 > Immovable img=newset/block2 orientation=UP autoTiling=False invisible=True
+        test7 > Resource img=newset/egg orientation=LEFT prob=0.17762553614306598 cooldown=18 hidden=True
+        test8  > Portal img=newset/exit orientation=UP stype=test6  shrinkFactor=0.12420881367483227 autoTiling=False
+
+    LevelMapping
+        E > test0
+        O > test1
+        o > test2
+        M > test3
+        P > test4
+        e > test5
+        I > test6
+        U > test7
+        R > test8
+        A > avatar
+
+    InteractionSet
+        test2 test2 > collectResource scoreChange=0
+        test0 test0 > killSprite
+        test4 test4 > stepBack scoreChange=-5
+        test7 test7 > pullWithIt
+        test7 test7 > killIfHasLess resource=test7 limit=1
+        test3 test3 > killIfOtherHasMore resource=test7 limit=3 scoreChange=-3
+
+    TerminationSet
+        Timeout limit=161 win=True
+        Timeout limit=865 win=False scoreChange=127

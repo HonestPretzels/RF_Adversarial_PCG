@@ -1,9 +1,11 @@
 import random
 import sys
+import re
 import string
 
 from vgdl.parser import Node
 from gameComprehension import *
+from levelGen import getRandomLevel, levelToFile
 
 
 # SPRITES
@@ -260,7 +262,7 @@ def randomTermination(sTypes, resources, win):
 
 # MAPPING
 
-CHARS = 'qwertyuiopasdfghjklzxcvbnm1234567890,./;[]?:"!@#$%^&*()'
+CHARS = 'qwertyuiopasdfghjklzxcvbnm1234567890'
 
 def generateLevelMapping(spriteNames, spriteTypes, avatarName):
   mapping = {}
@@ -454,7 +456,7 @@ def getSpriteByName(node, name):
         if out is not None:
           return out
 
-def subGen(initialGamePath, outPath, spriteSubs, interactionSubs, terminationSubs):
+def subGen(initialGamePath, outPath, spriteSubs, interactionSubs, terminationSubs, levelFile, levelOutPath):
   with open(initialGamePath, 'r') as preGame:
     gameDesc = preGame.readline().strip()
 
@@ -463,6 +465,7 @@ def subGen(initialGamePath, outPath, spriteSubs, interactionSubs, terminationSub
   terminationRoot = getTerminationSetNode(initialGamePath)
 
   # Sub sprites (Only works on sprites with no children for now and keeps resources)
+  preMapping = extractLevelMapping(initialGamePath)
   for i in range(spriteSubs):
     subRandomSprite(spriteRoot)
 
@@ -475,10 +478,26 @@ def subGen(initialGamePath, outPath, spriteSubs, interactionSubs, terminationSub
   spriteNames = [name for name in getSpriteNames(spriteRoot) if name != 'avatar']
   spriteTypes = [t for t in getSpriteTypes(spriteRoot) if t not in AVATAR_CLASSES]
 
-  levelMapping = generateLevelMapping(spriteNames, spriteTypes, 'avatar')
+  postMapping = generateLevelMapping(spriteNames, spriteTypes, 'avatar')
+
+  # get the values to update in the level file
+  replacements = {}
+  for postChar, postSprite in postMapping.items():
+    for preChar, preSprite in preMapping.items():
+      if preSprite == postSprite:
+        replacements[preChar] = postChar
+  
+  newLevel = ''
+  with open(levelFile, 'r') as LF:
+    newLevel = LF.read()
+    for char in replacements.keys():
+      newLevel = re.sub(char, replacements[char], newLevel)
 
   with open(outPath, 'w') as out:
-    writeToFile(out, gameDesc, spriteRoot, levelMapping, terminationRoot, interactionRoot)
+    writeToFile(out, gameDesc, spriteRoot, postMapping, terminationRoot, interactionRoot)
+  
+  with open(levelOutPath, 'w') as levelOut:
+    levelOut.write(newLevel)
 
 if __name__ == "__main__":
 
@@ -490,6 +509,14 @@ if __name__ == "__main__":
     output = outputPath + '\\' + outputName + '.txt'
 
     randomGen(output)
+    mapping = extractLevelMapping(output)
+    level = getRandomLevel(30, 12, [k for k in mapping.keys()])
+    levelOutput = outputPath + '\\' + outputName + '_lvl0.txt'
+    levelOutput2 = outputPath + '\\' + outputName + '_lvl1.txt'
+
+    levelToFile(level, levelOutput)
+    subGen(output, output, 1, 0, 0, levelOutput, levelOutput2)
+
 
       
 
