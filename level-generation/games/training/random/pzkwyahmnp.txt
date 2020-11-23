@@ -1,0 +1,43 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > ShootAvatar img=newset/cop1
+        test0 > SpawnPoint img=newset/blockR3 orientation=UP stype=test2 speed=0.22360937331639263 orientation=DOWN
+        test1 > Portal img=newset/exit orientation=LEFT stype=test7
+        test2 > Portal img=newset/exit orientation=UP stype=test0
+        test3 > RandomNPC img=newset/girl2 orientation=LEFT color=DARKGRAY limit=4 hidden=False
+        test4 > Chaser img=newset/bandit1 orientation=UP stype=test7 singleton=True color=LIGHTGREEN
+        test5 > Passive img=newset/camel1 orientation=LEFT color=BROWN cooldown=11 prob=0.6820662912834693
+        test6 > Immovable img=newset/block2 orientation=DOWN prob=0.8667360891791609 shrinkFactor=0.6311463985971059
+        test7 > SpawnPoint img=newset/blockR3 orientation=RIGHT stype=test5 cooldown=10 hidden=False orientation=LEFT
+        test8 > Passive img=newset/camel1 orientation=DOWN orientation=DOWN prob=0.5290558382822849 color=LIGHTBLUE
+        test9 > RandomNPC img=newset/girl2 orientation=DOWN limit=1 singleton=False
+        testResource > Resource color=LIGHTBLUE
+
+    LevelMapping
+        S > test0
+        R > test1
+        r > test2
+        N > test3
+        C > test4
+        P > test5
+        I > test6
+        s > test7
+        p > test8
+        n > test9
+        E > testResource
+        A > avatar
+
+    InteractionSet
+        test5 test5 > killIfOtherHasMore resource=testResource limit=2 scoreChange=-4
+        test3 test3 > undoAll scoreChange=2
+        test5 test5 > killIfOtherHasMore resource=testResource limit=2 scoreChange=-4
+        test3 test3 > killBoth 
+        test0 test0 > pullWithIt 
+        test4 test4 > stepBack 
+        test3 test3 > killIfHasMore resource=testResource limit=5 scoreChange=-2
+        test3 test3 > killSprite scoreChange=4
+
+    TerminationSet
+        ResourceCounter stype=testResource limit=25 win=True
+        ResourceCounter stype=testResource limit=78 win=False

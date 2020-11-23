@@ -1,0 +1,31 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > FlakAvatar img=newset/cop1
+        test0  > Portal img=newset/exit orientation=RIGHT stype=test1  prob=0.708460058602103 prob=0.2551035890147261
+        test1 > Immovable img=newset/block2 orientation=UP hidden=True
+        test2     > Immovable img=newset/block2 orientation=UP invisible=False
+        test3 > Resource img=newset/egg orientation=DOWN
+        test4  > Portal img=newset/exit orientation=RIGHT stype=test0
+
+    LevelMapping
+        R > test0
+        I > test1
+        i > test2
+        E > test3
+        r > test4
+        A > avatar
+
+    InteractionSet
+        test1 test1 > transformTo stype=test1 scoreChange=1
+        test4 test4 > wrapAround offset=3
+        test2 test2 > reverseDirection scoreChange=1
+        test2 test2 > spawnIfHasMore resource=test3 stype=test3 limit=4
+        test1 test1 > attractGaze prob=0.2378618241117304 scoreChange=5
+        test2 test2 > pullWithIt scoreChange=2
+        test0 test0 > transformTo stype=test3
+        test1 test1 > collectResource scoreChange=-1
+
+    TerminationSet
+        Timeout limit=446 win=False
+        Timeout limit=464 win=True

@@ -1,0 +1,41 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > FlakAvatar img=newset/cop1
+        test0 > Immovable img=newset/block2 orientation=UP
+        test1 > Immovable img=newset/block2 orientation=UP hidden=False color=LIGHTRED
+        test2 > Fleeing img=newset/blessedman orientation=RIGHT stype=test0 speed=0.9001724184402603
+        test3 > Portal img=newset/exit orientation=UP stype=test1 cooldown=7 prob=0.5292314280337271 hidden=False
+        test4 > OrientedFlicker img=newset/cherries orientation=RIGHT cooldown=1 speed=0.7366468356705874
+        test5 > RandomNPC img=newset/girl2 orientation=LEFT
+        test6 > RandomNPC img=newset/girl2 orientation=RIGHT orientation=DOWN autoTiling=True singleton=False
+        test7 > Portal img=newset/exit orientation=DOWN stype=test1
+        test8 > Immovable img=newset/block2 orientation=DOWN orientation=DOWN singleton=True shrinkFactor=0.9262603664581627
+        test9 > Portal img=newset/exit orientation=DOWN stype=test7 invisible=False invisible=False
+        testResource > Resource color=PINK
+
+    LevelMapping
+        I > test0
+        i > test1
+        F > test2
+        R > test3
+        O > test4
+        N > test5
+        n > test6
+        r > test7
+        g > test8
+        k > test9
+        E > testResource
+        A > avatar
+
+    InteractionSet
+        test4 test4 > spawnIfHasMore resource=testResource stype=test9 limit=1
+        test0 test0 > killIfHasLess resource=testResource limit=1 scoreChange=-1
+        test4 test4 > killIfHasLess resource=testResource limit=2 scoreChange=-5
+        test4 test4 > pullWithIt scoreChange=2
+        test1 test1 > undoAll scoreChange=1
+        test1 test1 > collectResource scoreChange=5
+
+    TerminationSet
+        ResourceCounter stype=testResource limit=87 win=True scoreChange=274
+        SpriteCounter stype=testResource limit=1 win=False

@@ -1,0 +1,40 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > ShootAvatar img=newset/cop1
+        test0 > Chaser img=newset/bandit1 orientation=DOWN stype=test7 prob=0.5701691553113993 orientation=RIGHT orientation=DOWN
+        test1 > Resource img=newset/egg orientation=LEFT
+        test2 > Fleeing img=newset/blessedman orientation=UP stype=test0 speed=0.5899649326979566 orientation=LEFT
+        test3 > Portal img=newset/exit orientation=UP stype=test0 hidden=False cooldown=1
+        test4 > Bomber img=oryx/alien1 orientation=UP stype=test1
+        test5 > SpawnPoint img=newset/blockR3 orientation=UP stype=test0 autoTiling=False
+        test6 > Bomber img=oryx/alien1 orientation=RIGHT stype=test7 cooldown=6
+        test7 > Portal img=newset/exit orientation=LEFT stype=test0 prob=0.32100765987829305
+        test8 > Missile img=newset/arrow orientation=DOWN autoTiling=True
+        test9 > RandomNPC img=newset/girl2 orientation=DOWN
+
+    LevelMapping
+        C > test0
+        E > test1
+        F > test2
+        R > test3
+        B > test4
+        S > test5
+        b > test6
+        r > test7
+        M > test8
+        N > test9
+        A > avatar
+
+    InteractionSet
+        test4 test4 > killIfHasLess resource=test1 limit=2 scoreChange=3
+        test4 test4 > stepBack 
+        test7 test7 > killIfHasLess resource=test1 limit=4 scoreChange=0
+        test0 test0 > killIfHasMore resource=test1 limit=1
+        test7 test7 > killBoth 
+        test8 test8 > killIfHasLess resource=test1 limit=5
+        test8 test8 > killIfHasMore resource=test1 limit=5
+
+    TerminationSet
+        Timeout limit=126 win=True
+        Timeout limit=930 win=False

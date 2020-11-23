@@ -53,7 +53,7 @@ def main():
     clf = createClassifier(humanGames, randomGames)
 
     predictedAsHuman = []
-    human_threshold = 0.9
+    human_threshold = 0.95
     neighbourCount = 8
     levelNeighbourCount = 8
     iterations = 1

@@ -1,0 +1,37 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > MovingAvatar img=newset/cop1
+        test0   > Portal img=newset/exit orientation=RIGHT stype=test4  cooldown=11
+        test1 > OrientedFlicker img=newset/cherries orientation=DOWN autoTiling=True color=GOLD prob=0.1571411998851453
+        test2  > Portal img=newset/exit orientation=UP stype=test3  hidden=True
+        test3 > Bomber img=oryx/alien1 orientation=LEFT stype=test4
+        test4 > Missile img=newset/arrow orientation=DOWN autoTiling=True autoTiling=False
+        test5  > Portal img=newset/exit orientation=RIGHT stype=test7
+        test6  > Portal img=newset/exit orientation=RIGHT stype=test5
+        test7   > OrientedFlicker img=newset/cherries orientation=UP autoTiling=False shrinkFactor=0.7098673101277125
+        testResource > Resource color=ORANGE
+
+    LevelMapping
+        R > test0
+        O > test1
+        r > test2
+        B > test3
+        M > test4
+        h > test5
+        y > test6
+        o > test7
+        E > testResource
+        A > avatar
+
+    InteractionSet
+        test2 test2 > killIfFromAbove
+        test6 test6 > reverseDirection scoreChange=-5
+        test6 test6 > changeResource resource=testResource value=5 scoreChange=-2
+        test6 test6 > killIfFromAbove scoreChange=-5
+        test0 test0 > killIfFromAbove
+        test6 test6 > killIfFromAbove scoreChange=-3
+
+    TerminationSet
+        Timeout limit=311 win=True
+        SpriteCounter stype=test1 limit=4 win=False

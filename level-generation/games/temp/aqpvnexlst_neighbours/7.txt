@@ -1,0 +1,35 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > MovingAvatar img=newset/cop1
+        test0  > Immovable img=newset/block2 orientation=DOWN
+        test1 > Portal img=newset/exit orientation=UP stype=test2 singleton=False
+        test2 > Immovable img=newset/block2 orientation=UP cooldown=12 autoTiling=True
+        test3 > Flicker img=newset/butterfly1 orientation=RIGHT singleton=False limit=6 hidden=False
+        test4 > Portal img=newset/exit orientation=UP stype=test3 singleton=True prob=0.753727772978539
+        test5 > SpawnPoint img=newset/blockR3 orientation=RIGHT stype=test2
+        testResource > Resource color=LIGHTGREEN
+
+    LevelMapping
+        I > test0
+        R > test1
+        i > test2
+        L > test3
+        r > test4
+        S > test5
+        E > testResource
+        A > avatar
+
+    InteractionSet
+        test2 test2 > spawnIfHasMore resource=testResource stype=test5 limit=3 scoreChange=2
+        test4 test4 > flipDirection scoreChange=1
+        test5 test5 > bounceForward scoreChange=-4
+        test4 test4 > teleportToExit scoreChange=4
+        test5 test5 > transformTo stype=test5 scoreChange=-4
+        test2 test2 > reverseDirection scoreChange=-3
+        testResource testResource > turnAround scoreChange=3
+        test1 test1 > killIfOtherHasMore resource=testResource limit=3
+
+    TerminationSet
+        ResourceCounter stype=testResource limit=87 win=True
+        Timeout limit=666 win=False
