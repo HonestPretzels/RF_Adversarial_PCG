@@ -4,7 +4,7 @@ import random
 import shutil
 
 from gameGen import subGen, generateRandomGames
-from levelGen import makeSubstitution
+from levelGen import makeSubstitution, addRow, deleteRow, addColumn, deleteColumn
 from classification import createClassifier, getVector, getAllFilePaths
 
 ###### RUN AS FOLLOWS
@@ -12,6 +12,9 @@ from classification import createClassifier, getVector, getAllFilePaths
 ###### Note everything in random and iteration folder will be deleted and replaced
 ###### Then run this:
 ###### python -m vgdl.util.humanplay.play_vgdl [path to level file] -d [path to game description file]
+###### IF INSTALLING PY-VGDL FAILS
+###### delete the folder py-vgdl, reclone it from here https://github.com/rubenvereecken/py-vgdl, and run pip install -e 'py-vgdl[all]'
+
 
 def main():
     humanGameFiles = getAllFilePaths(sys.argv[1])
@@ -133,13 +136,45 @@ def genNeighbours(gamePath, levelPath, n, l):
 
     # Level Substitutions
     for j in range(n, n + l):
-        output =  neighbourFolder + '/' + str(j) + '.txt'
-        levelOutput =  neighbourFolder + '/' + str(j) + '_lvl0.txt'
+        output = neighbourFolder + '/' + str(j) + '.txt'
+        levelOutput = neighbourFolder + '/' + str(j) + '_lvl0.txt'
         copyFile(gamePath, output)
         makeSubstitution(gamePath, levelPath, levelOutput, 10)
         neighbours.append((output, levelOutput))
 
-            
+    # Row Delete
+    output = neighbourFolder + '/' + str(n+l+1) + '.txt'
+    levelOutput = neighbourFolder + '/' + str(n+l+1) + '_lvl0.txt'
+    changeHappened = deleteRow(levelPath, levelOutput)
+    if changeHappened:
+        copyFile(gamePath, output) 
+        neighbours.append((output, levelOutput))
+
+    # Row Add
+    output = neighbourFolder + '/' + str(n+l+2) + '.txt'
+    levelOutput = neighbourFolder + '/' + str(n+l+2) + '_lvl0.txt'
+    changeHappened = addRow(levelPath, levelOutput, gamePath)
+    if changeHappened:
+        copyFile(gamePath, output) 
+        neighbours.append((output, levelOutput))
+
+    # Column Delete
+    output = neighbourFolder + '/' + str(n+l+3) + '.txt'
+    levelOutput = neighbourFolder + '/' + str(n+l+3) + '_lvl0.txt'
+    changeHappened = deleteColumn(levelPath, levelOutput)
+    if changeHappened:
+        copyFile(gamePath, output) 
+        neighbours.append((output, levelOutput))
+
+    # Column Add
+    output = neighbourFolder + '/' + str(n+l+4) + '.txt'
+    levelOutput = neighbourFolder + '/' + str(n+l+4) + '_lvl0.txt'
+    changeHappened = addColumn(levelPath, levelOutput, gamePath)
+    if changeHappened:
+        copyFile(gamePath, output) 
+        neighbours.append((output, levelOutput))
+        
+
     return neighbours
 
 

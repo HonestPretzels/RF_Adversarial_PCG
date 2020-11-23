@@ -68,12 +68,53 @@ def makeSubstitution(gameFile, originalLevel, outputLevel, n):
     level = substitution(row, col, char, level)
   levelToFile(level, outputLevel)
 
+def deleteRow(originalLevel, outputLevel):
+  level = getLevelFromFile(originalLevel)
+  if len(level) > 1: # Level at least 2 rows
+    level = level[:-1]
+    levelToFile(level, outputLevel)
+    return True
+  return False
+
+def addRow(originalLevel, outputLevel, gameFile):
+  level = getLevelFromFile(originalLevel)
+  chars = [c for c in extractLevelMapping(gameFile).keys()]
+  if len(level) < 13: # level not too long
+    rowLen = len(level[0])
+    level.append([random.choice(chars) for _ in range(rowLen)])
+    levelToFile(level, outputLevel)
+    return True
+  return False
+
+def deleteColumn(originalLevel, outputLevel):
+  level = getLevelFromFile(originalLevel)
+  if len(level) > 1: # Level at least 2 columns
+    for i in range(len(level)):
+      row = level[i]
+      row = row[:-1]
+      level[i] = row
+    levelToFile(level, outputLevel)
+    return True
+  return False
+
+def addColumn(originalLevel, outputLevel, gameFile):
+  level = getLevelFromFile(originalLevel)
+  chars = [c for c in extractLevelMapping(gameFile).keys()]
+  if len(level) < 13: # level not too long
+    for row in level:
+      row.append(random.choice(chars))
+    levelToFile(level, outputLevel)
+    return True
+  return False
+
 def main():
   inputFile = sys.argv[1]
   outputFile = sys.argv[2]
   levelMapping = extractLevelMapping(inputFile)
   charSet = [i for i in levelMapping.keys()]
   levelToFile(getRandomLevel(10, 10, charSet), outputFile)
+  deleteColumn(outputFile, outputFile + '0')
+  deleteRow(outputFile, outputFile + '1')
   return
 
 if __name__ == "__main__":
