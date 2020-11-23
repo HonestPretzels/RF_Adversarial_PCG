@@ -1,0 +1,36 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > MovingAvatar img=newset/cop1
+        test0  > Immovable img=newset/block2 orientation=UP orientation=DOWN hidden=False
+        test1 > RandomNPC img=newset/girl2 orientation=UP limit=1 speed=0.8360476059600562 prob=0.22569910956942962
+        test2  > Portal img=newset/exit orientation=DOWN stype=test0  hidden=True
+        test3 > Spreader img=newset/alienShotgun_0 orientation=DOWN color=BLUE autoTiling=False
+        test4    > Immovable img=newset/block2 orientation=LEFT singleton=True singleton=False autoTiling=True
+        test5  > Immovable img=newset/block2 orientation=RIGHT shrinkFactor=0.8551998922823262 prob=0.11135909999889793 hidden=True
+        testResource > Resource color=BLACK
+
+    LevelMapping
+        I > test0
+        N > test1
+        R > test2
+        E > test3
+        i > test4
+        h > test5
+        U > testResource
+        A > avatar
+
+    InteractionSet
+        test4 test4 > attractGaze prob=0.577394495831127
+        test4 test4 > undoAll scoreChange=-5
+        test2 test2 > cloneSprite
+        testResource testResource > killSprite scoreChange=4
+        test3 test3 > collectResource scoreChange=-1
+        test1 test1 > stepBack
+        test1 test1 > collectResource scoreChange=0
+        test0 test0 > killBoth
+        test2 test2 > changeResource resource=testResource value=-3
+
+    TerminationSet
+        ResourceCounter stype=testResource limit=57 win=True
+        ResourceCounter stype=testResource limit=59 win=False

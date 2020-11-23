@@ -1,0 +1,33 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > ShootAvatar img=newset/cop1
+        test0 > Resource img=newset/egg orientation=DOWN color=PINK color=LIGHTRED
+        test1  > RandomNPC img=newset/girl2 orientation=LEFT prob=0.4788038813443327
+        test2   > RandomNPC img=newset/girl2 orientation=RIGHT speed=0.8541750757088997 color=YELLOW
+        test3 > Resource img=newset/egg orientation=UP color=LIGHTGREEN
+        test4   > Immovable img=newset/block2 orientation=LEFT hidden=True
+        test5 > Immovable img=newset/block2 orientation=DOWN
+        test6    > Immovable img=newset/block2 orientation=UP hidden=False prob=0.9297731124707551 cooldown=1
+
+    LevelMapping
+        U > test0
+        N > test1
+        n > test2
+        u > test3
+        I > test4
+        i > test5
+        e > test6
+        A > avatar
+
+    InteractionSet
+        test4 test4 > killIfFromAbove
+        test1 test1 > killIfFromAbove scoreChange=-1
+        test6 test6 > collectResource scoreChange=3
+        test5 test5 > killSprite scoreChange=-3
+        test4 test4 > cloneSprite
+        test4 test4 > turnAround
+
+    TerminationSet
+        ResourceCounter stype=test0 limit=49 win=True
+        ResourceCounter stype=test3 limit=27 win=False scoreChange=411

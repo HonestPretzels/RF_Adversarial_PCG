@@ -1,0 +1,35 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > MovingAvatar img=newset/cop1
+        test0 > Passive img=newset/camel1 orientation=LEFT
+        test1 > RandomNPC img=newset/girl2 orientation=UP autoTiling=True orientation=DOWN invisible=False
+        test2 > Bomber img=oryx/alien1 orientation=LEFT stype=test4 prob=0.8406838249067684 color=BROWN
+        test3 > Resource img=newset/egg orientation=UP
+        test4 > Passive img=newset/camel1 orientation=DOWN singleton=False hidden=True invisible=True
+        test5 > Resource img=newset/egg orientation=DOWN speed=0.2318461138842346 shrinkFactor=0.036705945194419276
+        test6 > Passive img=newset/camel1 orientation=LEFT shrinkFactor=0.23422278138739183
+
+    LevelMapping
+        P > test0
+        N > test1
+        B > test2
+        U > test3
+        p > test4
+        u > test5
+        e > test6
+        A > avatar
+
+    InteractionSet
+        test4 test4 > bounceForward scoreChange=-3
+        test0 test0 > transformTo stype=test0
+        test4 test4 > collectResource scoreChange=1
+        test5 test5 > flipDirection 
+        test6 test6 > killIfFromAbove 
+        test5 test5 > wrapAround offset=3 scoreChange=-5
+        test1 test1 > collectResource scoreChange=5
+        test1 test1 > killBoth 
+
+    TerminationSet
+        SpriteCounter stype=test3 limit=1 win=True
+        Timeout limit=23 win=False

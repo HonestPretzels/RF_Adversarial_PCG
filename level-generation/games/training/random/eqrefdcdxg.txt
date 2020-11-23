@@ -1,0 +1,38 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > MovingAvatar img=newset/cop1
+        test0 > OrientedFlicker img=newset/cherries orientation=LEFT
+        test1 > Portal img=newset/exit orientation=LEFT stype=test5 autoTiling=True
+        test2 > OrientedFlicker img=newset/cherries orientation=RIGHT autoTiling=False hidden=True
+        test3 > Portal img=newset/exit orientation=LEFT stype=test0 shrinkFactor=0.18316376698432257 shrinkFactor=0.6952149609645873
+        test4 > Portal img=newset/exit orientation=UP stype=test0
+        test5 > Spreader img=newset/alienShotgun_0 orientation=LEFT color=LIGHTORANGE
+        test6 > Chaser img=newset/bandit1 orientation=UP stype=test7 speed=0.18432384011313163
+        test7 > Chaser img=newset/bandit1 orientation=LEFT stype=test6 orientation=UP
+        testResource > Resource color=LIGHTGRAY
+
+    LevelMapping
+        O > test0
+        R > test1
+        o > test2
+        r > test3
+        5 > test4
+        E > test5
+        C > test6
+        c > test7
+        U > testResource
+        A > avatar
+
+    InteractionSet
+        test4 test4 > changeResource resource=testResource value=-1
+        testResource testResource > undoAll scoreChange=4
+        test6 test6 > killBoth scoreChange=5
+        test6 test6 > bounceForward 
+        test2 test2 > stepBack scoreChange=-3
+        test3 test3 > wrapAround offset=1 scoreChange=4
+        test5 test5 > bounceForward scoreChange=-1
+
+    TerminationSet
+        ResourceCounter stype=testResource limit=55 win=True scoreChange=160
+        Timeout limit=750 win=False

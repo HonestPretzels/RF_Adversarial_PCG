@@ -54,7 +54,7 @@ SPRITE_IMAGES = [
   'newset/exit',
   'newset/girl2',
   'newset/blockR3',
-  'newest/alienShotgun_0',
+  'newset/alienShotgun_0',
   'newset/egg',
 ]
 
@@ -499,11 +499,7 @@ def subGen(initialGamePath, outPath, spriteSubs, interactionSubs, terminationSub
   with open(levelOutPath, 'w') as levelOut:
     levelOut.write(newLevel)
 
-if __name__ == "__main__":
-
-  outputPath = sys.argv[1]
-  amount = int(sys.argv[2])
-
+def generateRandomGames(outputPath, amount):
   for i in range(amount):
     outputName = (''.join(random.choice(string.ascii_lowercase) for _ in range(10)))
     output = outputPath + '\\' + outputName + '.txt'
@@ -514,6 +510,13 @@ if __name__ == "__main__":
     levelOutput = outputPath + '\\' + outputName + '_lvl0.txt'
 
     levelToFile(level, levelOutput)
+
+if __name__ == "__main__":
+
+  outputPath = sys.argv[1]
+  amount = int(sys.argv[2])
+
+  generateRandomGames(outputPath, amount)
 
 
       

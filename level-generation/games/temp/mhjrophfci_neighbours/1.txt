@@ -1,0 +1,37 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > MovingAvatar img=newset/cop1
+        test0 > Portal img=newset/exit orientation=RIGHT stype=test3 orientation=RIGHT color=PINK cooldown=13
+        test1  > Portal img=newset/exit orientation=RIGHT stype=test0  cooldown=11 shrinkFactor=0.6483263773313476
+        test2    > Immovable img=newset/block2 orientation=DOWN singleton=False
+        test3   > Immovable img=newset/block2 orientation=LEFT cooldown=14
+        test4 > Resource img=newset/egg orientation=LEFT orientation=LEFT hidden=True
+        test5   > RandomNPC img=newset/girl2 orientation=LEFT cooldown=2 shrinkFactor=0.8318618330408775 cooldown=15
+        test6  > Immovable img=newset/block2 orientation=DOWN invisible=False
+
+    LevelMapping
+        R > test0
+        r > test1
+        I > test2
+        i > test3
+        U > test4
+        N > test5
+        7 > test6
+        A > avatar
+
+    InteractionSet
+        test1 test1 > transformTo stype=test1
+        test1 test1 > killIfFromAbove
+        test6 test6 > collectResource
+        test2 test2 > collectResource scoreChange=-1
+        test3 test3 > changeResource resource=test4 value=1
+        test3 test3 > killIfFromAbove
+        test0 test0 > attractGaze prob=0.6596969435281822
+        test2 test2 > killSprite scoreChange=-4
+        test5 test5 > turnAround
+        test1 test1 > killSprite 
+
+    TerminationSet
+        Timeout limit=136 win=True
+        Timeout limit=882 win=False

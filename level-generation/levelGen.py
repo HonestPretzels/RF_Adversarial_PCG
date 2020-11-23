@@ -47,6 +47,27 @@ def getRandomSubLevel(width, height, charSet, background, subNum):
     level = substitution(randRow, randCol, random.choice(charSet), level)
   return level
 
+def getLevelFromFile(levelFile):
+  level = []
+  with open(levelFile, 'r') as LF:
+    for line in LF.readlines():
+      row = []
+      row[:0] = line.strip()
+      level.append(row)
+  return level
+
+
+def makeSubstitution(gameFile, originalLevel, outputLevel, n):
+  mapping = extractLevelMapping(gameFile)
+  chars = [c for c in mapping.keys()]
+  level = getLevelFromFile(originalLevel)
+  for i in range(n):
+    row = random.randint(0, len(level) - 1)
+    col = random.randint(0, len(level[row]) - 1)
+    char = random.choice(chars)
+    level = substitution(row, col, char, level)
+  levelToFile(level, outputLevel)
+
 def main():
   inputFile = sys.argv[1]
   outputFile = sys.argv[2]
