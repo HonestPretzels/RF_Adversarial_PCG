@@ -1,0 +1,38 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > FlakAvatar img=newset/cop1
+        test0 > Flicker img=newset/butterfly1 orientation=DOWN invisible=False prob=0.4638900837576757
+        test1 > RandomNPC img=newset/girl2 orientation=DOWN invisible=False autoTiling=False
+        test2 > Immovable img=newset/block2 orientation=DOWN color=LIGHTORANGE orientation=LEFT
+        test3 > Resource img=newset/egg orientation=RIGHT
+        test4 > Chaser img=newset/bandit1 orientation=UP stype=test0 limit=1 color=GRAY
+        test5 > Immovable img=newset/block2 orientation=RIGHT shrinkFactor=0.5557822847263285
+        test6 > Fleeing img=newset/blessedman orientation=UP stype=test5 invisible=False
+        test7 > OrientedFlicker img=newset/cherries orientation=LEFT
+        test8 > Immovable img=newset/block2 orientation=LEFT cooldown=10
+        test9 > RandomNPC img=newset/girl2 orientation=LEFT orientation=LEFT hidden=False invisible=True
+
+    LevelMapping
+        L > test0
+        N > test1
+        I > test2
+        E > test3
+        C > test4
+        i > test5
+        F > test6
+        O > test7
+        f > test8
+        n > test9
+        A > avatar
+
+    InteractionSet
+        test5 test5 > killIfFromAbove scoreChange=0
+        test3 test3 > killIfHasMore resource=test3 limit=3 scoreChange=2
+        test2 test2 > killIfHasMore resource=test3 limit=1 scoreChange=-5
+        test9 test9 > pullWithIt scoreChange=2
+        test6 test6 > pullWithIt 
+
+    TerminationSet
+        Timeout limit=157 win=True
+        SpriteCounter stype=test3 limit=2 win=False scoreChange=439

@@ -1,0 +1,33 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > MovingAvatar img=newset/cop1
+        test0 > Resource img=newset/egg orientation=RIGHT limit=10 speed=0.38498552126625096 cooldown=7
+        test1 > Resource img=newset/egg orientation=LEFT color=PINK autoTiling=True singleton=False
+        test2  > RandomNPC img=newset/girl2 orientation=DOWN
+        test3  > Immovable img=newset/block2 orientation=UP
+        test4   > Immovable img=newset/block2 orientation=DOWN singleton=False
+
+    LevelMapping
+        E > test0
+        e > test1
+        N > test2
+        I > test3
+        i > test4
+        A > avatar
+
+    InteractionSet
+        test2 test2 > collectResource scoreChange=-3
+        test0 test0 > killBoth scoreChange=3
+        test1 test1 > killIfOtherHasLess resource=test0 limit=1
+        test4 test4 > stepBack
+        test1 test1 > killIfHasLess resource=test0 limit=1
+        test2 test2 > killIfFromAbove
+        test3 test3 > flipDirection scoreChange=-5
+        test1 test1 > killIfOtherHasMore resource=test1 limit=4
+        test0 test0 > flipDirection
+        test4 test4 > pullWithIt scoreChange=2
+
+    TerminationSet
+        ResourceCounter stype=test0 limit=8 win=False
+        SpriteCounter stype=test4 limit=4 win=True

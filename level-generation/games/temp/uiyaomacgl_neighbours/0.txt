@@ -1,0 +1,40 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > MovingAvatar img=newset/cop1
+        test0  > Bomber img=oryx/alien1 orientation=UP stype=test8   color=BLACK limit=10
+        test1  > RandomNPC img=newset/girl2 orientation=RIGHT autoTiling=True shrinkFactor=0.7461647179014438
+        test2  > Portal img=newset/exit orientation=DOWN stype=test5
+        test3 > Missile img=newset/arrow orientation=UP cooldown=9 autoTiling=False
+        test4  > Immovable img=newset/block2 orientation=LEFT hidden=False
+        test5  > Immovable img=newset/block2 orientation=UP
+        test6  > Portal img=newset/exit orientation=LEFT stype=test8   hidden=False invisible=True autoTiling=False
+        test7  > OrientedFlicker img=newset/cherries orientation=UP limit=1 orientation=DOWN autoTiling=False
+        test8  > Portal img=newset/exit orientation=RIGHT stype=test1  limit=9 cooldown=19
+        testResource > Resource color=PINK
+
+    LevelMapping
+        B > test0
+        N > test1
+        R > test2
+        M > test3
+        I > test4
+        i > test5
+        r > test6
+        O > test7
+        l > test8
+        E > testResource
+        A > avatar
+
+    InteractionSet
+        test0 test0 > pullWithIt
+        test1 test1 > reverseDirection scoreChange=4
+        test5 test5 > flipDirection scoreChange=4
+        test8 test8 > killSprite scoreChange=0
+        test3 test3 > killSprite
+        test0 test0 > undoAll
+        test4 test4 > spawnIfHasMore resource=testResource stype=test0 limit=1
+
+    TerminationSet
+        ResourceCounter stype=testResource limit=22 win=True scoreChange=252
+        ResourceCounter stype=testResource limit=24 win=False

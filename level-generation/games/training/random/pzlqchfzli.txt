@@ -1,0 +1,41 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > ShootAvatar img=newset/cop1
+        test0 > Chaser img=newset/bandit1 orientation=UP stype=test7 limit=9 prob=0.9373557894180004 invisible=True
+        test1 > Passive img=newset/camel1 orientation=RIGHT hidden=True
+        test2 > Bomber img=oryx/alien1 orientation=RIGHT stype=test5
+        test3 > Missile img=newset/arrow orientation=UP speed=0.6541622859733767 prob=0.7343946507945784
+        test4 > Resource img=newset/egg orientation=DOWN
+        test5 > OrientedFlicker img=newset/cherries orientation=LEFT
+        test6 > SpawnPoint img=newset/blockR3 orientation=UP stype=test0
+        test7 > Portal img=newset/exit orientation=DOWN stype=test6 autoTiling=False invisible=False hidden=True
+        test8 > Resource img=newset/egg orientation=UP orientation=UP speed=0.5190448449625692 singleton=True
+        test9 > Missile img=newset/arrow orientation=DOWN limit=9 limit=6 cooldown=6
+
+    LevelMapping
+        C > test0
+        P > test1
+        B > test2
+        M > test3
+        E > test4
+        O > test5
+        S > test6
+        R > test7
+        e > test8
+        m > test9
+        A > avatar
+
+    InteractionSet
+        test4 test4 > reverseDirection scoreChange=0
+        test0 test0 > changeResource resource=test4 value=1 scoreChange=0
+        test3 test3 > reverseDirection 
+        test5 test5 > turnAround 
+        test5 test5 > bounceForward 
+        test2 test2 > bounceForward 
+        test5 test5 > pullWithIt 
+        test1 test1 > pullWithIt 
+
+    TerminationSet
+        ResourceCounter stype=test4 limit=65 win=True scoreChange=48
+        SpriteCounter stype=test8 limit=4 win=False

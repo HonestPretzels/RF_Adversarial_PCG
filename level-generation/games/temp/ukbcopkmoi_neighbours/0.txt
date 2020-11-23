@@ -1,0 +1,32 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > ShootAvatar img=newset/cop1
+        test0   > Immovable img=newset/block2 orientation=RIGHT prob=0.7000550114910399 shrinkFactor=0.8509125945222019 color=ORANGE
+        test1  > RandomNPC img=newset/girl2 orientation=UP cooldown=4
+        test2 > Resource img=newset/egg orientation=RIGHT speed=0.837268054035714 orientation=LEFT shrinkFactor=0.18451727675827811
+        test3   > RandomNPC img=newset/girl2 orientation=LEFT
+        test4 > Resource img=newset/egg orientation=UP limit=3
+        test5  > Immovable img=newset/block2 orientation=UP
+        test6 > Resource img=newset/egg orientation=RIGHT cooldown=3 shrinkFactor=0.22881906143553143 shrinkFactor=0.1855989600502237
+
+    LevelMapping
+        I > test0
+        N > test1
+        E > test2
+        n > test3
+        e > test4
+        i > test5
+        r > test6
+        A > avatar
+
+    InteractionSet
+        test2 test2 > turnAround
+        test4 test4 > stepBack scoreChange=1
+        test5 test5 > teleportToExit scoreChange=-2
+        test4 test4 > killIfHasLess resource=test6 limit=1 scoreChange=0
+        test6 test6 > transformTo stype=test0
+
+    TerminationSet
+        SpriteCounter stype=test6 limit=5 win=True scoreChange=251
+        Timeout limit=120 win=False scoreChange=132

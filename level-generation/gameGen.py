@@ -22,7 +22,6 @@ SPRITE_CLASSES = [
     'Portal',
     'RandomNPC',
     'SpawnPoint',
-    'Spreader',
     'Resource'
 ]
 
@@ -54,7 +53,6 @@ SPRITE_IMAGES = [
   'newset/exit',
   'newset/girl2',
   'newset/blockR3',
-  'newset/alienShotgun_0',
   'newset/egg',
 ]
 

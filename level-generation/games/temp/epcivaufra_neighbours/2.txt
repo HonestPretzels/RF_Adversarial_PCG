@@ -1,0 +1,38 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > ShootAvatar img=newset/cop1
+        test0  > RandomNPC img=newset/girl2 orientation=UP speed=0.21725083837205705 singleton=True orientation=UP
+        test1  > Immovable img=newset/block2 orientation=UP hidden=False hidden=True prob=0.8796244205856958
+        test2  > Immovable img=newset/block2 orientation=UP
+        test3 > RandomNPC img=newset/girl2 orientation=DOWN
+        test4  > Portal img=newset/exit orientation=UP stype=test2  cooldown=4 color=DARKGRAY singleton=False
+        test5  > Immovable img=newset/block2 orientation=RIGHT prob=0.9834462769733329 cooldown=10
+        test6  > Immovable img=newset/block2 orientation=LEFT cooldown=16
+        testResource > Resource color=GRAY
+
+    LevelMapping
+        N > test0
+        I > test1
+        i > test2
+        n > test3
+        R > test4
+        s > test5
+        9 > test6
+        E > testResource
+        A > avatar
+
+    InteractionSet
+        testResource testResource > killIfFromAbove scoreChange=-4
+        test1 test1 > killIfHasLess resource=testResource limit=4 scoreChange=-4
+        test6 test6 > attractGaze prob=0.03137631241332417 scoreChange=1
+        test3 test3 > transformTo stype=test0 scoreChange=0
+        test3 test3 > attractGaze prob=0.729601655627064
+        test1 test1 > killIfHasMore resource=testResource limit=3
+        test2 test2 > transformTo stype=test3 scoreChange=-1
+        test6 test6 > wrapAround offset=1
+        test6 test6 > killIfOtherHasMore resource=testResource limit=3 scoreChange=-3
+
+    TerminationSet
+        SpriteCounter stype=test4 limit=10 win=True
+        Timeout limit=997 win=False

@@ -1,0 +1,34 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > ShootAvatar img=newset/cop1
+        test0 > Portal img=newset/exit orientation=RIGHT stype=test3 cooldown=3
+        test1 > SpawnPoint img=newset/blockR3 orientation=UP stype=test2
+        test2 > Chaser img=newset/bandit1 orientation=LEFT stype=test1 limit=10
+        test3 > Bomber img=oryx/alien1 orientation=RIGHT stype=test0 hidden=True speed=0.5155521139017173 color=DARKGRAY
+        test4 > Portal img=newset/exit orientation=UP stype=test3 cooldown=15 speed=0.4377669733055958 speed=0.5011068964477501
+        test5 > Bomber img=oryx/alien1 orientation=UP stype=test3 shrinkFactor=0.7010785050653052 orientation=UP color=LIGHTGREEN
+        testResource > Resource color=LIGHTRED
+
+    LevelMapping
+        R > test0
+        S > test1
+        C > test2
+        B > test3
+        r > test4
+        b > test5
+        E > testResource
+        A > avatar
+
+    InteractionSet
+        test5 test5 > cloneSprite scoreChange=-3
+        test3 test3 > cloneSprite 
+        test0 test0 > undoAll 
+        testResource testResource > pullWithIt 
+        test3 test3 > wrapAround offset=0
+        test3 test3 > attractGaze prob=0.8262488794461568
+        testResource testResource > wrapAround offset=0 scoreChange=2
+
+    TerminationSet
+        Timeout limit=980 win=True
+        ResourceCounter stype=testResource limit=71 win=False
