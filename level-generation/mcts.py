@@ -1,5 +1,6 @@
 import os
 import gym
+import gym_gvgai
 import sys
 import random
 import itertools
@@ -57,20 +58,18 @@ class Runner:
         best_rewards = []
         start_time = time()
         env = gym.make(self.env_name)
-        env.monitor.start(self.dir)
 
-        print self.env_name
+        print(self.env_name)
 
-        for loop in xrange(self.loops):
+        for loop in range(self.loops):
             env.reset()
             root = Node(None, None)
 
             best_actions = []
             best_reward = float("-inf")
 
-            for _ in xrange(self.playouts):
-                state = copy(env)
-                del state._monitor
+            for _ in range(self.playouts):
+                state = copy(env) 
 
                 sum_reward = 0
                 node = root
@@ -116,9 +115,6 @@ class Runner:
                     node.value += sum_reward
                     node = node.parent
 
-                # fix monitors not being garbage collected
-                del state._monitor
-
             sum_reward = 0
             for action in best_actions:
                 _, reward, terminal, _ = env.step(action)
@@ -144,7 +140,7 @@ def main():
     os.makedirs(rec_dir)
     print("rec_dir:", rec_dir)
 
-    # Runner(rec_dir, 'Taxi-v1',   loops=100, playouts=4000, max_depth=50).run()
+    Runner(rec_dir, 'gvgai-test-lvl0-v0',   loops=100, playouts=4000, max_depth=50).run()
     
 
 
