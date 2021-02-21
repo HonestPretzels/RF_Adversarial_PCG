@@ -1,12 +1,14 @@
 import os
 import gym
-import gym_gvgai
 import sys
 import random
 import itertools
 from time import time
 from copy import copy
 from math import sqrt, log
+
+from vgdl.interfaces.gym import VGDLEnv
+
 
 #https://gist.github.com/blole/dfebbec182e6b72ec16b66cc7e331110   FROM HERE
 
@@ -43,10 +45,9 @@ class Node:
 
 
 class Runner:
-    def __init__(self, rec_dir, env_name, loops=300, max_depth=1000, playouts=10000):
-        self.env_name = env_name
-        self.dir = rec_dir+'/'+env_name
-
+    def __init__(self, game_path, level_path, loops=300, max_depth=1000, playouts=10000):
+        self.game_path = game_path
+        self.level_path = level_path
         self.loops = loops
         self.max_depth = max_depth
         self.playouts = playouts
@@ -57,19 +58,20 @@ class Runner:
     def run(self):
         best_rewards = []
         start_time = time()
-        env = gym.make(self.env_name)
 
-        print(self.env_name)
+        env = VGDLEnv(self.game_path, self.level_path,'image', block_size=10)
 
         for loop in range(self.loops):
-            print(loop)
+            print('Loop:', loop+1)
+            env.render(mode='headless')
             env.reset()
             root = Node(None, None)
 
             best_actions = []
             best_reward = float("-inf")
 
-            for _ in range(self.playouts):
+            for playout in range(self.playouts):
+                print('Playout:', playout+1)
                 state = copy(env) 
 
                 sum_reward = 0
@@ -141,7 +143,7 @@ def main():
     os.makedirs(rec_dir)
     print("rec_dir:", rec_dir)
 
-    Runner(rec_dir, 'gvgai-test-lvl0-v0',   loops=20, playouts=200, max_depth=10).run()
+    Runner('./games/temp/sivujdyvlr.txt', './games/temp/sivujdyvlr_lvl0.txt', loops=20, playouts=200, max_depth=10).run()
     
 
 
