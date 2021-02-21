@@ -62,6 +62,7 @@ class Runner:
         print(self.env_name)
 
         for loop in range(self.loops):
+            print(loop)
             env.reset()
             root = Node(None, None)
 
@@ -140,7 +141,7 @@ def main():
     os.makedirs(rec_dir)
     print("rec_dir:", rec_dir)
 
-    Runner(rec_dir, 'gvgai-test-lvl0-v0',   loops=100, playouts=4000, max_depth=50).run()
+    Runner(rec_dir, 'gvgai-test-lvl0-v0',   loops=20, playouts=200, max_depth=10).run()
     
 
 
