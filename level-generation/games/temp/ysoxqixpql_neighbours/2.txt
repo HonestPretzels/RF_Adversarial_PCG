@@ -1,0 +1,38 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > MovingAvatar img=newset/cop1
+        test0   > Fleeing img=newset/blessedman orientation=UP stype=test3  
+        test1 > OrientedFlicker img=newset/cherries orientation=RIGHT speed=0.2176989876063964 autoTiling=False
+        test2  > Portal img=newset/exit orientation=LEFT stype=test7  prob=0.8415515387019762 speed=0.01272612059601208 invisible=False
+        test3  > Portal img=newset/exit orientation=LEFT stype=test7  shrinkFactor=0.9462756194226706 color=YELLOW cooldown=17
+        test4 > RandomNPC img=newset/girl2 orientation=LEFT autoTiling=False invisible=False
+        test5  > Portal img=newset/exit orientation=UP stype=test7  color=WHITE speed=0.4271462617773433 orientation=DOWN
+        test6  > Immovable img=newset/block2 orientation=LEFT prob=0.9764521332237552
+        test7  > Immovable img=newset/block2 orientation=DOWN orientation=RIGHT
+        testResource > Resource color=GREEN
+
+    LevelMapping
+        F > test0
+        O > test1
+        R > test2
+        r > test3
+        N > test4
+        m > test5
+        I > test6
+        i > test7
+        E > testResource
+        A > avatar
+
+    InteractionSet
+        test2 test2 > reverseDirection scoreChange=-1
+        test0 test0 > changeResource resource=testResource value=1
+        test3 test3 > collectResource
+        test6 test6 > turnAround
+        test4 test4 > turnAround
+        testResource testResource > teleportToExit scoreChange=-5
+        test4 test4 > collectResource scoreChange=0
+
+    TerminationSet
+        ResourceCounter stype=testResource limit=80 win=True
+        Timeout limit=914 win=False

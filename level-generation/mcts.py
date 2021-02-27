@@ -9,7 +9,6 @@ from math import sqrt, log
 
 from vgdl.interfaces.gym import VGDLEnv
 
-
 #https://gist.github.com/blole/dfebbec182e6b72ec16b66cc7e331110   FROM HERE
 
 def moving_average(v, n):
@@ -45,15 +44,29 @@ class Node:
 
 
 class Runner:
-    def __init__(self, game_path, level_path, loops=300, max_depth=1000, playouts=10000):
+    def __init__(self, game_path, level_path, out_path, loops=300, max_depth=1000, playouts=10000):
         self.game_path = game_path
         self.level_path = level_path
         self.loops = loops
         self.max_depth = max_depth
         self.playouts = playouts
+        self.out_path = out_path
+        self.max_time = 1000
 
     def print_stats(self, loop, score, avg_time):
         print('\r%3d   score:%10.3f   avg_time:%4.1f s' % (loop, score, avg_time))
+    
+    def record_results(self, reward, actions, time):
+        out = 'MCTS COMPLETED %s WITH REWARD %d AND LENGTH %f AND TIME %4.1f\n' % (self.game_path.split('/')[-1], reward, len(actions), time)
+        print(out)
+        with open(self.out_path, 'a') as f:
+            f.write(out)
+    
+    def record_timeout(self, time, reward, actions):
+        out = 'MCTS TIMED OUT %s WITH TIME %4.1f, REWARD IS %f AT ACTION %d\n' % (self.game_path.split('/')[-1], time, reward, len(actions))
+        print(out)
+        with open(self.out_path, 'a') as f:
+            f.write(out)
 
     def run(self):
         best_rewards = []
@@ -62,6 +75,7 @@ class Runner:
         env = VGDLEnv(self.game_path, self.level_path,'image', block_size=10)
 
         for loop in range(self.loops):
+
             print('Loop:', loop+1)
             env.render(mode='headless')
             env.reset()
@@ -71,6 +85,7 @@ class Runner:
             best_reward = float("-inf")
 
             for playout in range(self.playouts):
+                playout_start = time()
                 print('Playout:', playout+1)
                 state = copy(env) 
 
@@ -98,6 +113,24 @@ class Runner:
 
                 # playout
                 while not terminal:
+                    playout_time = time() - playout_start
+                    if  playout_time > 120:
+                        break
+                        
+                    if time() - start_time > 900:
+                        sum_reward = 0
+                        for action in best_actions:
+                            _, reward, terminal, _ = env.step(action)
+                            sum_reward += reward
+                            if terminal:
+                                break
+                        self.record_timeout(time() - start_time, sum_reward, best_actions)
+                        best_rewards.append(sum_reward)
+                        score = max(moving_average(best_rewards, 100))
+                        avg_time = (time()-start_time)/(loop+1)
+                        self.print_stats(loop+1, score, avg_time)
+                        return
+
                     action = state.action_space.sample()
                     _, reward, terminal, _ = state.step(action)
                     sum_reward += reward
@@ -128,8 +161,8 @@ class Runner:
             best_rewards.append(sum_reward)
             score = max(moving_average(best_rewards, 100))
             avg_time = (time()-start_time)/(loop+1)
+            self.record_results(sum_reward, best_actions, time()-start_time)
             self.print_stats(loop+1, score, avg_time)
-        env.monitor.close()
 
 
 def main():
@@ -143,7 +176,7 @@ def main():
     os.makedirs(rec_dir)
     print("rec_dir:", rec_dir)
 
-    Runner('./games/temp/sivujdyvlr.txt', './games/temp/sivujdyvlr_lvl0.txt', loops=20, playouts=200, max_depth=10).run()
+    Runner('./games/temp/sivujdyvlr.txt', './games/temp/sivujdyvlr_lvl0.txt', './rec/0.txt', loops=10, playouts=200, max_depth=50).run()
     
 
 

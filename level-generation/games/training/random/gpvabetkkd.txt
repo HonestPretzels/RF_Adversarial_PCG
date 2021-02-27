@@ -1,0 +1,39 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > MovingAvatar img=newset/cop1
+        test0 > Flicker img=newset/butterfly1 orientation=DOWN singleton=False singleton=False limit=4
+        test1 > Immovable img=newset/block2 orientation=UP invisible=False limit=4
+        test2 > Bomber img=oryx/alien1 orientation=DOWN stype=test4 hidden=True singleton=True invisible=False
+        test3 > Resource img=newset/egg orientation=LEFT cooldown=5 prob=0.09009342520806574 limit=1
+        test4 > Flicker img=newset/butterfly1 orientation=LEFT autoTiling=False
+        test5 > Immovable img=newset/block2 orientation=UP
+        test6 > Passive img=newset/camel1 orientation=UP prob=0.5416640500897384 cooldown=14 prob=0.5605339342845559
+        test7 > Portal img=newset/exit orientation=LEFT stype=test3 shrinkFactor=0.43941642414539883 cooldown=13
+        test8 > Chaser img=newset/bandit1 orientation=UP stype=test4 shrinkFactor=0.16579408859768607 speed=0.08178591391123224 autoTiling=True
+
+    LevelMapping
+        L > test0
+        I > test1
+        B > test2
+        E > test3
+        l > test4
+        i > test5
+        P > test6
+        R > test7
+        C > test8
+        A > avatar
+
+    InteractionSet
+        test4 test4 > reverseDirection 
+        test8 test8 > pullWithIt 
+        test4 test4 > killSprite 
+        test8 test8 > killIfOtherHasMore resource=test3 limit=4 scoreChange=2
+        test4 test4 > turnAround 
+        test2 test2 > teleportToExit 
+        test1 test1 > stepBack 
+        test1 test1 > turnAround 
+
+    TerminationSet
+        SpriteCounter stype=test5 limit=9 win=True
+        SpriteCounter stype=test5 limit=4 win=False

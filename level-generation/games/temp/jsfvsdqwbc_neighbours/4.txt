@@ -1,0 +1,45 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > MovingAvatar img=newset/cop1
+        test0  > Immovable img=newset/block2 orientation=UP
+        test1 > Bomber img=oryx/alien1 orientation=RIGHT stype=test3 autoTiling=False
+        test2  > Portal img=newset/exit orientation=RIGHT stype=test8  color=RED orientation=RIGHT
+        test3  > Immovable img=newset/block2 orientation=LEFT hidden=False speed=0.0639728323937585
+        test4  > Immovable img=newset/block2 orientation=UP
+        test5 > Portal img=newset/exit orientation=LEFT stype=test7 hidden=True prob=0.5561065936375199
+        test6 > RandomNPC img=newset/girl2 orientation=UP color=ORANGE
+        test7 > Immovable img=newset/block2 orientation=RIGHT
+        test8 > Bomber img=oryx/alien1 orientation=LEFT stype=test4 autoTiling=False
+        test9 > Fleeing img=newset/blessedman orientation=LEFT stype=test5 autoTiling=False
+        testResource > Resource color=LIGHTGREEN
+
+    LevelMapping
+        I > test0
+        B > test1
+        R > test2
+        i > test3
+        2 > test4
+        r > test5
+        N > test6
+        6 > test7
+        b > test8
+        F > test9
+        E > testResource
+        A > avatar
+
+    InteractionSet
+        test9 test9 > teleportToExit
+        test8 test8 > reverseDirection
+        test8 test8 > reverseDirection scoreChange=-2
+        testResource testResource > killBoth scoreChange=-2
+        test1 test1 > collectResource
+        test8 test8 > killIfHasMore resource=testResource limit=5 scoreChange=3
+        test9 test9 > bounceForward scoreChange=-2
+        test2 test2 > cloneSprite
+        test9 test9 > killIfFromAbove
+        test7 test7 > reverseDirection scoreChange=-5
+
+    TerminationSet
+        ResourceCounter stype=testResource limit=4 win=False
+        ResourceCounter stype=testResource limit=39 win=True

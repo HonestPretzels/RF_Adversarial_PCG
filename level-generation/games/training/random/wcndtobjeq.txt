@@ -1,0 +1,40 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > FlakAvatar img=newset/cop1
+        test0 > Flicker img=newset/butterfly1 orientation=RIGHT limit=9 color=DARKBLUE shrinkFactor=0.9875918001370969
+        test1 > Bomber img=oryx/alien1 orientation=DOWN stype=test0 singleton=False
+        test2 > OrientedFlicker img=newset/cherries orientation=UP shrinkFactor=0.3630922148917135 speed=0.5452371989906579 hidden=False
+        test3 > Resource img=newset/egg orientation=DOWN
+        test4 > Immovable img=newset/block2 orientation=DOWN color=BLACK
+        test5 > OrientedFlicker img=newset/cherries orientation=DOWN
+        test6 > Immovable img=newset/block2 orientation=LEFT
+        test7 > RandomNPC img=newset/girl2 orientation=DOWN
+        test8 > Bomber img=oryx/alien1 orientation=LEFT stype=test3 speed=0.6657359144680172 prob=0.04880687475569445
+
+    LevelMapping
+        L > test0
+        B > test1
+        O > test2
+        E > test3
+        I > test4
+        o > test5
+        i > test6
+        N > test7
+        b > test8
+        A > avatar
+
+    InteractionSet
+        test3 test3 > wrapAround offset=3
+        test4 test4 > cloneSprite 
+        test5 test5 > flipDirection 
+        test1 test1 > killIfOtherHasLess resource=test3 limit=1
+        test2 test2 > undoAll scoreChange=2
+        test2 test2 > undoAll scoreChange=5
+        test2 test2 > collectResource scoreChange=-5
+        test2 test2 > flipDirection scoreChange=-5
+        test4 test4 > bounceForward scoreChange=4
+
+    TerminationSet
+        SpriteCounter stype=test4 limit=2 win=True
+        SpriteCounter stype=test7 limit=6 win=False

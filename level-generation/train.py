@@ -61,15 +61,20 @@ def main():
     while len(predictedAsHuman) == 0 and iterations < 200:
         neighboursDict = {}
         stopFlag = False
+        prob_human_avg = 0
         for game, level in iterationGames.items():
-            prob_human = clf.predict_proba([getVector(game, level)])[0][1]
-            if prob_human > human_threshold:
-                print('training complete at iteration: %d with score: %.3f' %(iterations, prob_human))
+            prob_human_game = clf.predict_proba([getVector(game, level)])[0][1]
+            if prob_human_game > human_threshold:
                 predictedAsHuman.append((game, level))
-                stopFlag = True
-                break
+            prob_human_avg += prob_human_game / len(iterationGames)
             neighbours = genNeighbours(game, level, neighbourCount, levelNeighbourCount)
             neighboursDict[(game, level)] = neighbours
+
+        # Average probability across all games > threshold
+        if prob_human_avg > human_threshold:
+            print('training complete at iteration: %d with score: %.3f' %(iterations, prob_human_avg))
+            stopFlag = True
+            break
 
         if not stopFlag:
             avg_prob, best = replaceWithBestNeighbours(neighboursDict, clf)

@@ -1,0 +1,43 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > ShootAvatar img=newset/cop1
+        test0 > Flicker img=newset/butterfly1 orientation=DOWN hidden=True
+        test1 > Chaser img=newset/bandit1 orientation=DOWN stype=test0 shrinkFactor=0.9089676636950782 autoTiling=True orientation=LEFT
+        test2 > Missile img=newset/arrow orientation=DOWN singleton=True cooldown=16 orientation=RIGHT
+        test3 > Immovable img=newset/block2 orientation=LEFT singleton=False
+        test4 > Resource img=newset/egg orientation=DOWN shrinkFactor=0.58901597693606
+        test5 > Immovable img=newset/block2 orientation=DOWN color=LIGHTBLUE prob=0.8024411092984491
+        test6 > Passive img=newset/camel1 orientation=RIGHT orientation=DOWN
+        test7 > Missile img=newset/arrow orientation=LEFT orientation=RIGHT shrinkFactor=0.3481658196292329 hidden=True
+        test8 > Flicker img=newset/butterfly1 orientation=LEFT hidden=False color=GREEN invisible=True
+        test9 > Immovable img=newset/block2 orientation=DOWN autoTiling=True limit=1
+
+    LevelMapping
+        L > test0
+        C > test1
+        M > test2
+        I > test3
+        E > test4
+        i > test5
+        P > test6
+        m > test7
+        l > test8
+        1 > test9
+        A > avatar
+
+    InteractionSet
+        test2 test2 > pullWithIt scoreChange=4
+        test4 test4 > spawnIfHasMore resource=test4 stype=test3 limit=1
+        test3 test3 > undoAll 
+        test0 test0 > killIfOtherHasLess resource=test4 limit=4 scoreChange=1
+        test1 test1 > killIfHasLess resource=test4 limit=1 scoreChange=-3
+        test6 test6 > killIfFromAbove 
+        test1 test1 > changeResource resource=test4 value=0 scoreChange=-2
+        test7 test7 > teleportToExit 
+        test6 test6 > teleportToExit scoreChange=3
+        test5 test5 > transformTo stype=test9 scoreChange=-2
+
+    TerminationSet
+        SpriteCounter stype=test4 limit=7 win=True
+        ResourceCounter stype=test4 limit=89 win=False scoreChange=471
