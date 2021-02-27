@@ -1,0 +1,38 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > MovingAvatar img=newset/cop1
+        test0 > Resource img=newset/egg orientation=LEFT orientation=UP
+        test1 > RandomNPC img=newset/girl2 orientation=LEFT hidden=False limit=6 speed=0.5308293208801219
+        test2 > Passive img=newset/camel1 orientation=LEFT color=BLACK
+        test3 > Missile img=newset/arrow orientation=LEFT
+        test4 > Resource img=newset/egg orientation=RIGHT limit=8
+        test5 > Resource img=newset/egg orientation=DOWN singleton=False orientation=DOWN
+        test6 > Missile img=newset/arrow orientation=UP speed=0.029059520372385017
+        test7 > RandomNPC img=newset/girl2 orientation=RIGHT
+        test8 > Flicker img=newset/butterfly1 orientation=DOWN prob=0.44428944087120137 cooldown=9 cooldown=3
+
+    LevelMapping
+        E > test0
+        N > test1
+        P > test2
+        M > test3
+        e > test4
+        j > test5
+        m > test6
+        n > test7
+        L > test8
+        A > avatar
+
+    InteractionSet
+        test1 test1 > wrapAround offset=0
+        test3 test3 > killIfHasMore resource=test5 limit=5 scoreChange=-5
+        test7 test7 > attractGaze prob=0.15236237823516652
+        test3 test3 > killBoth scoreChange=4
+        test5 test5 > killIfHasLess resource=test4 limit=1
+        test6 test6 > flipDirection scoreChange=1
+        test4 test4 > undoAll 
+
+    TerminationSet
+        ResourceCounter stype=test4 limit=66 win=True
+        SpriteCounter stype=test5 limit=7 win=False

@@ -1,0 +1,31 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > ShootAvatar img=newset/cop1
+        test0 > Bomber img=oryx/alien1 orientation=DOWN stype=test1 orientation=UP
+        test1 > Immovable img=newset/block2 orientation=LEFT
+        test2 > OrientedFlicker img=newset/cherries orientation=RIGHT autoTiling=True prob=0.8996308160279144 cooldown=8
+        test3 > Flicker img=newset/butterfly1 orientation=UP speed=0.18022741131269193 shrinkFactor=0.35408610405542873
+        test4 > Fleeing img=newset/blessedman orientation=RIGHT stype=test3 prob=0.39488982270770534
+        testResource > Resource color=LIGHTBLUE
+
+    LevelMapping
+        B > test0
+        I > test1
+        O > test2
+        L > test3
+        F > test4
+        E > testResource
+        A > avatar
+
+    InteractionSet
+        test0 test0 > changeResource resource=testResource value=4
+        test2 test2 > killIfFromAbove scoreChange=1
+        test1 test1 > killIfHasLess resource=testResource limit=4
+        testResource testResource > wrapAround offset=1
+        test2 test2 > flipDirection scoreChange=-1
+        test4 test4 > turnAround scoreChange=-1
+
+    TerminationSet
+        Timeout limit=711 win=True
+        SpriteCounter stype=test2 limit=6 win=False

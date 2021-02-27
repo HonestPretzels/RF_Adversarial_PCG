@@ -52,37 +52,33 @@ def main():
 
     clf = createClassifier(humanGames, randomGames)
 
-    predictedAsHuman = []
+    predictedAsHuman = set([])
     human_threshold = 0.95
     neighbourCount = 8
     levelNeighbourCount = 8
     iterations = 1
 
-    while len(predictedAsHuman) == 0 and iterations < 200:
+    while iterations < 200:
         neighboursDict = {}
         stopFlag = False
         prob_human_avg = 0
         for game, level in iterationGames.items():
             prob_human_game = clf.predict_proba([getVector(game, level)])[0][1]
             if prob_human_game > human_threshold:
-                predictedAsHuman.append((game, level))
+                predictedAsHuman.add((game, level))
             prob_human_avg += prob_human_game / len(iterationGames)
             neighbours = genNeighbours(game, level, neighbourCount, levelNeighbourCount)
             neighboursDict[(game, level)] = neighbours
 
+
         # Average probability across all games > threshold
         if prob_human_avg > human_threshold:
             print('training complete at iteration: %d with score: %.3f' %(iterations, prob_human_avg))
-            stopFlag = True
             break
-
-        if not stopFlag:
+        else:
             avg_prob, best = replaceWithBestNeighbours(neighboursDict, clf)
-
             print('training iteration: %d with average score: %.3f and best score %.3f' %(iterations, avg_prob, best))
             iterations += 1
-        else:
-            break
 
     if len(predictedAsHuman) < 1:
         b = None

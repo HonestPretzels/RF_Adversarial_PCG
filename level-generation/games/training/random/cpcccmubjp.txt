@@ -1,0 +1,35 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > FlakAvatar img=newset/cop1
+        test0 > Fleeing img=newset/blessedman orientation=UP stype=test4
+        test1 > Missile img=newset/arrow orientation=DOWN cooldown=3 limit=10
+        test2 > Chaser img=newset/bandit1 orientation=DOWN stype=test3 shrinkFactor=0.06517229014699488
+        test3 > Missile img=newset/arrow orientation=UP autoTiling=True color=LIGHTGREEN prob=0.9798645128569471
+        test4 > RandomNPC img=newset/girl2 orientation=DOWN
+        test5 > Portal img=newset/exit orientation=DOWN stype=test2 singleton=False color=GOLD autoTiling=True
+        testResource > Resource color=RED
+
+    LevelMapping
+        F > test0
+        M > test1
+        C > test2
+        m > test3
+        N > test4
+        R > test5
+        E > testResource
+        A > avatar
+
+    InteractionSet
+        test1 test1 > stepBack 
+        test2 test2 > killIfHasMore resource=testResource limit=4
+        test0 test0 > undoAll 
+        testResource testResource > flipDirection 
+        test0 test0 > killIfHasLess resource=testResource limit=1 scoreChange=0
+        test5 test5 > flipDirection 
+        test1 test1 > pullWithIt 
+        test4 test4 > undoAll scoreChange=-4
+
+    TerminationSet
+        ResourceCounter stype=testResource limit=66 win=True
+        ResourceCounter stype=testResource limit=62 win=False

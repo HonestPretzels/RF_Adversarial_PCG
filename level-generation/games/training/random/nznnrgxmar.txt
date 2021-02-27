@@ -1,0 +1,35 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > FlakAvatar img=newset/cop1
+        test0 > OrientedFlicker img=newset/cherries orientation=DOWN shrinkFactor=0.5465621049217005 hidden=True invisible=False
+        test1 > Bomber img=oryx/alien1 orientation=DOWN stype=test7 hidden=True color=BLACK
+        test2 > Resource img=newset/egg orientation=UP limit=9
+        test3 > Missile img=newset/arrow orientation=DOWN speed=0.20596535306118458 hidden=True speed=0.19156605161611284
+        test4 > RandomNPC img=newset/girl2 orientation=UP hidden=False speed=0.8273721846406356 invisible=True
+        test5 > Immovable img=newset/block2 orientation=UP singleton=False
+        test6 > SpawnPoint img=newset/blockR3 orientation=UP stype=test0 prob=0.18134060341453961 shrinkFactor=0.9730449264184703 cooldown=5
+        test7 > Flicker img=newset/butterfly1 orientation=LEFT singleton=True shrinkFactor=0.9999975417956757
+
+    LevelMapping
+        O > test0
+        B > test1
+        E > test2
+        M > test3
+        N > test4
+        I > test5
+        S > test6
+        L > test7
+        A > avatar
+
+    InteractionSet
+        test2 test2 > bounceForward 
+        test4 test4 > killIfHasMore resource=test2 limit=2 scoreChange=2
+        test0 test0 > wrapAround offset=0 scoreChange=2
+        test4 test4 > reverseDirection 
+        test0 test0 > pullWithIt 
+        test0 test0 > undoAll 
+
+    TerminationSet
+        ResourceCounter stype=test2 limit=60 win=True
+        SpriteCounter stype=test6 limit=1 win=False

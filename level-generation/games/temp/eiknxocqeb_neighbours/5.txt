@@ -1,0 +1,41 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > FlakAvatar img=newset/cop1
+        test0  > Portal img=newset/exit orientation=LEFT stype=test2
+        test1  > Portal img=newset/exit orientation=DOWN stype=test4  singleton=True limit=6 cooldown=1
+        test2 > RandomNPC img=newset/girl2 orientation=LEFT cooldown=6 hidden=False
+        test3  > Portal img=newset/exit orientation=LEFT stype=test7  singleton=True hidden=True orientation=DOWN
+        test4 > Portal img=newset/exit orientation=DOWN stype=test8 limit=3
+        test5  > Immovable img=newset/block2 orientation=RIGHT hidden=False prob=0.6927041119935513 autoTiling=True
+        test6 > Immovable img=newset/block2 orientation=LEFT shrinkFactor=0.7765848734022346 cooldown=7
+        test7 > Passive img=newset/camel1 orientation=LEFT autoTiling=True invisible=True hidden=True
+        test8  > Immovable img=newset/block2 orientation=UP autoTiling=True speed=0.18322418249899064
+        test9  > OrientedFlicker img=newset/cherries orientation=LEFT invisible=True shrinkFactor=0.5583421912442266
+        testResource > Resource color=BLUE
+
+    LevelMapping
+        R > test0
+        r > test1
+        N > test2
+        w > test3
+        4 > test4
+        I > test5
+        i > test6
+        P > test7
+        3 > test8
+        O > test9
+        E > testResource
+        A > avatar
+
+    InteractionSet
+        test8 test8 > killIfOtherHasLess resource=testResource limit=1 scoreChange=4
+        test1 test1 > killIfFromAbove scoreChange=-5
+        test3 test3 > reverseDirection scoreChange=-2
+        test6 test6 > killIfOtherHasMore resource=testResource limit=2 scoreChange=-2
+        test7 test7 > transformTo stype=test5 scoreChange=5
+        test2 test2 > killIfHasLess resource=testResource limit=3
+
+    TerminationSet
+        SpriteCounter stype=test6 limit=2 win=True
+        ResourceCounter stype=testResource limit=85 win=False
