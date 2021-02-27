@@ -1,0 +1,37 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > FlakAvatar img=newset/cop1
+        test0 > Resource img=newset/egg orientation=LEFT
+        test1  > Portal img=newset/exit orientation=DOWN stype=test2
+        test2 > Missile img=newset/arrow orientation=LEFT hidden=False speed=0.76166397807235
+        test3 > Resource img=newset/egg orientation=LEFT limit=5 speed=0.6225081393855654 cooldown=15
+        test4  > Immovable img=newset/block2 orientation=LEFT orientation=RIGHT
+        test5 > Passive img=newset/camel1 orientation=RIGHT hidden=False
+        test6  > Portal img=newset/exit orientation=UP stype=test2  speed=0.6846304741775759 color=WHITE
+
+    LevelMapping
+        E > test0
+        R > test1
+        M > test2
+        e > test3
+        I > test4
+        P > test5
+        r > test6
+        A > avatar
+
+    InteractionSet
+        test4 test4 > cloneSprite scoreChange=1
+        test2 test2 > collectResource scoreChange=-2
+        test6 test6 > changeResource resource=test3 value=-4
+        test2 test2 > undoAll scoreChange=-5
+        test6 test6 > spawnIfHasMore resource=test0 stype=test1 limit=3 scoreChange=1
+        test5 test5 > killIfHasLess resource=test3 limit=4
+        test5 test5 > teleportToExit scoreChange=-3
+        test4 test4 > teleportToExit
+        test6 test6 > killIfOtherHasLess resource=test3 limit=5
+        test4 test4 > pullWithIt
+
+    TerminationSet
+        SpriteCounter stype=test4 limit=3 win=True
+        SpriteCounter stype=test1 limit=7 win=False

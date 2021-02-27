@@ -1,0 +1,35 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > MovingAvatar img=newset/cop1
+        test0   > Immovable img=newset/block2 orientation=UP singleton=False orientation=RIGHT orientation=DOWN
+        test1 > Missile img=newset/arrow orientation=RIGHT singleton=True color=BROWN color=LIGHTORANGE
+        test2  > OrientedFlicker img=newset/cherries orientation=UP hidden=True speed=0.8238106184271459 speed=0.3922981741823628
+        test3 > Missile img=newset/arrow orientation=UP prob=0.50027899695343 speed=0.944385577837029
+        test4  > Immovable img=newset/block2 orientation=DOWN limit=2 singleton=True invisible=False
+        test5   > Immovable img=newset/block2 orientation=UP cooldown=13
+        testResource > Resource color=BROWN
+
+    LevelMapping
+        I > test0
+        M > test1
+        O > test2
+        m > test3
+        i > test4
+        v > test5
+        E > testResource
+        A > avatar
+
+    InteractionSet
+        test5 test5 > wrapAround offset=2 scoreChange=0
+        test4 test4 > reverseDirection
+        test0 test0 > killIfOtherHasLess resource=testResource limit=1
+        test4 test4 > teleportToExit
+        test1 test1 > teleportToExit
+        test0 test0 > bounceForward
+        test3 test3 > killSprite scoreChange=4
+        test4 test4 > stepBack scoreChange=-2
+
+    TerminationSet
+        Timeout limit=356 win=False
+        SpriteCounter stype=test2 limit=10 win=True scoreChange=111

@@ -1,0 +1,38 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > MovingAvatar img=newset/cop1
+        test0  > Portal img=newset/exit orientation=DOWN stype=test7  prob=0.9269804053202396 limit=10
+        test1 > Immovable img=newset/block2 orientation=DOWN
+        test2  > Portal img=newset/exit orientation=UP stype=test0   speed=0.796608082458214 hidden=True color=RED
+        test3 > RandomNPC img=newset/girl2 orientation=DOWN hidden=False singleton=False
+        test4  > Portal img=newset/exit orientation=RIGHT stype=test3
+        test5  > Immovable img=newset/block2 orientation=UP prob=0.07557691348014206
+        test6  > Portal img=newset/exit orientation=RIGHT stype=test3  shrinkFactor=0.36315725733970516
+        test7  > Immovable img=newset/block2 orientation=LEFT color=BLUE orientation=DOWN
+        testResource > Resource color=LIGHTGREEN
+
+    LevelMapping
+        R > test0
+        I > test1
+        r > test2
+        N > test3
+        i > test4
+        f > test5
+        8 > test6
+        c > test7
+        E > testResource
+        A > avatar
+
+    InteractionSet
+        test6 test6 > killIfHasMore resource=testResource limit=4 scoreChange=1
+        test0 test0 > turnAround scoreChange=0
+        test7 test7 > transformTo stype=test1
+        test0 test0 > killIfOtherHasLess resource=testResource limit=3
+        testResource testResource > killSprite scoreChange=2
+        test6 test6 > killIfOtherHasMore resource=testResource limit=2 scoreChange=5
+        test4 test4 > turnAround scoreChange=4
+
+    TerminationSet
+        ResourceCounter stype=testResource limit=16 win=False scoreChange=338
+        ResourceCounter stype=testResource limit=62 win=True

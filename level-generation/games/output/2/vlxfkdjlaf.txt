@@ -1,0 +1,39 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > MovingAvatar img=newset/cop1
+        test0 > Flicker img=newset/butterfly1 orientation=RIGHT orientation=DOWN
+        test1 > Bomber img=oryx/alien1 orientation=UP stype=test8 color=LIGHTORANGE
+        test2 > Resource img=newset/egg orientation=DOWN speed=0.9955339454010046 color=PINK limit=3
+        test3   > OrientedFlicker img=newset/cherries orientation=UP
+        test4  > Bomber img=oryx/alien1 orientation=UP stype=test0  speed=0.3452976517331675 shrinkFactor=0.20697386455182543
+        test5  > Missile img=newset/arrow orientation=LEFT
+        test6 > Bomber img=oryx/alien1 orientation=UP stype=test0
+        test7  > Immovable img=newset/block2 orientation=LEFT speed=0.43961909182121295 prob=0.7362817290648559 autoTiling=False
+        test8  > Flicker img=newset/butterfly1 orientation=UP prob=0.4989000399444894 color=LIGHTGRAY
+
+    LevelMapping
+        L > test0
+        B > test1
+        E > test2
+        O > test3
+        b > test4
+        M > test5
+        5 > test6
+        I > test7
+        l > test8
+        A > avatar
+
+    InteractionSet
+        test5 test5 > undoAll
+        test4 test4 > reverseDirection scoreChange=-2
+        test7 test7 > teleportToExit
+        test1 test1 > cloneSprite scoreChange=-4
+        test4 test4 > flipDirection
+        test6 test6 > stepBack
+        test2 test2 > killSprite
+        test2 test2 > undoAll
+
+    TerminationSet
+        SpriteCounter stype=test3 limit=5 win=True
+        Timeout limit=829 win=False

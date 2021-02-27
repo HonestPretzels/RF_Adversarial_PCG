@@ -1,0 +1,35 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > ShootAvatar img=newset/cop1
+        test0 > Immovable img=newset/block2 orientation=LEFT orientation=RIGHT
+        test1 > Flicker img=newset/butterfly1 orientation=DOWN color=BLUE cooldown=15 speed=0.4586589093048017
+        test2  > Immovable img=newset/block2 orientation=LEFT limit=8
+        test3 > OrientedFlicker img=newset/cherries orientation=LEFT speed=0.406283092640512 prob=0.18556992035196063 limit=9
+        test4  > Immovable img=newset/block2 orientation=LEFT hidden=True autoTiling=False
+        test5  > Immovable img=newset/block2 orientation=LEFT autoTiling=False
+        test6 > Resource img=newset/egg orientation=LEFT
+
+    LevelMapping
+        I > test0
+        L > test1
+        i > test2
+        O > test3
+        w > test4
+        x > test5
+        E > test6
+        A > avatar
+
+    InteractionSet
+        test6 test6 > wrapAround offset=1
+        test0 test0 > bounceForward
+        test1 test1 > turnAround
+        test6 test6 > transformTo stype=test2 scoreChange=-4
+        test0 test0 > attractGaze prob=0.6490476707301094 scoreChange=-1
+        test5 test5 > killSprite scoreChange=-4
+        test3 test3 > spawnIfHasMore resource=test6 stype=test6 limit=3
+        test2 test2 > stepBack 
+
+    TerminationSet
+        SpriteCounter stype=test0 limit=0 win=True
+        Timeout limit=52 win=False

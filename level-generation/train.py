@@ -26,9 +26,11 @@ def main():
 
     # generate random games
     randomGamePath = sys.argv[2]
-    shutil.rmtree(randomGamePath)
-    os.mkdir(randomGamePath)
-    generateRandomGames(randomGamePath, 8)
+
+    # COMMENT OUT TO NOT REPLACE RANDOM GAMES
+    # shutil.rmtree(randomGamePath)
+    # os.mkdir(randomGamePath)
+    # generateRandomGames(randomGamePath, 8)
     
     randomGameFiles = getAllFilePaths(randomGamePath)
     randomGames = {}
@@ -60,7 +62,6 @@ def main():
 
     while iterations < 200:
         neighboursDict = {}
-        stopFlag = False
         prob_human_avg = 0
         for game, level in iterationGames.items():
             prob_human_game = clf.predict_proba([getVector(game, level)])[0][1]

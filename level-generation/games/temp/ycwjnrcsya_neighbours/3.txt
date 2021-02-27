@@ -1,0 +1,44 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > FlakAvatar img=newset/cop1
+        test0 > OrientedFlicker img=newset/cherries orientation=RIGHT autoTiling=True cooldown=7 speed=0.8634581990236236
+        test1 > Passive img=newset/camel1 orientation=DOWN
+        test2  > Portal img=newset/exit orientation=DOWN stype=test7   shrinkFactor=0.7749301504913713 prob=0.7677566014982353
+        test3 > Missile img=newset/arrow orientation=RIGHT singleton=False shrinkFactor=0.9835076408456336 color=GRAY
+        test4 > Chaser img=newset/bandit1 orientation=DOWN stype=test9 limit=2 speed=0.8589950696859017
+        test5 > SpawnPoint img=newset/blockR3 orientation=DOWN stype=test3
+        test6 > Fleeing img=newset/blessedman orientation=RIGHT stype=test9
+        test7  > Portal img=newset/exit orientation=LEFT stype=test2  invisible=False speed=0.5551657318528255 hidden=True
+        test8  > Flicker img=newset/butterfly1 orientation=UP prob=0.12203628508955511 cooldown=8
+        test9 > Chaser img=newset/bandit1 orientation=LEFT stype=test4 hidden=False orientation=DOWN shrinkFactor=0.9526415087427367
+        testResource > Resource color=DARKGRAY
+
+    LevelMapping
+        O > test0
+        P > test1
+        R > test2
+        M > test3
+        C > test4
+        S > test5
+        F > test6
+        r > test7
+        L > test8
+        c > test9
+        E > testResource
+        A > avatar
+
+    InteractionSet
+        test8 test8 > wrapAround offset=0
+        test4 test4 > flipDirection scoreChange=-1
+        testResource testResource > killIfFromAbove scoreChange=1
+        test3 test3 > killIfOtherHasLess resource=testResource limit=1
+        testResource testResource > reverseDirection
+        test2 test2 > transformTo stype=testResource
+        test4 test4 > bounceForward scoreChange=-5
+        test7 test7 > turnAround scoreChange=3
+        test1 test1 > flipDirection
+
+    TerminationSet
+        ResourceCounter stype=testResource limit=44 win=True scoreChange=95
+        SpriteCounter stype=test3 limit=3 win=False

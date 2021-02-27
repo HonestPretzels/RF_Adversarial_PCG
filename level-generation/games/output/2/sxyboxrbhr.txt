@@ -1,0 +1,41 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > ShootAvatar img=newset/cop1
+        test0 > Passive img=newset/camel1 orientation=UP shrinkFactor=0.7863997528830844 shrinkFactor=0.31979271429191947
+        test1  > Missile img=newset/arrow orientation=UP prob=0.6647640280996682 prob=0.43026363609219054 autoTiling=False
+        test2 > Bomber img=oryx/alien1 orientation=UP stype=test5 orientation=DOWN speed=0.617269775025052 color=RED
+        test3  > OrientedFlicker img=newset/cherries orientation=LEFT
+        test4 > Missile img=newset/arrow orientation=UP speed=0.8348316456544299 speed=0.8835096607435782 autoTiling=True
+        test5 > Missile img=newset/arrow orientation=RIGHT color=ORANGE speed=0.4925338260491341
+        test6  > Resource img=newset/egg orientation=UP
+        test7 > Bomber img=oryx/alien1 orientation=RIGHT stype=test2
+        test8  > Immovable img=newset/block2 orientation=UP speed=0.7903569357444515 invisible=True cooldown=7
+        test9  > Bomber img=oryx/alien1 orientation=UP stype=test7  hidden=True autoTiling=True limit=6
+        testResource > Resource color=YELLOW
+
+    LevelMapping
+        P > test0
+        M > test1
+        B > test2
+        O > test3
+        m > test4
+        4 > test5
+        E > test6
+        b > test7
+        I > test8
+        s > test9
+        e > testResource
+        A > avatar
+
+    InteractionSet
+        testResource testResource > wrapAround offset=3 scoreChange=-2
+        testResource testResource > bounceForward scoreChange=5
+        test8 test8 > wrapAround offset=0 scoreChange=-5
+        test1 test1 > bounceForward scoreChange=-3
+        test7 test7 > killSprite
+        test4 test4 > stepBack
+
+    TerminationSet
+        SpriteCounter stype=testResource limit=0 win=False scoreChange=231
+        Timeout limit=521 win=True scoreChange=357

@@ -1,0 +1,43 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > FlakAvatar img=newset/cop1
+        test0  > Portal img=newset/exit orientation=RIGHT stype=test3  speed=0.41700168435615537 limit=8 shrinkFactor=0.1323832033798099
+        test1  > Bomber img=oryx/alien1 orientation=UP stype=test2  invisible=True
+        test2  > Immovable img=newset/block2 orientation=LEFT prob=0.02749381851065269 limit=6
+        test3  > Portal img=newset/exit orientation=LEFT stype=test8
+        test4  > Portal img=newset/exit orientation=LEFT stype=test3   prob=0.5049236403860613 autoTiling=True
+        test5  > Portal img=newset/exit orientation=RIGHT stype=test4  hidden=False
+        test6 > RandomNPC img=newset/girl2 orientation=LEFT prob=0.05143650305743386 shrinkFactor=0.30564342227184726
+        test7  > Portal img=newset/exit orientation=RIGHT stype=test5   autoTiling=True
+        test8 > Missile img=newset/arrow orientation=RIGHT prob=0.49506164629547356 speed=0.5774199337190246 limit=4
+        test9 > Flicker img=newset/butterfly1 orientation=DOWN speed=0.5645978927374239
+        testResource > Resource color=DARKBLUE
+
+    LevelMapping
+        R > test0
+        B > test1
+        I > test2
+        r > test3
+        9 > test4
+        g > test5
+        N > test6
+        m > test7
+        M > test8
+        L > test9
+        E > testResource
+        A > avatar
+
+    InteractionSet
+        test0 test0 > stepBack
+        test1 test1 > pullWithIt scoreChange=5
+        test7 test7 > wrapAround offset=3 scoreChange=4
+        test6 test6 > attractGaze prob=0.3166898075290916 scoreChange=-3
+        test6 test6 > changeResource resource=testResource value=1 scoreChange=2
+        test9 test9 > collectResource scoreChange=-2
+        test5 test5 > killIfHasMore resource=testResource limit=3
+        test1 test1 > teleportToExit
+
+    TerminationSet
+        ResourceCounter stype=testResource limit=96 win=True
+        Timeout limit=536 win=False

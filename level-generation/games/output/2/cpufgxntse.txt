@@ -1,0 +1,39 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > FlakAvatar img=newset/cop1
+        test0   > Immovable img=newset/block2 orientation=UP singleton=True limit=3 autoTiling=True
+        test1  > Flicker img=newset/butterfly1 orientation=RIGHT speed=0.7802611101007311
+        test2  > OrientedFlicker img=newset/cherries orientation=LEFT
+        test3   > Immovable img=newset/block2 orientation=RIGHT
+        test4 > Missile img=newset/arrow orientation=LEFT prob=0.1387370292688802 singleton=False prob=0.04904390753754684
+        test5 > OrientedFlicker img=newset/cherries orientation=LEFT
+        test6  > Missile img=newset/arrow orientation=RIGHT hidden=True singleton=False invisible=True
+        testResource > Resource color=DARKGRAY
+
+    LevelMapping
+        I > test0
+        L > test1
+        O > test2
+        i > test3
+        M > test4
+        o > test5
+        m > test6
+        E > testResource
+        A > avatar
+
+    InteractionSet
+        test4 test4 > killIfHasLess resource=testResource limit=3
+        test5 test5 > killIfFromAbove
+        test0 test0 > killIfHasLess resource=testResource limit=4 scoreChange=4
+        test5 test5 > killIfHasLess resource=testResource limit=5
+        test5 test5 > teleportToExit
+        test2 test2 > killIfOtherHasLess resource=testResource limit=4
+        test2 test2 > undoAll scoreChange=-5
+        test3 test3 > killIfOtherHasLess resource=testResource limit=4
+        test0 test0 > killSprite scoreChange=1
+        test3 test3 > stepBack scoreChange=-1
+
+    TerminationSet
+        Timeout limit=681 win=False
+        SpriteCounter stype=avatar limit=6 win=True

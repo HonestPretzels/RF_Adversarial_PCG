@@ -1,0 +1,45 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > FlakAvatar img=newset/cop1
+        test0  > Immovable img=newset/block2 orientation=DOWN autoTiling=False
+        test1 > RandomNPC img=newset/girl2 orientation=UP
+        test2  > Immovable img=newset/block2 orientation=UP singleton=False
+        test3  > Portal img=newset/exit orientation=DOWN stype=test9  speed=0.8363038774281181
+        test4 > Missile img=newset/arrow orientation=RIGHT hidden=False
+        test5 > Immovable img=newset/block2 orientation=UP prob=0.08409865190441967 singleton=True
+        test6 > Missile img=newset/arrow orientation=RIGHT speed=0.5669228574611367 hidden=False color=DARKGRAY
+        test7 > Portal img=newset/exit orientation=RIGHT stype=test2 color=LIGHTRED
+        test8  > Immovable img=newset/block2 orientation=UP autoTiling=True limit=6
+        test9 > Passive img=newset/camel1 orientation=DOWN
+        testResource > Resource color=LIGHTORANGE
+
+    LevelMapping
+        I > test0
+        N > test1
+        i > test2
+        R > test3
+        M > test4
+        c > test5
+        m > test6
+        r > test7
+        3 > test8
+        P > test9
+        E > testResource
+        A > avatar
+
+    InteractionSet
+        test5 test5 > wrapAround offset=1
+        testResource testResource > collectResource scoreChange=-5
+        test0 test0 > flipDirection
+        test1 test1 > killIfFromAbove
+        test3 test3 > killBoth scoreChange=4
+        test2 test2 > killSprite scoreChange=2
+        test7 test7 > stepBack scoreChange=4
+        test8 test8 > collectResource scoreChange=5
+        test0 test0 > stepBack
+        test6 test6 > cloneSprite
+
+    TerminationSet
+        SpriteCounter stype=test2 limit=7 win=True
+        ResourceCounter stype=testResource limit=57 win=False

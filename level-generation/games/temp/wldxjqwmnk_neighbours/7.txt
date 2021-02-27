@@ -1,0 +1,41 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > FlakAvatar img=newset/cop1
+        test0 > Resource img=newset/egg orientation=DOWN cooldown=6 color=BLACK
+        test1  > Portal img=newset/exit orientation=UP stype=test8
+        test2 > Bomber img=oryx/alien1 orientation=UP stype=test7 shrinkFactor=0.4985322028261695 invisible=True shrinkFactor=0.531003589844939
+        test3 > Portal img=newset/exit orientation=UP stype=test0
+        test4 > Chaser img=newset/bandit1 orientation=DOWN stype=test3 orientation=RIGHT
+        test5  > Immovable img=newset/block2 orientation=LEFT shrinkFactor=0.46715730080831475 cooldown=8 shrinkFactor=0.7105446082950252
+        test6 > Chaser img=newset/bandit1 orientation=RIGHT stype=test8
+        test7  > Portal img=newset/exit orientation=RIGHT stype=test6  prob=0.7704730223012111 invisible=True
+        test8 > Missile img=newset/arrow orientation=DOWN orientation=UP singleton=False
+
+    LevelMapping
+        E > test0
+        R > test1
+        B > test2
+        r > test3
+        C > test4
+        I > test5
+        c > test6
+        t > test7
+        M > test8
+        A > avatar
+
+    InteractionSet
+        test0 test0 > killIfHasLess resource=test0 limit=3
+        test0 test0 > killIfOtherHasLess resource=test0 limit=2 scoreChange=2
+        test4 test4 > teleportToExit
+        test6 test6 > bounceForward
+        test2 test2 > killSprite
+        test7 test7 > attractGaze prob=0.6107095784827118 scoreChange=-2
+        test6 test6 > wrapAround offset=3
+        test2 test2 > pullWithIt
+        test3 test3 > transformTo stype=test2
+        test7 test7 > killIfOtherHasMore resource=test0 limit=3
+
+    TerminationSet
+        SpriteCounter stype=test0 limit=9 win=True
+        Timeout limit=746 win=False
