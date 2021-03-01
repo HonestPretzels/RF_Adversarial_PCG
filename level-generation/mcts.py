@@ -51,7 +51,7 @@ class Runner:
         self.max_depth = max_depth
         self.playouts = playouts
         self.out_path = out_path
-        self.max_time = 1000
+        self.max_time = 300
 
     def print_stats(self, loop, score, avg_time):
         print('\r%3d   score:%10.3f   avg_time:%4.1f s' % (loop, score, avg_time))
@@ -86,7 +86,6 @@ class Runner:
 
             for playout in range(self.playouts):
                 playout_start = time()
-                print('Playout:', playout+1)
                 state = copy(env) 
 
                 sum_reward = 0
@@ -133,12 +132,15 @@ class Runner:
 
                     action = state.action_space.sample()
                     _, reward, terminal, _ = state.step(action)
+
                     sum_reward += reward
                     actions.append(action)
 
                     if len(actions) > self.max_depth:
                         sum_reward -= 100
                         break
+                print('Playout: %d completed in %f' %(playout+1, time() - playout_start))
+                
 
                 # remember best
                 if best_reward < sum_reward:
@@ -152,6 +154,7 @@ class Runner:
                     node = node.parent
 
             sum_reward = 0
+            print(best_actions)
             for action in best_actions:
                 _, reward, terminal, _ = env.step(action)
                 sum_reward += reward
@@ -166,17 +169,60 @@ class Runner:
 
 
 def main():
-    # get rec_dir
-    if not os.path.exists('rec'):
-        os.makedirs('rec')
-        next_dir = 0
-    else:
-        next_dir = max([int(f) for f in os.listdir('rec')+["0"] if f.isdigit()])+1
-    rec_dir = 'rec/'+str(next_dir)
-    os.makedirs(rec_dir)
-    print("rec_dir:", rec_dir)
+    # try:
+    #     Runner('./games/output/5/cvirsbjuul.txt', './games/output/5/cvirsbjuul_lvl0.txt', './logs/MCTS_cvirsbjuul.txt', loops=10, playouts=1000, max_depth=50).run()
+    # except Exception as e:
+    #     print('Error with: cvirsbjuul --', e)
+    #     with open('./logs/MCTS_cvirsbjuul.txt', 'w') as f:
+    #         f.write(str(e))
 
-    Runner('./games/temp/sivujdyvlr.txt', './games/temp/sivujdyvlr_lvl0.txt', './rec/0.txt', loops=10, playouts=200, max_depth=50).run()
+    # try:
+    #     Runner('./games/output/5/cefkjprbjt.txt', './games/output/5/cefkjprbjt_lvl0.txt', './logs/MCTS_cefkjprbjt.txt', loops=10, playouts=1000, max_depth=50).run()
+    # except Exception as e:
+    #     print('Error with: cefkjprbjt--', e)
+    #     with open('./logs/MCTS_cefkjprbjt.txt', 'w') as f:
+    #         f.write(str(e))
+
+    try:
+        Runner('./games/output/5/kckuxyjwzr.txt', './games/output/5/kckuxyjwzr_lvl0.txt', './logs/MCTS_kckuxyjwzr.txt', loops=10, playouts=1000, max_depth=50).run()
+    except Exception as e:
+        print('Error with: kckuxyjwzr--', e)
+        with open('./logs/MCTS_kckuxyjwzr.txt', 'w') as f:
+            f.write(str(e))
+    # try:
+    #  Runner('./games/output/5/lgaqxpddxo.txt', './games/output/5/lgaqxpddxo_lvl0.txt', './logs/MCTS_lgaqxpddxo.txt', loops=10, playouts=1000, max_depth=50).run()
+    # except Exception as e:
+    #     print('Error with: lgaqxpddxo--', e)
+    #     with open('./logs/MCTS_lgaqxpddxo.txt', 'w') as f:
+    #         f.write(str(e))
+
+    # try:
+    #     Runner('./games/output/5/wldxjqwmnk.txt', './games/output/5/wldxjqwmnk_lvl0.txt', './logs/MCTS_wldxjqwmnk.txt', loops=10, playouts=1000, max_depth=50).run()
+    # except Exception as e:
+    #     print('Error with: wldxjqwmnk--', e)
+    #     with open('./logs/MCTS_wldxjqwmnk.txt', 'w') as f:
+    #         f.write(str(e))
+
+    # try:
+    #     Runner('./games/output/5/ycwjnrcsya.txt', './games/output/5/ycwjnrcsya_lvl0.txt', './logs/MCTS_ycwjnrcsya.txt', loops=10, playouts=1000, max_depth=50).run()
+    # except Exception as e:
+    #     print('Error with: ycwjnrcsya--', e)
+    #     with open('./logs/MCTS_ycwjnrcsya.txt', 'w') as f:
+    #         f.write(str(e))
+    
+    # try:
+    #     Runner('./games/output/5/ysbrlmgqbo.txt', './games/output/5/ysbrlmgqbo_lvl0.txt', './logs/MCTS_ysbrlmgqbo.txt', loops=10, playouts=1000, max_depth=50).run()
+    # except Exception as e:
+    #     print('Error with: ysbrlmgqbo--', e)
+    #     with open('./logs/MCTS_ysbrlmgqbo.txt', 'w') as f:
+    #         f.write(str(e))
+    
+    # try:
+    #     Runner('./games/output/5/ytiwqqexca.txt', './games/output/5/ytiwqqexca_lvl0.txt', './logs/MCTS_ytiwqqexca.txt', loops=10, playouts=1000, max_depth=50).run()
+    # except Exception as e:
+    #     print('Error with: ytiwqqexca--', e)
+    #     with open('./logs/MCTS_ytiwqqexca.txt', 'w') as f:
+    #         f.write(str(e))
     
 
 
