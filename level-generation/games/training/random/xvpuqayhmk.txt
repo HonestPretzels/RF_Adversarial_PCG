@@ -1,0 +1,33 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > ShootAvatar img=newset/cop1
+        test0 > RandomNPC img=newset/girl2 orientation=RIGHT singleton=False shrinkFactor=0.6512459938786991 autoTiling=True
+        test1 > RandomNPC img=newset/girl2 orientation=LEFT
+        test2 > Resource img=newset/egg orientation=UP
+        test3 > Missile img=newset/arrow orientation=RIGHT prob=0.3816644708962622
+        test4 > Chaser img=newset/bandit1 orientation=LEFT stype=test3 cooldown=17
+
+    LevelMapping
+        N > test0
+        n > test1
+        E > test2
+        M > test3
+        C > test4
+        A > avatar
+
+    InteractionSet
+        test2 test2 > pullWithIt scoreChange=1
+        test0 test0 > transformTo stype=test1 scoreChange=-3
+        test3 test3 > killIfFromAbove 
+        test2 test2 > killBoth 
+        test3 test3 > reverseDirection scoreChange=3
+        test2 test2 > teleportToExit 
+        test2 test2 > killIfHasMore resource=test2 limit=2 scoreChange=1
+        test4 test4 > transformTo stype=test3 scoreChange=2
+        test0 test0 > transformTo stype=test2
+        test1 test1 > wrapAround offset=0 scoreChange=3
+
+    TerminationSet
+        SpriteCounter stype=test3 limit=4 win=True
+        ResourceCounter stype=test2 limit=34 win=False

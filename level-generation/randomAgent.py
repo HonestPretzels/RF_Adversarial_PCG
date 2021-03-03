@@ -1,7 +1,8 @@
 from vgdl.interfaces.gym import VGDLEnv
 from time import time
 
-prefix = './games/output/5/'
+# prefix = './games/output/5/'
+prefix = './games/training/human/'
 logPrefix = './logs/'
 
 
@@ -46,7 +47,8 @@ def runGame(game):
             return
 
 def main():
-    games = ['cefkjprbjt', 'cvirsbjuul', 'kckuxyjwzr', 'lgaqxpddxo', 'wldxjqwmnk', 'ycwjnrcsya', 'ysbrlmgqbo', 'ytiwqqexca']
+    # games = ['cefkjprbjt', 'cvirsbjuul', 'kckuxyjwzr', 'lgaqxpddxo', 'wldxjqwmnk', 'ycwjnrcsya', 'ysbrlmgqbo', 'ytiwqqexca']
+    games = ['boulderdash']
     for game in games:
         print('Running Game: %s' %game)
         try:

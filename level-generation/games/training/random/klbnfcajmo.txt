@@ -1,0 +1,43 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > MovingAvatar img=newset/cop1
+        test0 > Missile img=newset/arrow orientation=LEFT singleton=True color=GRAY limit=8
+        test1 > Immovable img=newset/block2 orientation=UP limit=4 invisible=False
+        test2 > Fleeing img=newset/blessedman orientation=RIGHT stype=test8 color=RED prob=0.9484097020381242 speed=0.44718404942021905
+        test3 > Fleeing img=newset/blessedman orientation=DOWN stype=test5
+        test4 > Bomber img=oryx/alien1 orientation=DOWN stype=test5
+        test5 > Resource img=newset/egg orientation=UP cooldown=1 orientation=LEFT
+        test6 > Chaser img=newset/bandit1 orientation=RIGHT stype=test8 hidden=True singleton=True
+        test7 > Passive img=newset/camel1 orientation=RIGHT cooldown=6
+        test8 > Passive img=newset/camel1 orientation=UP prob=0.04335988307937
+        test9 > OrientedFlicker img=newset/cherries orientation=UP singleton=False limit=10 speed=0.031295554603912645
+
+    LevelMapping
+        M > test0
+        I > test1
+        F > test2
+        f > test3
+        B > test4
+        E > test5
+        C > test6
+        P > test7
+        p > test8
+        O > test9
+        A > avatar
+
+    InteractionSet
+        test1 test1 > cloneSprite scoreChange=-3
+        test4 test4 > changeResource resource=test5 value=3
+        test8 test8 > killBoth scoreChange=0
+        test2 test2 > collectResource 
+        test6 test6 > attractGaze prob=0.3055210461909855 scoreChange=3
+        test1 test1 > killIfHasLess resource=test5 limit=4
+        test0 test0 > cloneSprite scoreChange=1
+        test1 test1 > spawnIfHasMore resource=test5 stype=test2 limit=4 scoreChange=0
+        test5 test5 > killIfFromAbove 
+        test6 test6 > stepBack scoreChange=4
+
+    TerminationSet
+        ResourceCounter stype=test5 limit=35 win=True scoreChange=8
+        SpriteCounter stype=test2 limit=10 win=False scoreChange=21
