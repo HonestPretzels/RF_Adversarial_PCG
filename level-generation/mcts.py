@@ -8,6 +8,7 @@ from copy import copy
 from math import sqrt, log
 
 from vgdl.interfaces.gym import VGDLEnv
+from classification import getAllFilePaths
 
 #https://gist.github.com/blole/dfebbec182e6b72ec16b66cc7e331110   FROM HERE
 
@@ -70,14 +71,13 @@ class Runner:
 
     def run(self):
         best_rewards = []
-        start_time = time.time()
 
-        env = VGDLEnv(self.game_path, self.level_path,'image', block_size=10)
+        env = VGDLEnv(self.game_path, self.level_path,'objects', block_size=10)
 
         for loop in range(self.loops):
-
+            start_time = time.time()
             print('Loop:', loop+1)
-            env.render(mode='human')
+            env.render(mode='headless')
             env.reset()
             root = Node(None, None)
 
@@ -85,7 +85,9 @@ class Runner:
             best_reward = float("-inf")
 
             for playout in range(self.playouts):
-                playout_start = time.time()
+                # RESET TO EQUAL COPYING AN EMPTY STATE --- THINK THIS THROUGH AGAIN LATER
+                env.render(mode='headless')
+                env.reset()
                 state = copy(env) 
 
                 sum_reward = 0
@@ -94,6 +96,7 @@ class Runner:
                 actions = []
 
                 # selection
+                # This also catches us up to the state, assuming that the env is deterministic
                 while node.children:
                     if node.explored_children < len(node.children):
                         child = node.children[node.explored_children]
@@ -115,7 +118,8 @@ class Runner:
                     if time.time() - start_time > 300:
                         sum_reward = 0
                         for action in best_actions:
-                            _, reward, terminal, _ = env.step(action)
+                            state.render(mode="headless")
+                            _, reward, terminal, _ = state.step(action)
                             sum_reward += reward
                             if terminal:
                                 break
@@ -135,7 +139,7 @@ class Runner:
                     if len(actions) > self.max_depth:
                         sum_reward -= 100
                         break
-                print('Playout: %d completed in %f' %(playout+1, time.time() - playout_start))
+                # print('Playout: %d completed in %f' %(playout+1, time.time() - playout_start))
                 
 
                 # remember best
@@ -151,83 +155,58 @@ class Runner:
 
             sum_reward = 0
             print(best_actions)
+            env.render(mode="headless")
+            env.reset()
+            # Go through best actions
+            terminated = False
             for action in best_actions:
+                env.render(mode="headless")
                 _, reward, terminal, _ = env.step(action)
-                env.render()
                 sum_reward += reward
                 if terminal:
-                    print('terminal')
+                    terminated = True
+                    break
+            
+            # Take random actions until terminal or another 300 moves occured
+            actionCounter = 0
+            while not terminated and actionCounter < 300:
+                env.render(mode="headless")
+                action = env.action_space.sample()
+                best_actions.append(action)
+                _, reward, terminal, _ = env.step(action)
+                sum_reward += reward
+                actionCounter += 1
+                if terminal:
+                    terminated = True
                     break
 
             best_rewards.append(sum_reward)
             score = max(moving_average(best_rewards, 100))
-            avg_time = (time.time()-start_time)/(loop+1)
-            self.record_results(sum_reward, best_actions, time.time()-start_time)
+            avg_time = (time.time()-start_time)
+            if terminated:
+                self.record_results(sum_reward, best_actions, time.time()-start_time)
+            else:
+                self.record_timeout(time.time()-start_time, sum_reward, best_actions)
             self.print_stats(loop+1, score, avg_time)
 
 
 def main():
-    # try:
-    #     Runner('./games/output/5/cvirsbjuul.txt', './games/output/5/cvirsbjuul_lvl0.txt', './logs/MCTS_cvirsbjuul.txt', loops=10, playouts=1000, max_depth=50).run()
-    # except Exception as e:
-    #     print('Error with: cvirsbjuul --', e)
-    #     with open('./logs/MCTS_cvirsbjuul.txt', 'w') as f:
-    #         f.write(str(e))
-
-    # try:
-    #     Runner('./games/output/5/cefkjprbjt.txt', './games/output/5/cefkjprbjt_lvl0.txt', './logs/MCTS_cefkjprbjt.txt', loops=10, playouts=1000, max_depth=50).run()
-    # except Exception as e:
-    #     print('Error with: cefkjprbjt--', e)
-    #     with open('./logs/MCTS_cefkjprbjt.txt', 'w') as f:
-    #         f.write(str(e))
-
-    # try:
-    #     Runner('./games/output/5/kckuxyjwzr.txt', './games/output/5/kckuxyjwzr_lvl0.txt', './logs/MCTS_kckuxyjwzr.txt', loops=10, playouts=1000, max_depth=50).run()
-    # except Exception as e:
-    #     print('Error with: kckuxyjwzr--', e)
-    #     with open('./logs/MCTS_kckuxyjwzr.txt', 'w') as f:
-    #         f.write(str(e))
-    # try:
-    #  Runner('./games/output/5/lgaqxpddxo.txt', './games/output/5/lgaqxpddxo_lvl0.txt', './logs/MCTS_lgaqxpddxo.txt', loops=10, playouts=1000, max_depth=50).run()
-    # except Exception as e:
-    #     print('Error with: lgaqxpddxo--', e)
-    #     with open('./logs/MCTS_lgaqxpddxo.txt', 'w') as f:
-    #         f.write(str(e))
-
-    # try:
-    #     Runner('./games/output/5/wldxjqwmnk.txt', './games/output/5/wldxjqwmnk_lvl0.txt', './logs/MCTS_wldxjqwmnk.txt', loops=10, playouts=1000, max_depth=50).run()
-    # except Exception as e:
-    #     print('Error with: wldxjqwmnk--', e)
-    #     with open('./logs/MCTS_wldxjqwmnk.txt', 'w') as f:
-    #         f.write(str(e))
-
-    # try:
-    #     Runner('./games/output/5/ycwjnrcsya.txt', './games/output/5/ycwjnrcsya_lvl0.txt', './logs/MCTS_ycwjnrcsya.txt', loops=10, playouts=1000, max_depth=50).run()
-    # except Exception as e:
-    #     print('Error with: ycwjnrcsya--', e)
-    #     with open('./logs/MCTS_ycwjnrcsya.txt', 'w') as f:
-    #         f.write(str(e))
-    
-    # try:
-    #     Runner('./games/output/5/ysbrlmgqbo.txt', './games/output/5/ysbrlmgqbo_lvl0.txt', './logs/MCTS_ysbrlmgqbo.txt', loops=10, playouts=1000, max_depth=50).run()
-    # except Exception as e:
-    #     print('Error with: ysbrlmgqbo--', e)
-    #     with open('./logs/MCTS_ysbrlmgqbo.txt', 'w') as f:
-    #         f.write(str(e))
-    
-    # try:
-    #     Runner('./games/output/5/ytiwqqexca.txt', './games/output/5/ytiwqqexca_lvl0.txt', './logs/MCTS_ytiwqqexca.txt', loops=10, playouts=1000, max_depth=50).run()
-    # except Exception as e:
-    #     print('Error with: ytiwqqexca--', e)
-    #     with open('./logs/MCTS_ytiwqqexca.txt', 'w') as f:
-    #         f.write(str(e))
-    try:
-        Runner('./games/training/human/boulderdash.txt', './games/training/human/boulderdash_lvl0.txt', './logs/boulderdash.txt', loops=10, playouts=1000, max_depth=50).run()
-    except Exception as e:
-        print('Error with: kckuxyjwzr--', e)
-        with open('./logs/boulderdash.txt', 'w') as f:
-            f.write(str(e))
-
+    gameDirectory = sys.argv[1]
+    logDirectory = sys.argv[2]
+    gamePaths = getAllFilePaths(gameDirectory)
+    games = {}
+    for game in gamePaths:
+        if '_lvl' in game:
+            gameName = game.split('_')[0] + '.txt'
+            games[gameName] = game
+    for game, level in games.items():
+        logs = os.path.join(logDirectory, 'MCTS_' + os.path.basename(game))
+        try:
+            Runner(game, level, logs, loops=5, playouts=500, max_depth=200).run()
+        except Exception as e:
+            print('Error with: %s -- %s' %(os.path.basename(game), e))
+            with open(logs, 'w') as f:
+                f.write(str(e))
 
 if __name__ == "__main__":
     main()

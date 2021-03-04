@@ -1,0 +1,8 @@
+aliens.txt COMPLETED at action 242 with score 11.000000
+aliens.txt COMPLETED at action 233 with score 9.000000
+aliens.txt COMPLETED at action 167 with score -1.000000
+aliens.txt COMPLETED at action 146 with score 3.000000
+aliens.txt COMPLETED at action 226 with score 5.000000
+aliens.txt COMPLETED at action 188 with score 5.000000
+aliens.txt COMPLETED at action 185 with score 3.000000
+aliens.txt TIMED OUT at action 500 with score 36.000000
