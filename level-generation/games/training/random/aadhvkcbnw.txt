@@ -1,0 +1,34 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > MovingAvatar img=newset/cop1
+        test0 > Fleeing img=newset/blessedman orientation=UP stype=test7 cooldown=10 color=DARKBLUE
+        test1 > SpawnPoint img=newset/blockR3 orientation=DOWN stype=test0
+        test2 > Immovable img=newset/block2 orientation=LEFT orientation=DOWN
+        test3 > Flicker img=newset/butterfly1 orientation=RIGHT hidden=True
+        test4 > Resource img=newset/egg orientation=UP autoTiling=True
+        test5 > Immovable img=newset/block2 orientation=RIGHT speed=0.8288416370611953 singleton=True speed=0.5814869792503744
+        test6 > Immovable img=newset/block2 orientation=UP hidden=True autoTiling=False
+        test7 > Passive img=newset/camel1 orientation=RIGHT speed=0.3244801491409366 color=BLACK
+
+    LevelMapping
+        F > test0
+        S > test1
+        I > test2
+        L > test3
+        E > test4
+        i > test5
+        q > test6
+        P > test7
+        A > avatar
+
+    InteractionSet
+        test0 test0 > collectResource 
+        test1 test1 > pullWithIt 
+        test6 test6 > undoAll 
+        test0 test0 > wrapAround offset=0
+        test1 test1 > killIfFromAbove 
+
+    TerminationSet
+        ResourceCounter stype=test4 limit=29 win=True
+        SpriteCounter stype=test6 limit=3 win=False

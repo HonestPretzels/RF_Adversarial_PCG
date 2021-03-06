@@ -1,0 +1,32 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > MovingAvatar img=newset/cop1
+        test0  > Immovable img=newset/block2 orientation=DOWN limit=9 singleton=True
+        test1 > Flicker img=newset/butterfly1 orientation=LEFT singleton=False invisible=True autoTiling=False
+        test2 > RandomNPC img=newset/girl2 orientation=LEFT
+        test3 > Resource img=newset/egg orientation=DOWN
+        test4 > Immovable img=newset/block2 orientation=DOWN shrinkFactor=0.5181558027163425 limit=10 prob=0.006202857401725992
+        test5 > Bomber img=oryx/alien1 orientation=LEFT stype=test0 limit=10 speed=0.055936563129236005
+        test6  > Portal img=newset/exit orientation=RIGHT stype=test5
+
+    LevelMapping
+        I > test0
+        L > test1
+        N > test2
+        E > test3
+        i > test4
+        B > test5
+        R > test6
+        A > avatar
+
+    InteractionSet
+        test4 test4 > killIfOtherHasLess resource=test3 limit=1
+        test6 test6 > undoAll
+        test4 test4 > undoAll
+        test2 test2 > stepBack scoreChange=1
+        test0 test0 > stepBack scoreChange=0
+
+    TerminationSet
+        Timeout limit=739 win=True
+        ResourceCounter stype=test3 limit=31 win=False

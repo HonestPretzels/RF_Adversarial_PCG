@@ -1,0 +1,32 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > FlakAvatar img=newset/cop1
+        test0   > Portal img=newset/exit orientation=LEFT stype=test4   shrinkFactor=0.9115336127684028
+        test1 > Portal img=newset/exit orientation=LEFT stype=test3
+        test2 > Missile img=newset/arrow orientation=DOWN limit=4 limit=5
+        test3  > Missile img=newset/arrow orientation=DOWN cooldown=12 limit=4
+        test4  > Portal img=newset/exit orientation=LEFT stype=test1  shrinkFactor=0.8143519549446306 invisible=True
+        testResource > Resource color=LIGHTGRAY
+
+    LevelMapping
+        R > test0
+        r > test1
+        M > test2
+        m > test3
+        a > test4
+        E > testResource
+        A > avatar
+
+    InteractionSet
+        test2 test2 > killIfFromAbove scoreChange=-4
+        test2 test2 > attractGaze prob=0.43905243545808703 scoreChange=-2
+        test0 test0 > reverseDirection
+        test4 test4 > flipDirection
+        test4 test4 > reverseDirection
+        test1 test1 > pullWithIt scoreChange=2
+        test0 test0 > cloneSprite
+
+    TerminationSet
+        ResourceCounter stype=testResource limit=44 win=True
+        Timeout limit=768 win=False scoreChange=193

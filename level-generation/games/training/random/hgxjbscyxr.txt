@@ -1,0 +1,35 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > FlakAvatar img=newset/cop1
+        test0 > SpawnPoint img=newset/blockR3 orientation=RIGHT stype=test1 singleton=False prob=0.5539897660914378 color=GOLD
+        test1 > Resource img=newset/egg orientation=RIGHT color=LIGHTRED
+        test2 > Fleeing img=newset/blessedman orientation=DOWN stype=test0
+        test3 > Portal img=newset/exit orientation=UP stype=test4 color=LIGHTGRAY cooldown=9
+        test4 > OrientedFlicker img=newset/cherries orientation=UP
+        test5 > Immovable img=newset/block2 orientation=LEFT limit=4 autoTiling=True cooldown=5
+        test6 > Immovable img=newset/block2 orientation=RIGHT singleton=False orientation=UP
+
+    LevelMapping
+        S > test0
+        E > test1
+        F > test2
+        R > test3
+        O > test4
+        I > test5
+        i > test6
+        A > avatar
+
+    InteractionSet
+        test0 test0 > killIfHasLess resource=test1 limit=4
+        test5 test5 > collectResource 
+        test0 test0 > spawnIfHasMore resource=test1 stype=test6 limit=5
+        test1 test1 > attractGaze prob=0.18591588549901128 scoreChange=-2
+        test2 test2 > attractGaze prob=0.09657580465880833
+        test5 test5 > killIfOtherHasLess resource=test1 limit=4
+        test5 test5 > killIfOtherHasMore resource=test1 limit=4 scoreChange=4
+        test2 test2 > attractGaze prob=0.8765864053630578 scoreChange=-5
+
+    TerminationSet
+        ResourceCounter stype=test1 limit=49 win=True
+        Timeout limit=625 win=False

@@ -1,0 +1,43 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > MovingAvatar img=newset/cop1
+        test0 > Flicker img=newset/butterfly1 orientation=UP color=DARKGRAY speed=0.09490747001574029
+        test1 > Immovable img=newset/block2 orientation=DOWN hidden=True
+        test2 > OrientedFlicker img=newset/cherries orientation=LEFT shrinkFactor=0.1438827375844376 limit=1 hidden=False
+        test3 > OrientedFlicker img=newset/cherries orientation=RIGHT prob=0.9498465783826977
+        test4  > RandomNPC img=newset/girl2 orientation=RIGHT limit=4 speed=0.7343806359530851 singleton=True
+        test5 > Flicker img=newset/butterfly1 orientation=DOWN
+        test6  > Immovable img=newset/block2 orientation=DOWN
+        test7 > Immovable img=newset/block2 orientation=RIGHT singleton=True limit=10 invisible=False
+        test8  > Immovable img=newset/block2 orientation=LEFT color=ORANGE limit=1 prob=0.3742834686888179
+        test9 > OrientedFlicker img=newset/cherries orientation=LEFT singleton=True cooldown=1
+        testResource > Resource color=BLUE
+
+    LevelMapping
+        L > test0
+        I > test1
+        O > test2
+        o > test3
+        N > test4
+        l > test5
+        i > test6
+        8 > test7
+        u > test8
+        v > test9
+        E > testResource
+        A > avatar
+
+    InteractionSet
+        test0 test0 > turnAround scoreChange=5
+        test0 test0 > killIfFromAbove
+        test9 test9 > killIfOtherHasLess resource=testResource limit=1
+        test9 test9 > spawnIfHasMore resource=testResource stype=test6 limit=5
+        test4 test4 > killIfFromAbove scoreChange=-3
+        test5 test5 > pullWithIt scoreChange=1
+        test7 test7 > wrapAround offset=2
+        test2 test2 > pullWithIt scoreChange=-2
+
+    TerminationSet
+        Timeout limit=271 win=True
+        SpriteCounter stype=test8 limit=2 win=False

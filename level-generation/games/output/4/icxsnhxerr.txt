@@ -1,0 +1,36 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > ShootAvatar img=newset/cop1
+        test0 > Chaser img=newset/bandit1 orientation=LEFT stype=test4 autoTiling=True shrinkFactor=0.6778950380927296
+        test1 > Resource img=newset/egg orientation=LEFT hidden=False
+        test2  > Flicker img=newset/butterfly1 orientation=RIGHT prob=0.5072277191109337 autoTiling=False cooldown=5
+        test3 > Passive img=newset/camel1 orientation=UP orientation=LEFT
+        test4 > Immovable img=newset/block2 orientation=LEFT shrinkFactor=0.19948722426066323
+        test5  > Immovable img=newset/block2 orientation=LEFT
+        test6  > Resource img=newset/egg orientation=DOWN singleton=False autoTiling=False orientation=UP
+        test7 > Immovable img=newset/block2 orientation=RIGHT color=LIGHTRED limit=3
+
+    LevelMapping
+        C > test0
+        E > test1
+        L > test2
+        P > test3
+        I > test4
+        i > test5
+        e > test6
+        z > test7
+        A > avatar
+
+    InteractionSet
+        test4 test4 > wrapAround offset=1 scoreChange=-5
+        test0 test0 > bounceForward scoreChange=-5
+        test0 test0 > stepBack scoreChange=-5
+        test5 test5 > killBoth
+        test7 test7 > turnAround
+        test1 test1 > killIfFromAbove scoreChange=2
+        test5 test5 > killSprite
+
+    TerminationSet
+        SpriteCounter stype=test6 limit=1 win=True scoreChange=151
+        SpriteCounter stype=test3 limit=1 win=False

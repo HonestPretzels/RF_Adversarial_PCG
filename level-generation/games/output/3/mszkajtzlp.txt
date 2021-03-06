@@ -1,0 +1,32 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > ShootAvatar img=newset/cop1
+        test0  > Portal img=newset/exit orientation=UP stype=test4
+        test1 > Resource img=newset/egg orientation=LEFT shrinkFactor=0.9623459988009602 limit=6
+        test2  > Immovable img=newset/block2 orientation=LEFT
+        test3   > Immovable img=newset/block2 orientation=UP speed=0.5788874386910199 shrinkFactor=0.6293486126951077
+        test4   > Immovable img=newset/block2 orientation=DOWN hidden=False invisible=False shrinkFactor=0.08307345643864561
+
+    LevelMapping
+        R > test0
+        E > test1
+        I > test2
+        i > test3
+        s > test4
+        A > avatar
+
+    InteractionSet
+        test0 test0 > spawnIfHasMore resource=test1 stype=test3 limit=4 scoreChange=-3
+        test4 test4 > turnAround
+        test0 test0 > undoAll scoreChange=-3
+        test3 test3 > undoAll
+        test4 test4 > killIfOtherHasLess resource=test1 limit=3
+        test3 test3 > reverseDirection
+        test4 test4 > killIfOtherHasLess resource=test1 limit=4
+        test4 test4 > killIfHasMore resource=test1 limit=2 scoreChange=-4
+        test3 test3 > stepBack scoreChange=0
+
+    TerminationSet
+        SpriteCounter stype=test4 limit=7 win=True scoreChange=185
+        Timeout limit=996 win=False

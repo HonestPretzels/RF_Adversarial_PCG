@@ -1,0 +1,35 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > MovingAvatar img=newset/cop1
+        test0   > Immovable img=newset/block2 orientation=LEFT singleton=True
+        test1 > Immovable img=newset/block2 orientation=RIGHT prob=0.4068288044164813 color=LIGHTRED prob=0.26203217789397304
+        test2 > Missile img=newset/arrow orientation=UP shrinkFactor=0.34530960863967675 orientation=LEFT limit=8
+        test3 > Flicker img=newset/butterfly1 orientation=RIGHT hidden=True color=LIGHTGRAY shrinkFactor=0.6763963389442391
+        test4 > Fleeing img=newset/blessedman orientation=RIGHT stype=test3
+        test5   > Flicker img=newset/butterfly1 orientation=RIGHT hidden=False speed=0.5624394464370887 prob=0.6764134862243193
+        testResource > Resource color=BROWN
+
+    LevelMapping
+        I > test0
+        i > test1
+        M > test2
+        L > test3
+        F > test4
+        l > test5
+        E > testResource
+        A > avatar
+
+    InteractionSet
+        test2 test2 > undoAll
+        test3 test3 > collectResource
+        test3 test3 > undoAll scoreChange=-1
+        testResource testResource > cloneSprite
+        test3 test3 > killIfOtherHasLess resource=testResource limit=5 scoreChange=0
+        test5 test5 > flipDirection scoreChange=-5
+        test4 test4 > stepBack
+        test4 test4 > killSprite scoreChange=-1
+
+    TerminationSet
+        SpriteCounter stype=test5 limit=9 win=False
+        ResourceCounter stype=testResource limit=11 win=True

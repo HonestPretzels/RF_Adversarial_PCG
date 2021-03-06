@@ -1,0 +1,40 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > FlakAvatar img=newset/cop1
+        test0 > Resource img=newset/egg orientation=RIGHT color=GOLD
+        test1 > Passive img=newset/camel1 orientation=UP orientation=DOWN singleton=False limit=1
+        test2 > Passive img=newset/camel1 orientation=DOWN prob=0.6647982048308951 shrinkFactor=0.9982483366370581
+        test3 > RandomNPC img=newset/girl2 orientation=DOWN
+        test4 > Chaser img=newset/bandit1 orientation=RIGHT stype=test6 orientation=RIGHT
+        test5 > RandomNPC img=newset/girl2 orientation=UP singleton=True shrinkFactor=0.7004065167359452 color=LIGHTORANGE
+        test6 > Passive img=newset/camel1 orientation=UP cooldown=11
+        test7 > Resource img=newset/egg orientation=RIGHT invisible=False autoTiling=False limit=9
+        test8 > Resource img=newset/egg orientation=UP
+
+    LevelMapping
+        E > test0
+        P > test1
+        p > test2
+        N > test3
+        C > test4
+        n > test5
+        4 > test6
+        e > test7
+        k > test8
+        A > avatar
+
+    InteractionSet
+        test0 test0 > cloneSprite 
+        test8 test8 > killIfFromAbove 
+        test4 test4 > transformTo stype=test4
+        test4 test4 > teleportToExit scoreChange=4
+        test4 test4 > killIfOtherHasLess resource=test8 limit=5
+        test0 test0 > bounceForward scoreChange=-5
+        test0 test0 > wrapAround offset=0
+        test2 test2 > changeResource resource=test8 value=-1 scoreChange=-2
+        test1 test1 > bounceForward 
+
+    TerminationSet
+        Timeout limit=791 win=True
+        ResourceCounter stype=test8 limit=91 win=False

@@ -1,0 +1,39 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > ShootAvatar img=newset/cop1
+        test0 > Missile img=newset/arrow orientation=DOWN
+        test1 > Chaser img=newset/bandit1 orientation=UP stype=test3 hidden=True color=ORANGE singleton=False
+        test2  > Immovable img=newset/block2 orientation=LEFT singleton=False hidden=False autoTiling=False
+        test3 > Flicker img=newset/butterfly1 orientation=RIGHT orientation=UP color=BLACK
+        test4 > Chaser img=newset/bandit1 orientation=DOWN stype=test5 color=ORANGE singleton=False speed=0.6194511886952936
+        test5  > Immovable img=newset/block2 orientation=UP cooldown=7 singleton=False
+        test6 > OrientedFlicker img=newset/cherries orientation=LEFT autoTiling=False speed=0.7677500768106972 orientation=DOWN
+        test7 > Resource img=newset/egg orientation=DOWN prob=0.9776520787008666 limit=3
+
+    LevelMapping
+        M > test0
+        C > test1
+        I > test2
+        L > test3
+        c > test4
+        i > test5
+        O > test6
+        E > test7
+        A > avatar
+
+    InteractionSet
+        test7 test7 > transformTo stype=test1 scoreChange=-1
+        test2 test2 > cloneSprite scoreChange=0
+        test4 test4 > killIfOtherHasMore resource=test7 limit=1
+        test1 test1 > turnAround scoreChange=-5
+        test1 test1 > killIfFromAbove scoreChange=5
+        test5 test5 > killIfHasLess resource=test7 limit=2 scoreChange=-5
+        test2 test2 > reverseDirection scoreChange=2
+        test2 test2 > pullWithIt scoreChange=-3
+        test5 test5 > stepBack scoreChange=-4
+        test3 test3 > killSprite
+
+    TerminationSet
+        ResourceCounter stype=test7 limit=19 win=True
+        SpriteCounter stype=test5 limit=4 win=False

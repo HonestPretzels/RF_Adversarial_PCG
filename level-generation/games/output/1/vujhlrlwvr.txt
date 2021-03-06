@@ -1,0 +1,39 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > ShootAvatar img=newset/cop1
+        test0 > RandomNPC img=newset/girl2 orientation=DOWN orientation=DOWN shrinkFactor=0.3746745256312669 singleton=True
+        test1 > Resource img=newset/egg orientation=DOWN
+        test2  > Portal img=newset/exit orientation=DOWN stype=test8  shrinkFactor=0.14488398213456655
+        test3  > Portal img=newset/exit orientation=RIGHT stype=test7   singleton=True color=DARKGRAY
+        test4 > SpawnPoint img=newset/blockR3 orientation=LEFT stype=test0 shrinkFactor=0.2078611659147619 speed=0.8394035387472057 limit=6
+        test5  > Immovable img=newset/block2 orientation=LEFT cooldown=2 shrinkFactor=0.37526265099003187
+        test6 > Immovable img=newset/block2 orientation=DOWN hidden=True hidden=False autoTiling=False
+        test7  > Immovable img=newset/block2 orientation=LEFT shrinkFactor=0.4536111923301466 prob=0.6303503949060584
+        test8 > Bomber img=oryx/alien1 orientation=LEFT stype=test3 orientation=LEFT speed=0.09700947827763029 shrinkFactor=0.43942477365164745
+
+    LevelMapping
+        N > test0
+        E > test1
+        R > test2
+        r > test3
+        S > test4
+        I > test5
+        i > test6
+        g > test7
+        B > test8
+        A > avatar
+
+    InteractionSet
+        test1 test1 > pullWithIt scoreChange=-2
+        test1 test1 > reverseDirection
+        test1 test1 > reverseDirection
+        test1 test1 > bounceForward scoreChange=-5
+        test0 test0 > killIfOtherHasLess resource=test1 limit=1
+        test0 test0 > flipDirection scoreChange=5
+        test6 test6 > killIfHasMore resource=test1 limit=1
+        test3 test3 > killSprite scoreChange=4
+
+    TerminationSet
+        Timeout limit=674 win=True
+        SpriteCounter stype=test2 limit=9 win=False scoreChange=441

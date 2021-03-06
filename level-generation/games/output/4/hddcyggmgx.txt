@@ -1,0 +1,40 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > MovingAvatar img=newset/cop1
+        test0  > Immovable img=newset/block2 orientation=LEFT
+        test1 > Fleeing img=newset/blessedman orientation=LEFT stype=test5 autoTiling=False
+        test2 > OrientedFlicker img=newset/cherries orientation=UP color=LIGHTORANGE prob=0.02421144135731723 autoTiling=False
+        test3   > Immovable img=newset/block2 orientation=DOWN autoTiling=False
+        test4  > Bomber img=oryx/alien1 orientation=LEFT stype=test7
+        test5 > Immovable img=newset/block2 orientation=UP singleton=True cooldown=20 singleton=False
+        test6 > Fleeing img=newset/blessedman orientation=RIGHT stype=test3 color=BLACK limit=5 hidden=False
+        test7 > OrientedFlicker img=newset/cherries orientation=RIGHT prob=0.5600748495050818
+        test8  > Immovable img=newset/block2 orientation=DOWN color=RED speed=0.34367533094835334
+        testResource > Resource color=GOLD
+
+    LevelMapping
+        I > test0
+        F > test1
+        O > test2
+        i > test3
+        B > test4
+        d > test5
+        f > test6
+        o > test7
+        x > test8
+        E > testResource
+        A > avatar
+
+    InteractionSet
+        test6 test6 > wrapAround offset=2 scoreChange=-2
+        test4 test4 > spawnIfHasMore resource=testResource stype=test1 limit=4
+        test3 test3 > killSprite
+        test6 test6 > pullWithIt scoreChange=-1
+        test4 test4 > teleportToExit
+        test5 test5 > killBoth scoreChange=4
+        test7 test7 > stepBack scoreChange=5
+
+    TerminationSet
+        SpriteCounter stype=test7 limit=2 win=False scoreChange=191
+        ResourceCounter stype=testResource limit=49 win=True

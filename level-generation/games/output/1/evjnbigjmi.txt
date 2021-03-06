@@ -1,0 +1,32 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > ShootAvatar img=newset/cop1
+        test0  > Immovable img=newset/block2 orientation=LEFT singleton=False color=GREEN autoTiling=True
+        test1  > Immovable img=newset/block2 orientation=DOWN
+        test2  > Immovable img=newset/block2 orientation=RIGHT singleton=True
+        test3 > Resource img=newset/egg orientation=LEFT invisible=True color=YELLOW autoTiling=True
+        test4 > Flicker img=newset/butterfly1 orientation=LEFT limit=5 cooldown=18 speed=0.9773032609643449
+
+    LevelMapping
+        I > test0
+        i > test1
+        p > test2
+        E > test3
+        L > test4
+        A > avatar
+
+    InteractionSet
+        test3 test3 > turnAround scoreChange=3
+        test0 test0 > transformTo stype=test3
+        test3 test3 > spawnIfHasMore resource=test3 stype=test1 limit=2 scoreChange=3
+        test4 test4 > killIfHasLess resource=test3 limit=5
+        test4 test4 > turnAround scoreChange=3
+        test2 test2 > spawnIfHasMore resource=test3 stype=test3 limit=2 scoreChange=-2
+        test0 test0 > killBoth scoreChange=-5
+        test4 test4 > attractGaze prob=0.9574319362500802
+        test2 test2 > killSprite 
+
+    TerminationSet
+        SpriteCounter stype=test1 limit=1 win=True
+        Timeout limit=973 win=False

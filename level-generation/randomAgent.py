@@ -25,8 +25,8 @@ def runGame(gameFile, levelFile, logs):
     logInterval = 50
 
     env = VGDLEnv(gameFile, levelFile, 'image', block_size=10)
-    startTime = time()
     for loop in range(10):
+        startTime = time()
         score = 0
         env.render(mode='headless')
         env.reset()

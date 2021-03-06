@@ -1,0 +1,43 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > FlakAvatar img=newset/cop1
+        test0 > Passive img=newset/camel1 orientation=RIGHT
+        test1 > Chaser img=newset/bandit1 orientation=UP stype=test8 invisible=True
+        test2 > Fleeing img=newset/blessedman orientation=LEFT stype=test9 orientation=DOWN singleton=True autoTiling=True
+        test3 > Fleeing img=newset/blessedman orientation=RIGHT stype=test9 autoTiling=False autoTiling=True shrinkFactor=0.42098436816156515
+        test4 > Flicker img=newset/butterfly1 orientation=DOWN speed=0.1807965780336256
+        test5 > Missile img=newset/arrow orientation=UP invisible=True
+        test6 > SpawnPoint img=newset/blockR3 orientation=LEFT stype=test2 color=GOLD singleton=True hidden=False
+        test7   > Immovable img=newset/block2 orientation=UP
+        test8 > RandomNPC img=newset/girl2 orientation=DOWN
+        test9 > Immovable img=newset/block2 orientation=RIGHT invisible=True cooldown=12
+        testResource > Resource color=GRAY
+
+    LevelMapping
+        P > test0
+        C > test1
+        F > test2
+        f > test3
+        L > test4
+        M > test5
+        S > test6
+        I > test7
+        N > test8
+        i > test9
+        E > testResource
+        A > avatar
+
+    InteractionSet
+        test5 test5 > wrapAround offset=2
+        test8 test8 > turnAround scoreChange=-1
+        test6 test6 > pullWithIt scoreChange=4
+        test9 test9 > attractGaze prob=0.2286458237889828
+        testResource testResource > changeResource resource=testResource value=0
+        test9 test9 > flipDirection
+        test5 test5 > killIfHasMore resource=testResource limit=4
+        test8 test8 > undoAll
+
+    TerminationSet
+        SpriteCounter stype=test3 limit=8 win=True
+        SpriteCounter stype=test9 limit=5 win=False

@@ -1,0 +1,32 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > FlakAvatar img=newset/cop1
+        test0 > SpawnPoint img=newset/blockR3 orientation=RIGHT stype=test2 autoTiling=True
+        test1  > Bomber img=oryx/alien1 orientation=UP stype=test5  autoTiling=False prob=0.05047965447518288 speed=0.5637224404067072
+        test2 > Chaser img=newset/bandit1 orientation=LEFT stype=test4 autoTiling=False singleton=True autoTiling=True
+        test3  > Immovable img=newset/block2 orientation=LEFT
+        test4   > Immovable img=newset/block2 orientation=UP prob=0.8147718459430957
+        test5 > Portal img=newset/exit orientation=DOWN stype=test0 color=ORANGE
+        testResource > Resource color=DARKGRAY
+
+    LevelMapping
+        S > test0
+        B > test1
+        C > test2
+        I > test3
+        i > test4
+        R > test5
+        E > testResource
+        A > avatar
+
+    InteractionSet
+        testResource testResource > turnAround scoreChange=-1
+        test3 test3 > killSprite scoreChange=1
+        test4 test4 > reverseDirection scoreChange=4
+        test1 test1 > transformTo stype=test4
+        test0 test0 > teleportToExit
+
+    TerminationSet
+        ResourceCounter stype=testResource limit=18 win=True
+        ResourceCounter stype=testResource limit=66 win=False scoreChange=228

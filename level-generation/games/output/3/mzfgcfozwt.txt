@@ -1,0 +1,37 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > FlakAvatar img=newset/cop1
+        test0 > Resource img=newset/egg orientation=RIGHT orientation=LEFT
+        test1 > Resource img=newset/egg orientation=LEFT
+        test2  > Bomber img=oryx/alien1 orientation=DOWN stype=test6   singleton=True
+        test3  > Bomber img=oryx/alien1 orientation=UP stype=test2  
+        test4 > Passive img=newset/camel1 orientation=RIGHT
+        test5  > Portal img=newset/exit orientation=RIGHT stype=test6   speed=0.08742374881941928
+        test6  > Immovable img=newset/block2 orientation=DOWN orientation=DOWN cooldown=17 singleton=False
+
+    LevelMapping
+        E > test0
+        e > test1
+        B > test2
+        b > test3
+        P > test4
+        R > test5
+        I > test6
+        A > avatar
+
+    InteractionSet
+        test2 test2 > killIfHasMore resource=test0 limit=5 scoreChange=2
+        test3 test3 > reverseDirection
+        test5 test5 > turnAround
+        test4 test4 > stepBack
+        test2 test2 > killSprite scoreChange=-4
+        test1 test1 > stepBack scoreChange=3
+        test3 test3 > killSprite scoreChange=3
+        test1 test1 > attractGaze prob=0.9514038778169588 scoreChange=-5
+        test1 test1 > killBoth scoreChange=5
+        test6 test6 > attractGaze prob=0.5270837756356311
+
+    TerminationSet
+        SpriteCounter stype=test4 limit=7 win=True
+        Timeout limit=341 win=False

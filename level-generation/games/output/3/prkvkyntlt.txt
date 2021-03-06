@@ -1,0 +1,37 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > MovingAvatar img=newset/cop1
+        test0 > Resource img=newset/egg orientation=UP autoTiling=True
+        test1 > Resource img=newset/egg orientation=UP
+        test2 > Resource img=newset/egg orientation=LEFT limit=9 invisible=False
+        test3 > Missile img=newset/arrow orientation=RIGHT autoTiling=True shrinkFactor=0.5808817167360916
+        test4  > Portal img=newset/exit orientation=RIGHT stype=test5  limit=9 speed=0.7727937124656827
+        test5 > Immovable img=newset/block2 orientation=DOWN autoTiling=False cooldown=2
+        test6 > Chaser img=newset/bandit1 orientation=DOWN stype=test0 hidden=True cooldown=11
+        test7  > Portal img=newset/exit orientation=DOWN stype=test4  orientation=RIGHT prob=0.9835829316518709
+        test8  > Fleeing img=newset/blessedman orientation=RIGHT stype=test4   shrinkFactor=0.3998963378723527 orientation=DOWN
+
+    LevelMapping
+        E > test0
+        e > test1
+        w > test2
+        M > test3
+        R > test4
+        I > test5
+        C > test6
+        r > test7
+        F > test8
+        A > avatar
+
+    InteractionSet
+        test4 test4 > attractGaze prob=0.018543828985059796 scoreChange=-2
+        test2 test2 > killIfFromAbove scoreChange=0
+        test4 test4 > collectResource scoreChange=-3
+        test4 test4 > stepBack scoreChange=3
+        test2 test2 > killIfFromAbove
+        test4 test4 > killIfOtherHasMore resource=test2 limit=5
+
+    TerminationSet
+        Timeout limit=411 win=True
+        Timeout limit=561 win=False scoreChange=329

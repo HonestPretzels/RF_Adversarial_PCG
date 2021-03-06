@@ -1,0 +1,35 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > MovingAvatar img=newset/cop1
+        test0 > Resource img=newset/egg orientation=LEFT orientation=DOWN prob=0.036679639042832335
+        test1   > Portal img=newset/exit orientation=UP stype=test4  prob=0.6093190911723222
+        test2  > Portal img=newset/exit orientation=LEFT stype=test3  singleton=False prob=0.7552649858899785 color=LIGHTGREEN
+        test3  > Portal img=newset/exit orientation=LEFT stype=test1  shrinkFactor=0.010538543846890902 cooldown=4 shrinkFactor=0.9096282515460061
+        test4 > Fleeing img=newset/blessedman orientation=LEFT stype=test5 prob=0.41599978254634984 cooldown=5 shrinkFactor=0.5562363590513021
+        test5  > Immovable img=newset/block2 orientation=LEFT speed=0.9045192228152855
+
+    LevelMapping
+        E > test0
+        R > test1
+        r > test2
+        8 > test3
+        F > test4
+        I > test5
+        A > avatar
+
+    InteractionSet
+        test1 test1 > killIfOtherHasLess resource=test0 limit=2 scoreChange=5
+        test2 test2 > collectResource scoreChange=-3
+        test1 test1 > killSprite scoreChange=1
+        test0 test0 > turnAround scoreChange=-5
+        test5 test5 > killIfHasMore resource=test0 limit=5
+        test4 test4 > transformTo stype=test5
+        test0 test0 > spawnIfHasMore resource=test0 stype=test0 limit=1 scoreChange=-2
+        test5 test5 > wrapAround offset=2 scoreChange=-4
+        test3 test3 > collectResource scoreChange=-3
+        test1 test1 > attractGaze prob=0.6856990138160546
+
+    TerminationSet
+        Timeout limit=770 win=True scoreChange=124
+        SpriteCounter stype=test0 limit=0 win=False scoreChange=94

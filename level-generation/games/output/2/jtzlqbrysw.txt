@@ -1,0 +1,30 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > ShootAvatar img=newset/cop1
+        test0   > Immovable img=newset/block2 orientation=LEFT singleton=False
+        test1  > OrientedFlicker img=newset/cherries orientation=DOWN autoTiling=False hidden=False
+        test2 > Fleeing img=newset/blessedman orientation=UP stype=test4 color=DARKGRAY singleton=True
+        test3 > Flicker img=newset/butterfly1 orientation=LEFT hidden=False
+        test4 > Passive img=newset/camel1 orientation=DOWN
+        testResource > Resource color=YELLOW
+
+    LevelMapping
+        I > test0
+        O > test1
+        F > test2
+        L > test3
+        P > test4
+        E > testResource
+        A > avatar
+
+    InteractionSet
+        test3 test3 > stepBack scoreChange=2
+        test2 test2 > spawnIfHasMore resource=testResource stype=testResource limit=4
+        testResource testResource > bounceForward scoreChange=3
+        testResource testResource > teleportToExit
+        test1 test1 > collectResource scoreChange=-5
+
+    TerminationSet
+        Timeout limit=539 win=True
+        Timeout limit=334 win=False scoreChange=158

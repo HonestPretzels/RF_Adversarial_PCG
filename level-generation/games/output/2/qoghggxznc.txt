@@ -1,0 +1,41 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > FlakAvatar img=newset/cop1
+        test0  > Passive img=newset/camel1 orientation=UP hidden=False
+        test1  > RandomNPC img=newset/girl2 orientation=RIGHT
+        test2  > Flicker img=newset/butterfly1 orientation=DOWN hidden=True
+        test3 > RandomNPC img=newset/girl2 orientation=RIGHT shrinkFactor=0.6822705706867425
+        test4 > SpawnPoint img=newset/blockR3 orientation=RIGHT stype=test6
+        test5 > Fleeing img=newset/blessedman orientation=LEFT stype=test0 prob=0.25458712666189554 singleton=True
+        test6   > Immovable img=newset/block2 orientation=LEFT hidden=True prob=0.312244156328758 singleton=True
+        test7   > Immovable img=newset/block2 orientation=LEFT autoTiling=True
+        test8  > Immovable img=newset/block2 orientation=DOWN color=DARKGRAY
+        testResource > Resource color=GRAY
+
+    LevelMapping
+        P > test0
+        N > test1
+        L > test2
+        n > test3
+        S > test4
+        F > test5
+        I > test6
+        i > test7
+        y > test8
+        E > testResource
+        A > avatar
+
+    InteractionSet
+        test0 test0 > attractGaze prob=0.7623714592959707
+        test8 test8 > changeResource resource=testResource value=5 scoreChange=4
+        test3 test3 > flipDirection scoreChange=4
+        test0 test0 > killIfHasMore resource=testResource limit=1 scoreChange=-1
+        test3 test3 > stepBack
+        testResource testResource > changeResource resource=testResource value=1 scoreChange=-4
+        test7 test7 > attractGaze prob=0.19647393058936735
+        test3 test3 > killSprite scoreChange=0
+
+    TerminationSet
+        Timeout limit=136 win=True
+        Timeout limit=925 win=False

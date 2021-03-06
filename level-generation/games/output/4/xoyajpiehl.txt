@@ -1,0 +1,32 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > FlakAvatar img=newset/cop1
+        test0   > Immovable img=newset/block2 orientation=LEFT
+        test1 > Resource img=newset/egg orientation=UP hidden=False shrinkFactor=0.16047909900798984 shrinkFactor=0.6292229832438229
+        test2  > Immovable img=newset/block2 orientation=LEFT color=BLUE speed=0.13122634368149588 autoTiling=False
+        test3 > Missile img=newset/arrow orientation=DOWN color=LIGHTORANGE invisible=False
+        test4   > Immovable img=newset/block2 orientation=RIGHT
+        test5 > Immovable img=newset/block2 orientation=DOWN
+        test6  > Flicker img=newset/butterfly1 orientation=RIGHT color=LIGHTGRAY
+
+    LevelMapping
+        I > test0
+        E > test1
+        i > test2
+        M > test3
+        e > test4
+        y > test5
+        L > test6
+        A > avatar
+
+    InteractionSet
+        test5 test5 > killIfOtherHasLess resource=test1 limit=4
+        test6 test6 > teleportToExit scoreChange=1
+        test6 test6 > killSprite scoreChange=0
+        test2 test2 > killSprite scoreChange=0
+        test3 test3 > stepBack scoreChange=0
+
+    TerminationSet
+        SpriteCounter stype=avatar limit=0 win=True
+        SpriteCounter stype=test6 limit=9 win=False

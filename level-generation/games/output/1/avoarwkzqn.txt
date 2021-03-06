@@ -1,0 +1,42 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > FlakAvatar img=newset/cop1
+        test0  > Immovable img=newset/block2 orientation=RIGHT
+        test1 > Flicker img=newset/butterfly1 orientation=LEFT shrinkFactor=0.2614565980252148
+        test2  > Bomber img=oryx/alien1 orientation=DOWN stype=test7
+        test3  > Portal img=newset/exit orientation=DOWN stype=test8    invisible=False speed=0.8638883222929025 singleton=False
+        test4  > Portal img=newset/exit orientation=DOWN stype=test7  orientation=RIGHT
+        test5 > Immovable img=newset/block2 orientation=RIGHT invisible=True
+        test6  > Bomber img=oryx/alien1 orientation=RIGHT stype=test4   singleton=False shrinkFactor=0.18953623029780986 color=DARKGRAY
+        test7  > Flicker img=newset/butterfly1 orientation=RIGHT cooldown=10 color=BROWN shrinkFactor=0.19959292089689573
+        test8   > Portal img=newset/exit orientation=UP stype=test4   limit=2 shrinkFactor=0.5332581580096295
+        testResource > Resource color=DARKGRAY
+
+    LevelMapping
+        I > test0
+        L > test1
+        B > test2
+        R > test3
+        r > test4
+        i > test5
+        b > test6
+        l > test7
+        f > test8
+        E > testResource
+        A > avatar
+
+    InteractionSet
+        test0 test0 > transformTo stype=test5
+        test4 test4 > killIfOtherHasMore resource=testResource limit=5 scoreChange=-2
+        test1 test1 > killIfHasLess resource=testResource limit=3
+        test0 test0 > changeResource resource=testResource value=-4 scoreChange=1
+        test0 test0 > bounceForward
+        test8 test8 > killIfHasMore resource=testResource limit=5 scoreChange=3
+        test5 test5 > killIfOtherHasMore resource=testResource limit=2 scoreChange=5
+        test3 test3 > attractGaze prob=0.7633578889330178
+        test8 test8 > killSprite scoreChange=4
+
+    TerminationSet
+        Timeout limit=372 win=True
+        SpriteCounter stype=test1 limit=1 win=False

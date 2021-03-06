@@ -1,0 +1,35 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > MovingAvatar img=newset/cop1
+        test0  > Portal img=newset/exit orientation=UP stype=test4
+        test1 > Immovable img=newset/block2 orientation=DOWN speed=0.5357835310254441 shrinkFactor=0.6465953095977884
+        test2  > Immovable img=newset/block2 orientation=LEFT
+        test3 > Chaser img=newset/bandit1 orientation=RIGHT stype=test1 autoTiling=False
+        test4 > Portal img=newset/exit orientation=LEFT stype=test2 speed=0.41551814873482773 prob=0.3221563552276787
+        testResource > Resource color=WHITE
+
+    LevelMapping
+        R > test0
+        I > test1
+        i > test2
+        C > test3
+        r > test4
+        E > testResource
+        A > avatar
+
+    InteractionSet
+        test0 test0 > wrapAround offset=1 scoreChange=3
+        test3 test3 > spawnIfHasMore resource=testResource stype=testResource limit=4 scoreChange=-5
+        test2 test2 > teleportToExit scoreChange=4
+        test3 test3 > killIfOtherHasMore resource=testResource limit=5 scoreChange=-5
+        test1 test1 > undoAll scoreChange=-2
+        test2 test2 > killIfHasLess resource=testResource limit=2
+        test0 test0 > killIfOtherHasLess resource=testResource limit=4
+        testResource testResource > killIfFromAbove scoreChange=5
+        test1 test1 > wrapAround offset=3
+        testResource testResource > killIfOtherHasLess resource=testResource limit=4 scoreChange=2
+
+    TerminationSet
+        ResourceCounter stype=testResource limit=39 win=True
+        Timeout limit=792 win=False scoreChange=107

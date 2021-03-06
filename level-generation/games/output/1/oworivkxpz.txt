@@ -1,0 +1,42 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > ShootAvatar img=newset/cop1
+        test0  > Portal img=newset/exit orientation=UP stype=test7  color=LIGHTGREEN limit=4
+        test1  > Portal img=newset/exit orientation=LEFT stype=test6  prob=0.30239286524042985
+        test2  > Immovable img=newset/block2 orientation=DOWN cooldown=7 invisible=True shrinkFactor=0.48119099880503113
+        test3 > Fleeing img=newset/blessedman orientation=UP stype=test1
+        test4 > Passive img=newset/camel1 orientation=DOWN autoTiling=True speed=0.8296418655416077 prob=0.5373299151445008
+        test5   > Flicker img=newset/butterfly1 orientation=LEFT hidden=False singleton=False
+        test6 > Chaser img=newset/bandit1 orientation=LEFT stype=test3 autoTiling=True orientation=LEFT
+        test7 > Immovable img=newset/block2 orientation=LEFT orientation=DOWN
+        test8   > Immovable img=newset/block2 orientation=LEFT hidden=True invisible=True orientation=LEFT
+        testResource > Resource color=YELLOW
+
+    LevelMapping
+        R > test0
+        r > test1
+        I > test2
+        F > test3
+        P > test4
+        L > test5
+        C > test6
+        i > test7
+        5 > test8
+        E > testResource
+        A > avatar
+
+    InteractionSet
+        test8 test8 > collectResource
+        test7 test7 > wrapAround offset=2
+        test0 test0 > turnAround scoreChange=-1
+        test3 test3 > reverseDirection scoreChange=-2
+        test4 test4 > bounceForward scoreChange=-5
+        testResource testResource > killIfHasMore resource=testResource limit=3 scoreChange=2
+        test0 test0 > cloneSprite
+        test6 test6 > pullWithIt
+        test6 test6 > killSprite
+
+    TerminationSet
+        Timeout limit=566 win=True
+        SpriteCounter stype=test1 limit=2 win=False

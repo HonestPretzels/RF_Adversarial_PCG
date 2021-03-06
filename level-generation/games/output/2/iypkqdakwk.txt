@@ -1,0 +1,32 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > FlakAvatar img=newset/cop1
+        test0 > Immovable img=newset/block2 orientation=UP limit=4 color=DARKBLUE orientation=RIGHT
+        test1 > OrientedFlicker img=newset/cherries orientation=UP limit=2 speed=0.07112288359386987 limit=6
+        test2  > Flicker img=newset/butterfly1 orientation=LEFT speed=0.8562742827604418
+        test3  > Immovable img=newset/block2 orientation=LEFT invisible=False color=LIGHTORANGE
+        test4  > OrientedFlicker img=newset/cherries orientation=DOWN
+        testResource > Resource color=ORANGE
+
+    LevelMapping
+        I > test0
+        O > test1
+        L > test2
+        i > test3
+        o > test4
+        E > testResource
+        A > avatar
+
+    InteractionSet
+        testResource testResource > killBoth
+        test2 test2 > attractGaze prob=0.0680647612481795
+        test4 test4 > stepBack
+        test1 test1 > pullWithIt scoreChange=-1
+        test2 test2 > turnAround
+        test3 test3 > spawnIfHasMore resource=testResource stype=test4 limit=2 scoreChange=5
+        test1 test1 > killIfOtherHasLess resource=testResource limit=1
+
+    TerminationSet
+        ResourceCounter stype=testResource limit=96 win=False
+        SpriteCounter stype=test4 limit=4 win=True

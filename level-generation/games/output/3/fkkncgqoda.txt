@@ -1,0 +1,34 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > MovingAvatar img=newset/cop1
+        test0 > Immovable img=newset/block2 orientation=DOWN cooldown=10 invisible=False cooldown=17
+        test1 > RandomNPC img=newset/girl2 orientation=UP singleton=False
+        test2  > Immovable img=newset/block2 orientation=UP invisible=True
+        test3  > Portal img=newset/exit orientation=DOWN stype=test4   prob=0.7416855230888943
+        test4  > Immovable img=newset/block2 orientation=LEFT cooldown=16
+        testResource > Resource color=YELLOW
+
+    LevelMapping
+        I > test0
+        N > test1
+        i > test2
+        R > test3
+        m > test4
+        E > testResource
+        A > avatar
+
+    InteractionSet
+        test3 test3 > killIfHasLess resource=testResource limit=2 scoreChange=4
+        test2 test2 > killIfHasLess resource=testResource limit=5
+        test2 test2 > changeResource resource=testResource value=0 scoreChange=1
+        test2 test2 > cloneSprite scoreChange=-1
+        test2 test2 > wrapAround offset=1 scoreChange=-2
+        test0 test0 > turnAround scoreChange=-2
+        test3 test3 > undoAll scoreChange=-2
+        test1 test1 > killIfOtherHasMore resource=testResource limit=3
+        testResource testResource > collectResource
+
+    TerminationSet
+        ResourceCounter stype=testResource limit=54 win=True
+        Timeout limit=939 win=False
