@@ -34,7 +34,7 @@ def runGame(gameFile, levelFile, logs):
         print('Loop: ' + str(loop + 1))
     
         i = 0
-        while time() - startTime < 300 and i < 500:
+        while time() - startTime < 300 and i < 700:
             i += 1
             if i % logInterval == 0:
                 print('Action: %d at time %4.2f' %(i, time() - startTime))
@@ -45,9 +45,9 @@ def runGame(gameFile, levelFile, logs):
             if isOver:
                 logCompletion(os.path.basename(gameFile), logs, score, i)
                 break
-        if time() - startTime > 300 or i >= 500:
+        if time() - startTime > 300 or i >= 700:
             logTimeout(os.path.basename(gameFile), logs, score, i)
-            return
+            
 
 def main():
     gameDirectory = sys.argv[1]

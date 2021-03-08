@@ -84,7 +84,7 @@ class Runner:
             best_actions = []
             best_reward = float("-inf")
 
-            for playout in range(self.playouts):
+            for _ in range(self.playouts):
                 # RESET TO EQUAL COPYING AN EMPTY STATE --- THINK THIS THROUGH AGAIN LATER
                 env.render(mode='headless')
                 env.reset()
@@ -116,19 +116,7 @@ class Runner:
                 # playout
                 while not terminal:
                     if time.time() - start_time > 300:
-                        sum_reward = 0
-                        for action in best_actions:
-                            state.render(mode="headless")
-                            _, reward, terminal, _ = state.step(action)
-                            sum_reward += reward
-                            if terminal:
-                                break
-                        self.record_timeout(time.time() - start_time, sum_reward, best_actions)
-                        best_rewards.append(sum_reward)
-                        score = max(moving_average(best_rewards, 100))
-                        avg_time = (time.time()-start_time)/(loop+1)
-                        self.print_stats(loop+1, score, avg_time)
-                        return
+                        break
 
                     action = state.action_space.sample()
                     _, reward, terminal, _ = state.step(action)
@@ -139,8 +127,6 @@ class Runner:
                     if len(actions) > self.max_depth:
                         sum_reward -= 100
                         break
-                # print('Playout: %d completed in %f' %(playout+1, time.time() - playout_start))
-                
 
                 # remember best
                 if best_reward < sum_reward:
@@ -167,9 +153,9 @@ class Runner:
                     terminated = True
                     break
             
-            # Take random actions until terminal or another 300 moves occured
+            # Take random actions until terminal or another 500 moves occured
             actionCounter = 0
-            while not terminated and actionCounter < 300:
+            while not terminated and actionCounter < 500:
                 env.render(mode="headless")
                 action = env.action_space.sample()
                 best_actions.append(action)

@@ -1,1 +1,2 @@
-oworivkxpz.txt TIMED OUT at action 500 with score -3252.000000
+oworivkxpz.txt COMPLETED at action 566 with score -3516.000000
+oworivkxpz.txt TIMED OUT at action 566 with score -3516.000000
