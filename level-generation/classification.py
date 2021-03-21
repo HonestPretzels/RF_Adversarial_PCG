@@ -135,6 +135,56 @@ def getLevelVector(levelName, mapping, spriteRoot):
       vectorizedLevel[(i*width) + j] = sTypes.index(row[j])
   return vectorizedLevel
 
+def getTerminationData(tRoot, sRoot):
+  # Only works for games with 1 win and 1 loss, which should be all
+  # Each smaller vector will be [timeoutTime, spritecounterNumber, ResourceCounterNumber]
+  winData = [0,0,0,0,0]
+  lossData = [0,0,0,0,0]
+  for node in tRoot.children:
+    if 'win=True' in node.content:
+      if 'Timeout' in node.content and 'limit' in node.content:
+        winData[0] = int(node.content.split('limit=')[-1].split(' ')[0])
+      elif 'SpriteCounter' in node.content and 'limit' in node.content:
+        winData[1] = int(node.content.split('limit=')[-1].split(' ')[0])
+      elif 'ResourceCounter' in node.content and 'limit' in node.content:
+        winData[2] = int(node.content.split('limit=')[-1].split(' ')[0])
+      if 'scoreChange' in node.content:
+        winData[3] = int(node.content.split('scoreChange=')[-1].split(' ')[0])
+
+      if 'stype' in node.content:
+        name = node.content.split('stype=')[-1].split(' ')[0]
+        sprite = getSpriteByName(sRoot, name)
+        spriteType = sprite.content.split('>')[1].strip().split(' ')[0].strip()
+        while spriteType not in sTypes:
+          spriteType = sprite.parent.content.split('>')[1].strip().split(' ')[0].strip()
+          sprite = sprite.parent
+        winData[4] = sTypes.index(spriteType) + 1
+
+    else:
+      if 'Timeout' in node.content and 'limit' in node.content:
+        lossData[0] = int(node.content.split('limit=')[-1].split(' ')[0])
+      elif 'SpriteCounter' in node.content and 'limit' in node.content:
+        lossData[1] = int(node.content.split('limit=')[-1].split(' ')[0])
+      elif 'ResourceCounter' in node.content and 'limit' in node.content:
+        lossData[2] = int(node.content.split('limit=')[-1].split(' ')[0])
+      if 'scoreChange' in node.content:
+        winData[3] = int(node.content.split('scoreChange=')[-1].split(' ')[0])
+
+      if 'stype' in node.content:
+        name = node.content.split('stype=')[-1].split(' ')[0]
+        sprite = getSpriteByName(sRoot, name)
+        spriteType = sprite.content.split('>')[1].strip().split(' ')[0].strip()
+        while spriteType not in sTypes:
+          spriteType = sprite.parent.content.split('>')[1].strip().split(' ')[0].strip()
+          sprite = sprite.parent
+        lossData[4] = sTypes.index(spriteType) + 1
+
+      
+
+  data = []
+  data.extend(winData)
+  data.extend(lossData)
+  return data
 
 def getVector(gameName, levelName):
   # Vector has the form of [total sprite counts, total interaction counts, total termination counts, ...each sprite type count, ...each interaction type count, ...each termination type count]
@@ -148,6 +198,7 @@ def getVector(gameName, levelName):
 
   terminationRoot = getTerminationSetNode(gameName)
   tCounts = getAllTerminationCounts(terminationRoot)
+  tData = getTerminationData(terminationRoot, spriteRoot)
 
   sTotal = sum(sCounts)
   iTotal = sum(iCounts)
@@ -157,6 +208,7 @@ def getVector(gameName, levelName):
   vector.extend([c for c in sCounts])
   vector.extend([c for c in iCounts])
   vector.extend([c for c in tCounts])
+  vector.extend(tData)
 
   # Add level data
   mapping = extractLevelMapping(gameName)
