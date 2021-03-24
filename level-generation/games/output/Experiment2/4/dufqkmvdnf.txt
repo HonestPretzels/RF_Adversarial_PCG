@@ -1,0 +1,31 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > MovingAvatar img=newset/cop1
+        test0  > Immovable img=newset/block2 orientation=DOWN color=LIGHTBLUE hidden=False
+        test1  > Portal img=newset/exit orientation=UP stype=test4
+        test2  > Immovable img=newset/block2 orientation=DOWN speed=0.516508165156447 singleton=True
+        test3 > Bomber img=oryx/alien1 orientation=UP stype=test0 autoTiling=True
+        test4  > Immovable img=newset/block2 orientation=UP speed=0.2455885571790849
+        testResource > Resource color=DARKGRAY
+
+    LevelMapping
+        I > test0
+        R > test1
+        i > test2
+        B > test3
+        c > test4
+        E > testResource
+        A > avatar
+
+    InteractionSet
+        test1 test1 > turnAround
+        test3 test3 > pullWithIt
+        test3 test3 > killSprite
+        test4 test4 > killIfHasMore resource=testResource limit=3
+        test4 test4 > transformTo stype=test4
+        test4 test4 > bounceForward
+
+    TerminationSet
+        ResourceCounter stype=testResource limit=0 win=True
+        SpriteCounter stype=test0 limit=7 win=False scoreChange=430

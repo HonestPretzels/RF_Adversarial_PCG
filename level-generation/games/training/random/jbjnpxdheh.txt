@@ -1,0 +1,35 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > FlakAvatar img=newset/cop1
+        test0 > Portal img=newset/exit orientation=UP stype=test1 singleton=False
+        test1 > Resource img=newset/egg orientation=RIGHT cooldown=13 singleton=True color=LIGHTORANGE
+        test2 > RandomNPC img=newset/girl2 orientation=RIGHT shrinkFactor=0.2060080145958192 hidden=True
+        test3 > Fleeing img=newset/blessedman orientation=LEFT stype=test1 prob=0.1745827749867208 singleton=False prob=0.22086598988839
+        test4 > Flicker img=newset/butterfly1 orientation=DOWN
+        test5 > Passive img=newset/camel1 orientation=DOWN
+
+    LevelMapping
+        R > test0
+        E > test1
+        N > test2
+        F > test3
+        L > test4
+        P > test5
+        A > avatar
+
+    InteractionSet
+        test4 test4 > killIfHasLess resource=test1 limit=4 scoreChange=-4
+        test3 test3 > teleportToExit scoreChange=5
+        test4 test4 > killIfOtherHasLess resource=test1 limit=1 scoreChange=-1
+        test4 test4 > cloneSprite scoreChange=5
+        test5 test5 > transformTo stype=test5
+        test3 test3 > teleportToExit 
+        test0 test0 > killIfOtherHasLess resource=test1 limit=5
+        test2 test2 > bounceForward scoreChange=1
+        test3 test3 > collectResource 
+        test1 test1 > reverseDirection scoreChange=4
+
+    TerminationSet
+        Timeout limit=738 win=True
+        Timeout limit=450 win=False

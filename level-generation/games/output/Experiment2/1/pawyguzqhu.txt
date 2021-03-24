@@ -1,0 +1,43 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > ShootAvatar img=newset/cop1
+        test0 > Portal img=newset/exit orientation=DOWN stype=test2 cooldown=4 limit=8 shrinkFactor=0.07890226140787948
+        test1 > Chaser img=newset/bandit1 orientation=RIGHT stype=test7
+        test2  > Portal img=newset/exit orientation=RIGHT stype=test1  hidden=True speed=0.29789943764808624 color=LIGHTORANGE
+        test3  > Immovable img=newset/block2 orientation=RIGHT speed=0.42422844247228997 invisible=False
+        test4  > Immovable img=newset/block2 orientation=UP invisible=True
+        test5  > Immovable img=newset/block2 orientation=RIGHT
+        test6  > Portal img=newset/exit orientation=RIGHT stype=test1  speed=0.9728105617416273
+        test7  > Portal img=newset/exit orientation=LEFT stype=test1  prob=0.4147509972539484
+        test8 > Bomber img=oryx/alien1 orientation=DOWN stype=test5 autoTiling=True
+        testResource > Resource color=LIGHTORANGE
+
+    LevelMapping
+        R > test0
+        C > test1
+        r > test2
+        I > test3
+        i > test4
+        2 > test5
+        0 > test6
+        6 > test7
+        B > test8
+        E > testResource
+        A > avatar
+
+    InteractionSet
+        testResource testResource > killIfFromAbove
+        test8 test8 > killIfOtherHasLess resource=testResource limit=1 scoreChange=-4
+        test3 test3 > bounceForward
+        testResource testResource > pullWithIt scoreChange=5
+        test0 test0 > killBoth scoreChange=3
+        test4 test4 > killIfOtherHasLess resource=testResource limit=3
+        testResource testResource > undoAll
+        testResource testResource > pullWithIt scoreChange=-2
+        test7 test7 > killSprite scoreChange=-4
+        test7 test7 > stepBack scoreChange=-3
+
+    TerminationSet
+        Timeout limit=559 win=True
+        SpriteCounter stype=test4 limit=3 win=False

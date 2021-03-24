@@ -1,0 +1,34 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > MovingAvatar img=newset/cop1
+        test0  > Immovable img=newset/block2 orientation=DOWN
+        test1  > Portal img=newset/exit orientation=RIGHT stype=test0   singleton=True shrinkFactor=0.6440266347355934
+        test2  > Immovable img=newset/block2 orientation=LEFT color=LIGHTRED
+        test3  > Portal img=newset/exit orientation=RIGHT stype=test1
+        test4  > Portal img=newset/exit orientation=RIGHT stype=test0  autoTiling=False singleton=True speed=0.7925630225947666
+        testResource > Resource color=RED
+
+    LevelMapping
+        I > test0
+        R > test1
+        i > test2
+        r > test3
+        2 > test4
+        E > testResource
+        A > avatar
+
+    InteractionSet
+        test3 test3 > killIfHasMore resource=testResource limit=4
+        test0 test0 > killIfHasLess resource=testResource limit=3 scoreChange=-4
+        test2 test2 > pullWithIt
+        test3 test3 > cloneSprite scoreChange=0
+        test1 test1 > flipDirection
+        test4 test4 > flipDirection scoreChange=-1
+        test4 test4 > killIfHasLess resource=testResource limit=5 scoreChange=-4
+        test3 test3 > transformTo stype=test0 scoreChange=4
+        test3 test3 > killSprite scoreChange=-5
+
+    TerminationSet
+        ResourceCounter stype=testResource limit=57 win=True scoreChange=313
+        SpriteCounter stype=avatar limit=0 win=False

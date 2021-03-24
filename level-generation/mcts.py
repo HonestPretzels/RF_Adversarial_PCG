@@ -188,7 +188,7 @@ def main():
     for game, level in games.items():
         logs = os.path.join(logDirectory, 'MCTS_' + os.path.basename(game))
         try:
-            Runner(game, level, logs, loops=5, playouts=500, max_depth=200).run()
+            Runner(game, level, logs, loops=1, playouts=500, max_depth=200).run()
         except Exception as e:
             print('Error with: %s -- %s' %(os.path.basename(game), e))
             with open(logs, 'w') as f:

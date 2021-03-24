@@ -1,0 +1,39 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > ShootAvatar img=newset/cop1
+        test0  > Immovable img=newset/block2 orientation=UP orientation=RIGHT limit=6 limit=2
+        test1 > Bomber img=oryx/alien1 orientation=RIGHT stype=test6 shrinkFactor=0.3583195962540717 invisible=True
+        test2 > Resource img=newset/egg orientation=DOWN color=LIGHTORANGE
+        test3 > Immovable img=newset/block2 orientation=UP
+        test4  > Portal img=newset/exit orientation=DOWN stype=test6  speed=0.8196716925359824 speed=0.011765438519303562 autoTiling=False
+        test5   > Immovable img=newset/block2 orientation=LEFT orientation=LEFT
+        test6 > Passive img=newset/camel1 orientation=UP
+        test7  > Portal img=newset/exit orientation=UP stype=test4   limit=4 limit=10 orientation=RIGHT
+        test8   > Portal img=newset/exit orientation=DOWN stype=test3  color=BROWN
+        test9 > Flicker img=newset/butterfly1 orientation=UP hidden=True autoTiling=False
+
+    LevelMapping
+        I > test0
+        B > test1
+        E > test2
+        i > test3
+        R > test4
+        j > test5
+        P > test6
+        r > test7
+        m > test8
+        L > test9
+        A > avatar
+
+    InteractionSet
+        test9 test9 > spawnIfHasMore resource=test2 stype=test4 limit=3
+        test5 test5 > bounceForward scoreChange=-5
+        test4 test4 > killIfFromAbove
+        test5 test5 > stepBack scoreChange=4
+        test1 test1 > stepBack scoreChange=0
+        test4 test4 > killSprite 
+
+    TerminationSet
+        Timeout limit=885 win=True scoreChange=9
+        SpriteCounter stype=test5 limit=2 win=False scoreChange=287

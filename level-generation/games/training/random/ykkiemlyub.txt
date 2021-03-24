@@ -1,0 +1,38 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > MovingAvatar img=newset/cop1
+        test0 > OrientedFlicker img=newset/cherries orientation=UP
+        test1 > Fleeing img=newset/blessedman orientation=DOWN stype=test2 singleton=True
+        test2 > RandomNPC img=newset/girl2 orientation=LEFT
+        test3 > Passive img=newset/camel1 orientation=DOWN hidden=True speed=0.023999195742536727
+        test4 > Immovable img=newset/block2 orientation=UP
+        test5 > Chaser img=newset/bandit1 orientation=UP stype=test6
+        test6 > Missile img=newset/arrow orientation=LEFT speed=0.6810455439509776 shrinkFactor=0.36884374438600787 invisible=False
+        test7 > OrientedFlicker img=newset/cherries orientation=LEFT singleton=True speed=0.9135885052567688
+        testResource > Resource color=WHITE
+
+    LevelMapping
+        O > test0
+        F > test1
+        N > test2
+        P > test3
+        I > test4
+        C > test5
+        M > test6
+        o > test7
+        E > testResource
+        A > avatar
+
+    InteractionSet
+        test1 test1 > killIfFromAbove scoreChange=-4
+        test5 test5 > wrapAround offset=3
+        test5 test5 > killIfHasMore resource=testResource limit=2
+        test1 test1 > killIfOtherHasLess resource=testResource limit=3 scoreChange=1
+        test1 test1 > reverseDirection 
+        test5 test5 > wrapAround offset=0 scoreChange=-4
+        test2 test2 > turnAround 
+
+    TerminationSet
+        SpriteCounter stype=test5 limit=8 win=True
+        ResourceCounter stype=testResource limit=56 win=False

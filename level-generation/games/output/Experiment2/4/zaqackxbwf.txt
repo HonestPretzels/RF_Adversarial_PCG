@@ -1,0 +1,31 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > MovingAvatar img=newset/cop1
+        test0   > Immovable img=newset/block2 orientation=DOWN
+        test1   > Immovable img=newset/block2 orientation=DOWN
+        test2 > Portal img=newset/exit orientation=DOWN stype=test3 speed=0.25283943350038607
+        test3  > Immovable img=newset/block2 orientation=UP cooldown=6 prob=0.2550349688319218 prob=0.9098214047993993
+        test4 > Resource img=newset/egg orientation=RIGHT orientation=RIGHT hidden=True
+        test5  > Immovable img=newset/block2 orientation=RIGHT singleton=False
+
+    LevelMapping
+        I > test0
+        i > test1
+        R > test2
+        e > test3
+        E > test4
+        m > test5
+        A > avatar
+
+    InteractionSet
+        test0 test0 > attractGaze prob=0.553209449892076
+        test2 test2 > transformTo stype=test0
+        test1 test1 > pullWithIt
+        test3 test3 > killIfOtherHasMore resource=test4 limit=1 scoreChange=1
+        test4 test4 > killIfHasLess resource=test4 limit=1 scoreChange=-5
+        test2 test2 > stepBack scoreChange=5
+
+    TerminationSet
+        SpriteCounter stype=test3 limit=7 win=True
+        SpriteCounter stype=test1 limit=0 win=False

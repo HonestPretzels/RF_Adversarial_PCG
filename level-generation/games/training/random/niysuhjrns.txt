@@ -1,0 +1,37 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > FlakAvatar img=newset/cop1
+        test0 > Flicker img=newset/butterfly1 orientation=UP hidden=True prob=0.8798248773599491
+        test1 > Bomber img=oryx/alien1 orientation=LEFT stype=test0
+        test2 > Passive img=newset/camel1 orientation=LEFT invisible=False
+        test3 > OrientedFlicker img=newset/cherries orientation=RIGHT cooldown=20 autoTiling=True
+        test4 > Bomber img=oryx/alien1 orientation=LEFT stype=test2 orientation=DOWN
+        test5 > Portal img=newset/exit orientation=UP stype=test4 singleton=True color=LIGHTGRAY
+        test6 > Portal img=newset/exit orientation=RIGHT stype=test3 autoTiling=False hidden=False
+        test7 > Flicker img=newset/butterfly1 orientation=DOWN speed=0.5544536093065092 hidden=True hidden=True
+        testResource > Resource color=BLUE
+
+    LevelMapping
+        L > test0
+        B > test1
+        P > test2
+        O > test3
+        b > test4
+        R > test5
+        r > test6
+        l > test7
+        E > testResource
+        A > avatar
+
+    InteractionSet
+        test3 test3 > killIfHasLess resource=testResource limit=3 scoreChange=-1
+        test4 test4 > killIfOtherHasMore resource=testResource limit=2
+        test2 test2 > changeResource resource=testResource value=1 scoreChange=5
+        test4 test4 > undoAll 
+        test7 test7 > pullWithIt 
+        test2 test2 > turnAround 
+
+    TerminationSet
+        SpriteCounter stype=test1 limit=2 win=True
+        Timeout limit=997 win=False

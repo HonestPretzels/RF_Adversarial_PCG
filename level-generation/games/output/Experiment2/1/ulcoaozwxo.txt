@@ -1,0 +1,41 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > FlakAvatar img=newset/cop1
+        test0 > RandomNPC img=newset/girl2 orientation=UP limit=5 shrinkFactor=0.06349325963313357 prob=0.30152813404543166
+        test1   > Immovable img=newset/block2 orientation=DOWN
+        test2 > Portal img=newset/exit orientation=LEFT stype=test1 color=LIGHTBLUE
+        test3   > Portal img=newset/exit orientation=LEFT stype=test8
+        test4 > OrientedFlicker img=newset/cherries orientation=DOWN color=LIGHTRED invisible=True limit=2
+        test5 > Resource img=newset/egg orientation=DOWN orientation=UP
+        test6  > Immovable img=newset/block2 orientation=LEFT singleton=False shrinkFactor=0.439506383852055 orientation=LEFT
+        test7  > Portal img=newset/exit orientation=UP stype=test6   cooldown=17 limit=1
+        test8  > Portal img=newset/exit orientation=RIGHT stype=test7   autoTiling=True hidden=False prob=0.05113055615826767
+
+    LevelMapping
+        N > test0
+        I > test1
+        R > test2
+        r > test3
+        O > test4
+        E > test5
+        i > test6
+        m > test7
+        z > test8
+        A > avatar
+
+    InteractionSet
+        test7 test7 > killIfOtherHasMore resource=test5 limit=3
+        test5 test5 > pullWithIt
+        test8 test8 > killIfOtherHasMore resource=test5 limit=5 scoreChange=-3
+        test3 test3 > undoAll
+        test6 test6 > killSprite
+        test0 test0 > wrapAround offset=0 scoreChange=2
+        test4 test4 > turnAround
+        test2 test2 > pullWithIt scoreChange=5
+        test1 test1 > stepBack scoreChange=5
+        test1 test1 > flipDirection scoreChange=-5
+
+    TerminationSet
+        ResourceCounter stype=test5 limit=35 win=True
+        ResourceCounter stype=test5 limit=44 win=False

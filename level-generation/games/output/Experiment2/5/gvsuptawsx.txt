@@ -1,0 +1,33 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > ShootAvatar img=newset/cop1
+        test0 > Portal img=newset/exit orientation=RIGHT stype=test1 prob=0.6663600592581471 autoTiling=False
+        test1 > Immovable img=newset/block2 orientation=LEFT autoTiling=True invisible=False autoTiling=True
+        test2  > Portal img=newset/exit orientation=LEFT stype=test1  hidden=True limit=10
+        test3  > Immovable img=newset/block2 orientation=LEFT orientation=LEFT invisible=True hidden=False
+        test4   > Immovable img=newset/block2 orientation=UP orientation=LEFT
+        testResource > Resource color=DARKBLUE
+
+    LevelMapping
+        R > test0
+        I > test1
+        r > test2
+        i > test3
+        8 > test4
+        E > testResource
+        A > avatar
+
+    InteractionSet
+        test0 test0 > transformTo stype=test2 scoreChange=-1
+        test4 test4 > killIfFromAbove
+        testResource testResource > teleportToExit
+        test4 test4 > transformTo stype=testResource
+        testResource testResource > turnAround scoreChange=1
+        test0 test0 > killIfOtherHasMore resource=testResource limit=4
+        test0 test0 > stepBack scoreChange=2
+        testResource testResource > killSprite scoreChange=1
+
+    TerminationSet
+        Timeout limit=195 win=True
+        SpriteCounter stype=test4 limit=6 win=False

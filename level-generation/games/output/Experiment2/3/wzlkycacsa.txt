@@ -1,0 +1,36 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > FlakAvatar img=newset/cop1
+        test0  > Immovable img=newset/block2 orientation=DOWN shrinkFactor=0.7432495551742865 orientation=RIGHT
+        test1  > Portal img=newset/exit orientation=DOWN stype=test3  hidden=True hidden=False
+        test2 > Passive img=newset/camel1 orientation=LEFT shrinkFactor=0.9520183123231977 speed=0.256792573206699 orientation=RIGHT
+        test3 > Immovable img=newset/block2 orientation=UP shrinkFactor=0.7707022991269626 speed=0.9975124054665531
+        test4  > Portal img=newset/exit orientation=UP stype=test3  speed=0.8094045594039702 orientation=LEFT
+        test5 > Resource img=newset/egg orientation=DOWN
+        test6 > Immovable img=newset/block2 orientation=LEFT autoTiling=True
+        test7 > Portal img=newset/exit orientation=RIGHT stype=test6
+
+    LevelMapping
+        I > test0
+        R > test1
+        P > test2
+        i > test3
+        r > test4
+        E > test5
+        n > test6
+        v > test7
+        A > avatar
+
+    InteractionSet
+        test3 test3 > pullWithIt
+        test0 test0 > killIfFromAbove
+        test0 test0 > collectResource scoreChange=4
+        test1 test1 > reverseDirection
+        test0 test0 > bounceForward scoreChange=4
+        test4 test4 > bounceForward scoreChange=-3
+        test1 test1 > killSprite 
+
+    TerminationSet
+        Timeout limit=428 win=True
+        SpriteCounter stype=test3 limit=6 win=False

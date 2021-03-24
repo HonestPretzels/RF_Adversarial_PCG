@@ -1,0 +1,38 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > FlakAvatar img=newset/cop1
+        test0 > SpawnPoint img=newset/blockR3 orientation=DOWN stype=test6
+        test1 > Resource img=newset/egg orientation=RIGHT
+        test2 > Fleeing img=newset/blessedman orientation=LEFT stype=test5 limit=1
+        test3 > Flicker img=newset/butterfly1 orientation=DOWN limit=6 cooldown=7
+        test4 > Missile img=newset/arrow orientation=DOWN prob=0.8797665241479481 autoTiling=True
+        test5 > Passive img=newset/camel1 orientation=LEFT color=LIGHTRED hidden=False limit=8
+        test6 > Immovable img=newset/block2 orientation=UP
+        test7 > Fleeing img=newset/blessedman orientation=LEFT stype=test5 speed=0.296878657348869 prob=0.7118289439685479
+        test8 > SpawnPoint img=newset/blockR3 orientation=RIGHT stype=test4 speed=0.6073263765523841 speed=0.6248005588118059 prob=0.9309178283805064
+        test9 > Fleeing img=newset/blessedman orientation=UP stype=test8 autoTiling=False limit=2 orientation=RIGHT
+
+    LevelMapping
+        S > test0
+        E > test1
+        F > test2
+        L > test3
+        M > test4
+        P > test5
+        I > test6
+        f > test7
+        s > test8
+        5 > test9
+        A > avatar
+
+    InteractionSet
+        test8 test8 > collectResource scoreChange=3
+        test1 test1 > stepBack 
+        test6 test6 > reverseDirection scoreChange=3
+        test9 test9 > cloneSprite 
+        test2 test2 > killBoth 
+
+    TerminationSet
+        ResourceCounter stype=test1 limit=60 win=True
+        ResourceCounter stype=test1 limit=37 win=False

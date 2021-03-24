@@ -137,9 +137,9 @@ def getLevelVector(levelName, mapping, spriteRoot):
 
 def getTerminationData(tRoot, sRoot):
   # Only works for games with 1 win and 1 loss, which should be all
-  # Each smaller vector will be [timeoutTime, spritecounterNumber, ResourceCounterNumber]
-  winData = [0,0,0,0,0]
-  lossData = [0,0,0,0,0]
+  # Each smaller vector will be [timeoutTime, spritecounterNumber, ResourceCounterNumber, scoreChange, spriteType1, spriteType2]
+  winData = [0,0,0,0,0,0]
+  lossData = [0,0,0,0,0,0]
   for node in tRoot.children:
     if 'win=True' in node.content:
       if 'Timeout' in node.content and 'limit' in node.content:
@@ -151,14 +151,40 @@ def getTerminationData(tRoot, sRoot):
       if 'scoreChange' in node.content:
         winData[3] = int(node.content.split('scoreChange=')[-1].split(' ')[0])
 
-      if 'stype' in node.content:
+      if 'stype=' in node.content:
         name = node.content.split('stype=')[-1].split(' ')[0]
         sprite = getSpriteByName(sRoot, name)
         spriteType = sprite.content.split('>')[1].strip().split(' ')[0].strip()
         while spriteType not in sTypes:
-          spriteType = sprite.parent.content.split('>')[1].strip().split(' ')[0].strip()
-          sprite = sprite.parent
+          if 'SpriteSet' in sprite.parent.content:
+            spriteType = sprite.children[0].content.split('>')[1].strip().split(' ')[0].strip()
+          else:
+            spriteType = sprite.parent.content.split('>')[1].strip().split(' ')[0].strip()
+            sprite = sprite.parent
         winData[4] = sTypes.index(spriteType) + 1
+
+      if 'stype1' in node.content:
+        name = node.content.split('stype1=')[-1].split(' ')[0]
+        sprite = getSpriteByName(sRoot, name)
+        spriteType = sprite.content.split('>')[1].strip().split(' ')[0].strip()
+        while spriteType not in sTypes:
+          if 'SpriteSet' in sprite.parent.content:
+            spriteType = sprite.children[0].content.split('>')[1].strip().split(' ')[0].strip()
+          else:
+            spriteType = sprite.parent.content.split('>')[1].strip().split(' ')[0].strip()
+            sprite = sprite.parent
+        winData[4] = sTypes.index(spriteType) + 1
+
+        name = node.content.split('stype2=')[-1].split(' ')[0]
+        sprite = getSpriteByName(sRoot, name)
+        spriteType = sprite.content.split('>')[1].strip().split(' ')[0].strip()
+        while spriteType not in sTypes:
+          if 'SpriteSet' in sprite.parent.content:
+            spriteType = sprite.children[0].content.split('>')[1].strip().split(' ')[0].strip()
+          else:
+            spriteType = sprite.parent.content.split('>')[1].strip().split(' ')[0].strip()
+            sprite = sprite.parent
+        winData[5] = sTypes.index(spriteType) + 1
 
     else:
       if 'Timeout' in node.content and 'limit' in node.content:
@@ -170,14 +196,40 @@ def getTerminationData(tRoot, sRoot):
       if 'scoreChange' in node.content:
         winData[3] = int(node.content.split('scoreChange=')[-1].split(' ')[0])
 
-      if 'stype' in node.content:
+      if 'stype=' in node.content:
         name = node.content.split('stype=')[-1].split(' ')[0]
         sprite = getSpriteByName(sRoot, name)
         spriteType = sprite.content.split('>')[1].strip().split(' ')[0].strip()
         while spriteType not in sTypes:
-          spriteType = sprite.parent.content.split('>')[1].strip().split(' ')[0].strip()
-          sprite = sprite.parent
+          if 'SpriteSet' in sprite.parent.content:
+            spriteType = sprite.children[0].content.split('>')[1].strip().split(' ')[0].strip()
+          else:
+            spriteType = sprite.parent.content.split('>')[1].strip().split(' ')[0].strip()
+            sprite = sprite.parent
         lossData[4] = sTypes.index(spriteType) + 1
+      
+      if 'stype1' in node.content:
+        name = node.content.split('stype1=')[-1].split(' ')[0]
+        sprite = getSpriteByName(sRoot, name)
+        spriteType = sprite.content.split('>')[1].strip().split(' ')[0].strip()
+        while spriteType not in sTypes:
+          if 'SpriteSet' in sprite.parent.content:
+            spriteType = sprite.children[0].content.split('>')[1].strip().split(' ')[0].strip()
+          else:
+            spriteType = sprite.parent.content.split('>')[1].strip().split(' ')[0].strip()
+            sprite = sprite.parent
+        lossData[4] = sTypes.index(spriteType) + 1
+
+        name = node.content.split('stype2=')[-1].split(' ')[0]
+        sprite = getSpriteByName(sRoot, name)
+        spriteType = sprite.content.split('>')[1].strip().split(' ')[0].strip()
+        while spriteType not in sTypes:
+          if 'SpriteSet' in sprite.parent.content:
+            spriteType = sprite.children[0].content.split('>')[1].strip().split(' ')[0].strip()
+          else:
+            spriteType = sprite.parent.content.split('>')[1].strip().split(' ')[0].strip()
+            sprite = sprite.parent
+        lossData[5] = sTypes.index(spriteType) + 1
 
       
 

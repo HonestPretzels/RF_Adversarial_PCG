@@ -1,0 +1,40 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > FlakAvatar img=newset/cop1
+        test0 > Chaser img=newset/bandit1 orientation=RIGHT stype=test6 prob=0.6055375308724419 autoTiling=False autoTiling=True
+        test1 > Flicker img=newset/butterfly1 orientation=LEFT autoTiling=True singleton=False limit=2
+        test2 > Passive img=newset/camel1 orientation=DOWN autoTiling=False
+        test3 > OrientedFlicker img=newset/cherries orientation=LEFT invisible=False
+        test4 > Fleeing img=newset/blessedman orientation=UP stype=test3
+        test5 > Portal img=newset/exit orientation=RIGHT stype=test4
+        test6 > Immovable img=newset/block2 orientation=LEFT color=WHITE
+        test7 > Bomber img=oryx/alien1 orientation=RIGHT stype=test9 hidden=True shrinkFactor=0.3189701009330024
+        test8 > Passive img=newset/camel1 orientation=RIGHT color=WHITE prob=0.37392875339460263 shrinkFactor=0.4483101947505659
+        test9 > RandomNPC img=newset/girl2 orientation=LEFT autoTiling=True autoTiling=False
+        testResource > Resource color=LIGHTORANGE
+
+    LevelMapping
+        C > test0
+        L > test1
+        P > test2
+        O > test3
+        F > test4
+        R > test5
+        I > test6
+        B > test7
+        p > test8
+        N > test9
+        E > testResource
+        A > avatar
+
+    InteractionSet
+        test1 test1 > killIfHasMore resource=testResource limit=3 scoreChange=-1
+        test5 test5 > killIfFromAbove scoreChange=-2
+        test5 test5 > killIfOtherHasLess resource=testResource limit=1 scoreChange=5
+        test2 test2 > killIfHasMore resource=testResource limit=5 scoreChange=-1
+        test3 test3 > spawnIfHasMore resource=testResource stype=test5 limit=1 scoreChange=2
+
+    TerminationSet
+        SpriteCounter stype=test3 limit=3 win=True
+        Timeout limit=765 win=False

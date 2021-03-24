@@ -1,0 +1,37 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > FlakAvatar img=newset/cop1
+        test0   > Immovable img=newset/block2 orientation=UP singleton=False cooldown=19
+        test1  > Portal img=newset/exit orientation=UP stype=test3   autoTiling=False prob=0.6915445924577389
+        test2  > Immovable img=newset/block2 orientation=LEFT shrinkFactor=0.2659141639995861 cooldown=17 orientation=RIGHT
+        test3  > Portal img=newset/exit orientation=LEFT stype=test2   invisible=True limit=3
+        test4  > Immovable img=newset/block2 orientation=DOWN color=DARKBLUE
+        test5   > Immovable img=newset/block2 orientation=RIGHT cooldown=2 prob=0.9764265800077481 color=BLUE
+        test6  > Portal img=newset/exit orientation=LEFT stype=test7  color=GRAY
+        test7 > Fleeing img=newset/blessedman orientation=LEFT stype=test5 invisible=True speed=0.05986132026094937
+        testResource > Resource color=BLUE
+
+    LevelMapping
+        I > test0
+        R > test1
+        i > test2
+        r > test3
+        4 > test4
+        5 > test5
+        0 > test6
+        F > test7
+        E > testResource
+        A > avatar
+
+    InteractionSet
+        test6 test6 > transformTo stype=test7 scoreChange=0
+        testResource testResource > transformTo stype=test7
+        test4 test4 > wrapAround offset=2
+        test4 test4 > killIfHasLess resource=testResource limit=4
+        test2 test2 > stepBack scoreChange=-4
+        test5 test5 > killBoth scoreChange=5
+
+    TerminationSet
+        SpriteCounter stype=testResource limit=1 win=True
+        ResourceCounter stype=testResource limit=37 win=False

@@ -1,0 +1,41 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > ShootAvatar img=newset/cop1
+        test0 > Portal img=newset/exit orientation=UP stype=test5 speed=0.6392632998761276 speed=0.22903044216589552
+        test1 > Immovable img=newset/block2 orientation=LEFT orientation=DOWN
+        test2 > Immovable img=newset/block2 orientation=RIGHT prob=0.06372343666382274 cooldown=15
+        test3 > Missile img=newset/arrow orientation=UP hidden=True
+        test4  > Portal img=newset/exit orientation=DOWN stype=test1 
+        test5 > OrientedFlicker img=newset/cherries orientation=DOWN autoTiling=False
+        test6 > Fleeing img=newset/blessedman orientation=DOWN stype=test4 speed=0.9472463827813733 autoTiling=False limit=6
+        test7 > Resource img=newset/egg orientation=UP
+        test8  > Portal img=newset/exit orientation=LEFT stype=test6  shrinkFactor=0.16212035372348832 speed=0.036842468651342775
+
+    LevelMapping
+        R > test0
+        I > test1
+        i > test2
+        M > test3
+        r > test4
+        O > test5
+        F > test6
+        E > test7
+        8 > test8
+        A > avatar
+
+    InteractionSet
+        test3 test3 > stepBack scoreChange=-3
+        test7 test7 > collectResource scoreChange=1
+        test6 test6 > killIfOtherHasMore resource=test7 limit=1 scoreChange=-1
+        test7 test7 > undoAll
+        test0 test0 > killSprite scoreChange=0
+        test6 test6 > undoAll scoreChange=-1
+        test2 test2 > cloneSprite scoreChange=2
+        test6 test6 > killSprite scoreChange=-2
+        test3 test3 > killSprite
+        test0 test0 > attractGaze prob=0.6787759634057227
+
+    TerminationSet
+        SpriteCounter stype=test7 limit=6 win=True
+        SpriteCounter stype=test2 limit=0 win=False

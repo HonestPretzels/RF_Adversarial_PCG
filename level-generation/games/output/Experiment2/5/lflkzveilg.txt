@@ -1,0 +1,41 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > ShootAvatar img=newset/cop1
+        test0 > Fleeing img=newset/blessedman orientation=RIGHT stype=test7 invisible=False
+        test1   > Immovable img=newset/block2 orientation=RIGHT color=LIGHTRED
+        test2  > Flicker img=newset/butterfly1 orientation=DOWN color=LIGHTGREEN hidden=True shrinkFactor=0.6014004646001231
+        test3  > Portal img=newset/exit orientation=DOWN stype=test6   shrinkFactor=0.17106836290063399 singleton=True
+        test4  > Immovable img=newset/block2 orientation=RIGHT limit=1
+        test5 > Missile img=newset/arrow orientation=DOWN limit=9 cooldown=14 speed=0.07724606377706145
+        test6  > Immovable img=newset/block2 orientation=UP
+        test7  > Immovable img=newset/block2 orientation=DOWN hidden=True singleton=False invisible=False
+        testResource > Resource color=GREEN
+
+    LevelMapping
+        F > test0
+        I > test1
+        L > test2
+        R > test3
+        i > test4
+        M > test5
+        a > test6
+        8 > test7
+        E > testResource
+        A > avatar
+
+    InteractionSet
+        test6 test6 > killBoth scoreChange=2
+        test7 test7 > transformTo stype=test1 scoreChange=2
+        test2 test2 > undoAll
+        test0 test0 > killSprite scoreChange=-3
+        test3 test3 > killIfHasLess resource=testResource limit=2 scoreChange=2
+        test2 test2 > attractGaze prob=0.163675322500895 scoreChange=5
+        test2 test2 > turnAround scoreChange=-4
+        test4 test4 > killSprite
+        test6 test6 > killSprite
+        test1 test1 > stepBack
+
+    TerminationSet
+        SpriteCounter stype=test1 limit=0 win=True
+        SpriteCounter stype=test4 limit=10 win=False scoreChange=231

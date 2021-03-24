@@ -1,0 +1,41 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > MovingAvatar img=newset/cop1
+        test0  > Immovable img=newset/block2 orientation=LEFT
+        test1  > Immovable img=newset/block2 orientation=UP cooldown=16 shrinkFactor=0.3288557818452319
+        test2  > Portal img=newset/exit orientation=DOWN stype=test7
+        test3  > Portal img=newset/exit orientation=UP stype=test5  shrinkFactor=0.42872155054349814 shrinkFactor=0.26678713793167985
+        test4 > Immovable img=newset/block2 orientation=UP prob=0.3480957380892832 limit=4
+        test5 > Portal img=newset/exit orientation=DOWN stype=test0 hidden=False shrinkFactor=0.46718163741964247
+        test6 > Immovable img=newset/block2 orientation=UP color=GRAY speed=0.9695555741607735 autoTiling=False
+        test7 > Missile img=newset/arrow orientation=RIGHT color=DARKBLUE limit=5
+        testResource > Resource color=LIGHTRED
+
+    LevelMapping
+        I > test0
+        i > test1
+        R > test2
+        r > test3
+        m > test4
+        7 > test5
+        9 > test6
+        M > test7
+        E > testResource
+        A > avatar
+
+    InteractionSet
+        test3 test3 > attractGaze prob=0.5953176552805813 scoreChange=1
+        testResource testResource > pullWithIt
+        test6 test6 > collectResource scoreChange=5
+        test0 test0 > transformTo stype=test1
+        test0 test0 > stepBack
+        test7 test7 > stepBack scoreChange=-3
+        test1 test1 > flipDirection
+        test5 test5 > turnAround scoreChange=-2
+        testResource testResource > killIfOtherHasLess resource=testResource limit=5 scoreChange=3
+        test6 test6 > turnAround
+
+    TerminationSet
+        Timeout limit=186 win=True
+        SpriteCounter stype=test3 limit=3 win=False

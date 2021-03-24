@@ -1,0 +1,39 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > MovingAvatar img=newset/cop1
+        test0 > Portal img=newset/exit orientation=LEFT stype=test4 limit=2 color=LIGHTORANGE
+        test1  > Immovable img=newset/block2 orientation=LEFT
+        test2 > Portal img=newset/exit orientation=DOWN stype=test7
+        test3  > Immovable img=newset/block2 orientation=UP shrinkFactor=0.38399364530158964
+        test4 > Missile img=newset/arrow orientation=UP singleton=False autoTiling=True limit=5
+        test5  > Portal img=newset/exit orientation=UP stype=test1   limit=2
+        test6  > Immovable img=newset/block2 orientation=UP autoTiling=False
+        test7 > Flicker img=newset/butterfly1 orientation=DOWN orientation=LEFT prob=0.3598499515820863 invisible=True
+        testResource > Resource color=GREEN
+
+    LevelMapping
+        R > test0
+        I > test1
+        r > test2
+        i > test3
+        M > test4
+        h > test5
+        8 > test6
+        L > test7
+        E > testResource
+        A > avatar
+
+    InteractionSet
+        test0 test0 > collectResource
+        test5 test5 > changeResource resource=testResource value=-3 scoreChange=-5
+        test2 test2 > flipDirection
+        test4 test4 > pullWithIt scoreChange=0
+        test4 test4 > turnAround scoreChange=-5
+        test5 test5 > killSprite scoreChange=3
+        test0 test0 > attractGaze prob=0.6199064491093003
+        test1 test1 > stepBack scoreChange=-4
+
+    TerminationSet
+        SpriteCounter stype=test3 limit=5 win=True
+        SpriteCounter stype=test0 limit=2 win=False

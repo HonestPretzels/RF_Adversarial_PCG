@@ -1,0 +1,39 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > ShootAvatar img=newset/cop1
+        test0 > Immovable img=newset/block2 orientation=UP color=LIGHTBLUE
+        test1 > Bomber img=oryx/alien1 orientation=LEFT stype=test5 limit=4 orientation=UP shrinkFactor=0.9829913881874125
+        test2 > Flicker img=newset/butterfly1 orientation=UP prob=0.9273917174272724
+        test3 > Chaser img=newset/bandit1 orientation=RIGHT stype=test4 speed=0.8360107705256777
+        test4 > OrientedFlicker img=newset/cherries orientation=DOWN singleton=True hidden=True
+        test5 > Immovable img=newset/block2 orientation=RIGHT
+        test6 > Bomber img=oryx/alien1 orientation=UP stype=test4 limit=7
+        test7 > Chaser img=newset/bandit1 orientation=LEFT stype=test0 prob=0.4942436084478682 prob=0.8066313808997582
+        testResource > Resource color=RED
+
+    LevelMapping
+        I > test0
+        B > test1
+        L > test2
+        C > test3
+        O > test4
+        i > test5
+        b > test6
+        c > test7
+        E > testResource
+        A > avatar
+
+    InteractionSet
+        test4 test4 > transformTo stype=testResource scoreChange=-2
+        test5 test5 > undoAll scoreChange=5
+        test6 test6 > killIfFromAbove scoreChange=-2
+        testResource testResource > killIfOtherHasLess resource=testResource limit=2
+        test3 test3 > wrapAround offset=3 scoreChange=4
+        test7 test7 > killSprite scoreChange=5
+        testResource testResource > pullWithIt scoreChange=0
+        test5 test5 > pullWithIt scoreChange=4
+
+    TerminationSet
+        Timeout limit=27 win=True
+        Timeout limit=583 win=False

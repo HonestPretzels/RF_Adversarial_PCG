@@ -1,0 +1,34 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > ShootAvatar img=newset/cop1
+        test0 > Resource img=newset/egg orientation=LEFT
+        test1 > Chaser img=newset/bandit1 orientation=RIGHT stype=test6
+        test2 > Immovable img=newset/block2 orientation=DOWN
+        test3 > Passive img=newset/camel1 orientation=UP shrinkFactor=0.9096139776085888 color=DARKBLUE
+        test4  > Portal img=newset/exit orientation=DOWN stype=test6  orientation=RIGHT cooldown=9 prob=0.7149693206409974
+        test5  > Portal img=newset/exit orientation=UP stype=test2  orientation=RIGHT autoTiling=False
+        test6  > Immovable img=newset/block2 orientation=LEFT
+
+    LevelMapping
+        E > test0
+        C > test1
+        I > test2
+        P > test3
+        R > test4
+        r > test5
+        i > test6
+        A > avatar
+
+    InteractionSet
+        test2 test2 > killSprite scoreChange=4
+        test4 test4 > pullWithIt scoreChange=2
+        test6 test6 > teleportToExit
+        test5 test5 > bounceForward
+        test2 test2 > killIfFromAbove scoreChange=1
+        test5 test5 > collectResource
+        test5 test5 > stepBack scoreChange=0
+
+    TerminationSet
+        SpriteCounter stype=test4 limit=2 win=False
+        ResourceCounter stype=test0 limit=63 win=True

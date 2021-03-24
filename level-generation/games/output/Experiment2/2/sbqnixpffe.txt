@@ -1,0 +1,39 @@
+BasicGame block_size=10
+
+    SpriteSet
+        avatar > ShootAvatar img=newset/cop1
+        test0 > Immovable img=newset/block2 orientation=LEFT invisible=True shrinkFactor=0.7808178719071358 speed=0.34864804420182527
+        test1  > Portal img=newset/exit orientation=UP stype=test2   color=RED shrinkFactor=0.4680855754442276 cooldown=16
+        test2  > Portal img=newset/exit orientation=RIGHT stype=test0  cooldown=1 invisible=False
+        test3  > Bomber img=oryx/alien1 orientation=DOWN stype=test2   invisible=False invisible=False
+        test4  > Portal img=newset/exit orientation=RIGHT stype=test1
+        test5  > Immovable img=newset/block2 orientation=RIGHT speed=0.7041192829913956 singleton=True orientation=RIGHT
+        test6 > Portal img=newset/exit orientation=DOWN stype=test4
+        test7 > Flicker img=newset/butterfly1 orientation=LEFT
+        testResource > Resource color=LIGHTORANGE
+
+    LevelMapping
+        I > test0
+        R > test1
+        r > test2
+        B > test3
+        h > test4
+        i > test5
+        k > test6
+        L > test7
+        E > testResource
+        A > avatar
+
+    InteractionSet
+        test4 test4 > killBoth scoreChange=2
+        test4 test4 > collectResource
+        test5 test5 > killIfFromAbove
+        test0 test0 > attractGaze prob=0.7182253498447128
+        test4 test4 > collectResource
+        test3 test3 > killIfOtherHasMore resource=testResource limit=2
+        test5 test5 > flipDirection scoreChange=2
+        test0 test0 > killSprite scoreChange=2
+
+    TerminationSet
+        SpriteCounter stype=test4 limit=10 win=True
+        SpriteCounter stype=test4 limit=0 win=False scoreChange=65
