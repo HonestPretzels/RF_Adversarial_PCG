@@ -1,1 +1,0 @@
-portals.txt TIMED OUT at action 500 with score 0.000000
